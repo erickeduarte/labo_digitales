@@ -1,0 +1,10 @@
+WARNING:Xst:1710 - FF/Latch <FFD4/Q_7> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD4/Q_6> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD4/Q_5> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD4/Q_4> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD2/Q_4> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD1/Q_3> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:2677 - Node <FFD1/Q_7> of sequential type is unconnected in block <MiniAlu>.
+WARNING:Xst:2677 - Node <FFD1/Q_6> of sequential type is unconnected in block <MiniAlu>.
+WARNING:Xst:2677 - Node <FFD1/Q_5> of sequential type is unconnected in block <MiniAlu>.
+WARNING:Xst:2677 - Node <FFD1/Q_4> of sequential type is unconnected in block <MiniAlu>.

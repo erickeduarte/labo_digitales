@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=/home/efmelendezbo/Documents/labo_digitales/experimento_1/MiniAlu.ncd
+OUTFILE=/home/efmelendezbo/Documents/labo_digitales/experimento_1/MiniAlu.bit
+FAMILY=Spartan3E
+PART=xc3s500e-4fg320
+WORKINGDIR=/home/efmelendezbo/Documents/labo_digitales/experimento_1
+LICENSE=ISE
+USER_INFO=174162558_174162559_210553509_201
