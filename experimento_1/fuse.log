@@ -10,11 +10,11 @@ Analyzing Verilog file "/home/efmelendezbo/Documents/labo_digitales/experimento_
 Analyzing Verilog file "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/TestBench.v" into library work
 Analyzing Verilog file "/opt/Xilinx/14.4/ISE_DS/ISE//verilog/src/glbl.v" into library work
 Starting static elaboration
-WARNING:HDLCompiler:189 - "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/MiniAlu.v" Line 46: Size mismatch in connection of port <Initial>. Formal port size is 16-bit while actual signal size is 32-bit.
-WARNING:HDLCompiler:189 - "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/MiniAlu.v" Line 95: Size mismatch in connection of port <D>. Formal port size is 8-bit while actual signal size is 16-bit.
+WARNING:HDLCompiler:189 - "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/MiniAlu.v" Line 47: Size mismatch in connection of port <Initial>. Formal port size is 16-bit while actual signal size is 32-bit.
+WARNING:HDLCompiler:189 - "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/MiniAlu.v" Line 96: Size mismatch in connection of port <D>. Formal port size is 8-bit while actual signal size is 16-bit.
 Completed static elaboration
 Fuse Memory Usage: 38812 KB
-Fuse CPU Usage: 2540 ms
+Fuse CPU Usage: 2520 ms
 Compiling module ROM
 Compiling module RAM_DUAL_READ_PORT
 Compiling module UPCOUNTER_POSEDGE
@@ -28,5 +28,5 @@ Waiting for 1 sub-compilation(s) to finish...
 Compiled 8 Verilog Units
 Built simulation executable /home/efmelendezbo/Documents/labo_digitales/experimento_1/TestBench_isim_beh.exe
 Fuse Memory Usage: 74680 KB
-Fuse CPU Usage: 2570 ms
-GCC CPU Usage: 290 ms
+Fuse CPU Usage: 2560 ms
+GCC CPU Usage: 300 ms

@@ -13,12 +13,13 @@ module MiniAlu
 );
 
 wire [15:0]  wIP,wIP_temp;
-reg         rWriteEnable,rBranchTaken;
+reg         rWriteEnable,rBranchTaken,rDoComplement;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
 reg [15:0]   rResult;
+wire [15:0]   wAddSubResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
-wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
+wire [15:0] wSourceData0,wSourceData0_tmp,wSourceData1,wIPInitialValue,wImmediateValue;
 
 ROM InstructionRom 
 (
@@ -98,6 +99,8 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
+assign wSourceData0_tmp = (rDoComplement) ? -wSourceData0 : wSourceData0;
+assign wAddSubResult = wSourceData1 + wSourceData0_tmp;
 
 
 always @ ( * )
@@ -109,6 +112,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rDoComplement <= 1'b0;
 		rResult      <= 0;
 	end
 	//-------------------------------------
@@ -117,7 +121,8 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
-		rResult      <= wSourceData1 + wSourceData0;
+		rDoComplement <= 1'b0;
+		rResult      <= wAddSubResult;
 	end
 		//-------------------------------------
 	`SUB:
@@ -125,7 +130,8 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
-		rResult      <= wSourceData1 - wSourceData0;
+		rDoComplement <= 1'b1;
+		rResult      <= wAddSubResult;
 	end
 	//-------------------------------------
 	`STO:
@@ -133,6 +139,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
+		rDoComplement <= 1'b0;
 		rResult      <= wImmediateValue;
 	end
 	//-------------------------------------
@@ -140,6 +147,7 @@ begin
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rDoComplement <= 1'b0;
 		rResult      <= 0;
 		if (wSourceData1 <= wSourceData0 )
 			rBranchTaken <= 1'b1;
@@ -153,6 +161,8 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
+		rDoComplement <= 1'b0;
+		
 		rBranchTaken <= 1'b1;
 	end
 	//-------------------------------------	
@@ -162,6 +172,7 @@ begin
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b0;
+		rDoComplement <= 1'b0;
 	end
 	//-------------------------------------
 	default:
@@ -170,6 +181,7 @@ begin
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b0;
+		rDoComplement <= 1'b0;
 	end	
 	//-------------------------------------	
 	endcase	
