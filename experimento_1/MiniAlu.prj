@@ -1,0 +1,4 @@
+verilog work "inputs/RAM.v"
+verilog work "inputs/Module_ROM.v"
+verilog work "inputs/Collaterals.v"
+verilog work "inputs/MiniAlu.v"

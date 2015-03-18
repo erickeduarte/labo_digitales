@@ -1,0 +1,8 @@
+INTSTYLE=impact
+INFILE=/home/efmelendezbo/Documents/labo_digitales/experimento_1/impact.xsl
+OUTFILE=/home/efmelendezbo/Documents/labo_digitales/experimento_1/impact.xsl
+FAMILY=Multiple
+PART=Multiple
+WORKINGDIR=/home/efmelendezbo/Documents/labo_digitales/experimento_1
+LICENSE=iMPACT
+USER_INFO=iMPACT
