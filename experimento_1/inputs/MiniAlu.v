@@ -39,7 +39,7 @@ RAM_DUAL_READ_PORT DataRam
 );
 
 assign wIPInitialValue = (Reset) ? 8'b0 : wDestination;
-UPCOUNTER_POSEDGE IP
+UPCOUNTER_POSEDGE # ( 16 ) IP
 (
 .Clock(   Clock                ), 
 .Reset(   Reset | rBranchTaken ),

@@ -1,0 +1,32 @@
+Running: /opt/Xilinx/14.4/ISE_DS/ISE/bin/lin/unwrapped/fuse -relaunch -intstyle "ise" -incremental -lib "unisims_ver" -lib "unimacro_ver" -lib "xilinxcorelib_ver" -o "/home/efmelendezbo/Documents/labo_digitales/experimento_1/TestBench_isim_beh.exe" -prj "/home/efmelendezbo/Documents/labo_digitales/experimento_1/TestBench_beh.prj" "work.TestBench" "work.glbl" 
+ISim P.49d (signature 0xfbc00daa)
+Number of CPUs detected in this system: 2
+Turning on mult-threading, number of parallel sub-compilation jobs: 4 
+Determining compilation order of HDL files
+Analyzing Verilog file "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/RAM.v" into library work
+Analyzing Verilog file "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/Module_ROM.v" into library work
+Analyzing Verilog file "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/Collaterals.v" into library work
+Analyzing Verilog file "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/MiniAlu.v" into library work
+Analyzing Verilog file "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/TestBench.v" into library work
+Analyzing Verilog file "/opt/Xilinx/14.4/ISE_DS/ISE//verilog/src/glbl.v" into library work
+Starting static elaboration
+WARNING:HDLCompiler:189 - "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/MiniAlu.v" Line 46: Size mismatch in connection of port <Initial>. Formal port size is 16-bit while actual signal size is 32-bit.
+WARNING:HDLCompiler:189 - "/home/efmelendezbo/Documents/labo_digitales/experimento_1/inputs/MiniAlu.v" Line 95: Size mismatch in connection of port <D>. Formal port size is 8-bit while actual signal size is 16-bit.
+Completed static elaboration
+Fuse Memory Usage: 38812 KB
+Fuse CPU Usage: 2540 ms
+Compiling module ROM
+Compiling module RAM_DUAL_READ_PORT
+Compiling module UPCOUNTER_POSEDGE
+Compiling module FFD_POSEDGE_SYNCRONOUS_RESET(SIZ...
+Compiling module FFD_POSEDGE_SYNCRONOUS_RESET
+Compiling module MiniAlu
+Compiling module TestBench
+Compiling module glbl
+Time Resolution for simulation is 1ps.
+Waiting for 1 sub-compilation(s) to finish...
+Compiled 8 Verilog Units
+Built simulation executable /home/efmelendezbo/Documents/labo_digitales/experimento_1/TestBench_isim_beh.exe
+Fuse Memory Usage: 74680 KB
+Fuse CPU Usage: 2570 ms
+GCC CPU Usage: 290 ms

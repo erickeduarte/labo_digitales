@@ -4,15 +4,15 @@ Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
 Parameter TMPDIR set to xst/projnav.tmp
 
 
-Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.10 secs
+Total REAL time to Xst completion: 1.00 secs
+Total CPU time to Xst completion: 0.07 secs
  
 --> 
 Parameter xsthdpdir set to xst
 
 
-Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.11 secs
+Total REAL time to Xst completion: 1.00 secs
+Total CPU time to Xst completion: 0.07 secs
  
 --> 
 Reading design: MiniAlu.prj
@@ -138,6 +138,9 @@ Analyzing hierarchy for module <UPCOUNTER_POSEDGE> in library <work> with parame
 	SIZE = "00000000000000000000000000010000"
 
 Analyzing hierarchy for module <FFD_POSEDGE_SYNCRONOUS_RESET> in library <work> with parameters.
+	SIZE = "00000000000000000000000000000100"
+
+Analyzing hierarchy for module <FFD_POSEDGE_SYNCRONOUS_RESET> in library <work> with parameters.
 	SIZE = "00000000000000000000000000001000"
 
 
@@ -163,9 +166,13 @@ Analyzing module <UPCOUNTER_POSEDGE> in library <work>.
 	SIZE = 32'sb00000000000000000000000000010000
 Module <UPCOUNTER_POSEDGE> is correct for synthesis.
  
-Analyzing module <FFD_POSEDGE_SYNCRONOUS_RESET> in library <work>.
+Analyzing module <FFD_POSEDGE_SYNCRONOUS_RESET.1> in library <work>.
+	SIZE = 32'sb00000000000000000000000000000100
+Module <FFD_POSEDGE_SYNCRONOUS_RESET.1> is correct for synthesis.
+ 
+Analyzing module <FFD_POSEDGE_SYNCRONOUS_RESET.2> in library <work>.
 	SIZE = 32'sb00000000000000000000000000001000
-Module <FFD_POSEDGE_SYNCRONOUS_RESET> is correct for synthesis.
+Module <FFD_POSEDGE_SYNCRONOUS_RESET.2> is correct for synthesis.
  
 
 =========================================================================
@@ -205,23 +212,32 @@ Synthesizing Unit <UPCOUNTER_POSEDGE>.
 Unit <UPCOUNTER_POSEDGE> synthesized.
 
 
-Synthesizing Unit <FFD_POSEDGE_SYNCRONOUS_RESET>.
+Synthesizing Unit <FFD_POSEDGE_SYNCRONOUS_RESET_1>.
+    Related source file is "inputs/Collaterals.v".
+    Found 4-bit register for signal <Q>.
+    Summary:
+	inferred   4 D-type flip-flop(s).
+Unit <FFD_POSEDGE_SYNCRONOUS_RESET_1> synthesized.
+
+
+Synthesizing Unit <FFD_POSEDGE_SYNCRONOUS_RESET_2>.
     Related source file is "inputs/Collaterals.v".
     Found 8-bit register for signal <Q>.
     Summary:
 	inferred   8 D-type flip-flop(s).
-Unit <FFD_POSEDGE_SYNCRONOUS_RESET> synthesized.
+Unit <FFD_POSEDGE_SYNCRONOUS_RESET_2> synthesized.
 
 
 Synthesizing Unit <MiniAlu>.
     Related source file is "inputs/MiniAlu.v".
-    Found 16-bit comparator lessequal for signal <rBranchTaken$cmp_le0000> created at line 136.
-    Found 16-bit adder for signal <rResult$addsub0000> created at line 120.
+    Found 16-bit comparator lessequal for signal <rBranchTaken$cmp_le0000> created at line 144.
+    Found 16-bit addsub for signal <rResult$addsub0000>.
     Summary:
 	inferred   2 Adder/Subtractor(s).
 	inferred   1 Comparator(s).
 Unit <MiniAlu> synthesized.
 
+INFO:Xst:1767 - HDL ADVISOR - Resource sharing has identified that some arithmetic operations in this design can share the same physical resources for reduced device utilization. For improved clock frequency you may try to disable resource sharing.
 
 =========================================================================
 HDL Synthesis Report
@@ -232,12 +248,14 @@ Macro Statistics
 # ROMs                                                 : 1
  16x28-bit ROM                                         : 1
 # Adders/Subtractors                                   : 2
- 16-bit adder                                          : 2
+ 16-bit adder                                          : 1
+ 16-bit addsub                                         : 1
 # Counters                                             : 1
  16-bit up counter                                     : 1
 # Registers                                            : 7
  16-bit register                                       : 2
- 8-bit register                                        : 5
+ 4-bit register                                        : 1
+ 8-bit register                                        : 4
 # Comparators                                          : 1
  16-bit comparator lessequal                           : 1
 
@@ -247,10 +265,6 @@ Macro Statistics
 *                       Advanced HDL Synthesis                          *
 =========================================================================
 
-WARNING:Xst:2677 - Node <Q_4> of sequential type is unconnected in block <FFD1>.
-WARNING:Xst:2677 - Node <Q_5> of sequential type is unconnected in block <FFD1>.
-WARNING:Xst:2677 - Node <Q_6> of sequential type is unconnected in block <FFD1>.
-WARNING:Xst:2677 - Node <Q_7> of sequential type is unconnected in block <FFD1>.
 
 Synthesizing (advanced) Unit <RAM_DUAL_READ_PORT>.
 INFO:Xst:3231 - The small RAM <Mram_Ram> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
@@ -296,11 +310,12 @@ Macro Statistics
 # ROMs                                                 : 1
  16x28-bit ROM                                         : 1
 # Adders/Subtractors                                   : 2
- 16-bit adder                                          : 2
+ 16-bit adder                                          : 1
+ 16-bit addsub                                         : 1
 # Counters                                             : 1
  16-bit up counter                                     : 1
-# Registers                                            : 72
- Flip-Flops                                            : 72
+# Registers                                            : 68
+ Flip-Flops                                            : 68
 # Comparators                                          : 1
  16-bit comparator lessequal                           : 1
 
@@ -309,27 +324,28 @@ Macro Statistics
 =========================================================================
 *                         Low Level Synthesis                           *
 =========================================================================
+WARNING:Xst:1710 - FF/Latch <FFD1/Q_3> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
 
 Optimizing unit <MiniAlu> ...
 
 Optimizing unit <RAM_DUAL_READ_PORT> ...
 
-Optimizing unit <FFD_POSEDGE_SYNCRONOUS_RESET> ...
+Optimizing unit <FFD_POSEDGE_SYNCRONOUS_RESET_2> ...
 WARNING:Xst:1710 - FF/Latch <FFD4/Q_7> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD4/Q_6> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD4/Q_5> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD4/Q_4> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD4/Q_3> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD3/Q_7> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD3/Q_6> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD3/Q_5> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD3/Q_4> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD2/Q_4> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD1/Q_3> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:2677 - Node <FFD1/Q_7> of sequential type is unconnected in block <MiniAlu>.
-WARNING:Xst:2677 - Node <FFD1/Q_6> of sequential type is unconnected in block <MiniAlu>.
-WARNING:Xst:2677 - Node <FFD1/Q_5> of sequential type is unconnected in block <MiniAlu>.
-WARNING:Xst:2677 - Node <FFD1/Q_4> of sequential type is unconnected in block <MiniAlu>.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <FFD2/Q_2> (without init value) has a constant value of 0 in block <MiniAlu>. This FF/Latch will be trimmed during the optimization process.
 
 Mapping all equations...
 Building and optimizing final netlist ...
 INFO:Xst:2261 - The FF/Latch <FFD2/Q_7> in Unit <MiniAlu> is equivalent to the following FF/Latch, which will be removed : <FFD2/Q_5> 
-INFO:Xst:2261 - The FF/Latch <FFD3/Q_7> in Unit <MiniAlu> is equivalent to the following 3 FFs/Latches, which will be removed : <FFD3/Q_6> <FFD3/Q_5> <FFD3/Q_4> 
 Found area constraint ratio of 100 (+ 5) on block MiniAlu, actual ratio is 2.
 
 Final Macro Processing ...
@@ -338,8 +354,8 @@ Final Macro Processing ...
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 74
- Flip-Flops                                            : 74
+# Registers                                            : 71
+ Flip-Flops                                            : 71
 
 =========================================================================
 
@@ -368,23 +384,25 @@ Design Statistics
 # IOs                              : 10
 
 Cell Usage :
-# BELS                             : 228
+# BELS                             : 206
 #      GND                         : 1
-#      LUT2                        : 43
-#      LUT2_D                      : 3
-#      LUT3                        : 21
-#      LUT3_D                      : 2
-#      LUT3_L                      : 1
-#      LUT4                        : 55
-#      LUT4_D                      : 7
-#      LUT4_L                      : 10
+#      LUT2                        : 20
+#      LUT2_D                      : 1
+#      LUT2_L                      : 2
+#      LUT3                        : 41
+#      LUT3_L                      : 4
+#      LUT4                        : 50
+#      LUT4_D                      : 5
+#      LUT4_L                      : 2
 #      MUXCY                       : 46
-#      MUXF5                       : 6
+#      MUXF5                       : 1
 #      VCC                         : 1
 #      XORCY                       : 32
-# FlipFlops/Latches                : 74
+# FlipFlops/Latches                : 71
 #      FD                          : 48
-#      FDRE                        : 26
+#      FDR                         : 2
+#      FDRE                        : 20
+#      FDRS                        : 1
 # RAMS                             : 32
 #      RAM16X1D                    : 32
 # Clock Buffers                    : 1
@@ -399,10 +417,10 @@ Device utilization summary:
 
 Selected Device : 3s500efg320-4 
 
- Number of Slices:                      105  out of   4656     2%  
- Number of Slice Flip Flops:             74  out of   9312     0%  
- Number of 4 input LUTs:                206  out of   9312     2%  
-    Number used as logic:               142
+ Number of Slices:                       97  out of   4656     2%  
+ Number of Slice Flip Flops:             71  out of   9312     0%  
+ Number of 4 input LUTs:                189  out of   9312     2%  
+    Number used as logic:               125
     Number used as RAMs:                 64
  Number of IOs:                          10
  Number of bonded IOBs:                  10  out of    232     4%  
@@ -429,7 +447,7 @@ Clock Information:
 -----------------------------------+------------------------+-------+
 Clock Signal                       | Clock buffer(FF name)  | Load  |
 -----------------------------------+------------------------+-------+
-Clock                              | BUFGP                  | 106   |
+Clock                              | BUFGP                  | 103   |
 -----------------------------------+------------------------+-------+
 
 Asynchronous Control Signals Information:
@@ -440,8 +458,8 @@ Timing Summary:
 ---------------
 Speed Grade: -4
 
-   Minimum period: 11.259ns (Maximum Frequency: 88.818MHz)
-   Minimum input arrival time before clock: 8.286ns
+   Minimum period: 12.669ns (Maximum Frequency: 78.933MHz)
+   Minimum input arrival time before clock: 11.902ns
    Maximum output required time after clock: 4.283ns
    Maximum combinational path delay: No path found
 
@@ -451,10 +469,10 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'Clock'
-  Clock period: 11.259ns (frequency: 88.818MHz)
-  Total number of paths / destination ports: 62564 / 402
+  Clock period: 12.669ns (frequency: 78.933MHz)
+  Total number of paths / destination ports: 140227 / 352
 -------------------------------------------------------------------------
-Delay:               11.259ns (Levels of Logic = 22)
+Delay:               12.669ns (Levels of Logic = 22)
   Source:            DataRam/oDataOut0_0 (FF)
   Destination:       DataRam/oDataOut1_15 (FF)
   Source Clock:      Clock rising
@@ -481,51 +499,41 @@ Delay:               11.259ns (Levels of Logic = 22)
      MUXCY:CI->O           1   0.059   0.000  Mcompar_rBranchTaken_cmp_le0000_cy<12> (Mcompar_rBranchTaken_cmp_le0000_cy<12>)
      MUXCY:CI->O           1   0.059   0.000  Mcompar_rBranchTaken_cmp_le0000_cy<13> (Mcompar_rBranchTaken_cmp_le0000_cy<13>)
      MUXCY:CI->O           1   0.059   0.000  Mcompar_rBranchTaken_cmp_le0000_cy<14> (Mcompar_rBranchTaken_cmp_le0000_cy<14>)
-     MUXCY:CI->O           2   0.459   0.451  Mcompar_rBranchTaken_cmp_le0000_cy<15> (rBranchTaken_cmp_le0000)
-     LUT4_D:I3->O          1   0.704   0.424  rBranchTaken1_1 (rBranchTaken1)
-     LUT4:I3->O            2   0.704   0.482  InstructionRom/oInstruction_and000055 (InstructionRom/oInstruction_and000055)
-     LUT4_D:I2->O         11   0.704   0.937  InstructionRom/oInstruction_and0000116 (InstructionRom/oInstruction_and0000)
-     LUT4:I3->O           17   0.704   1.051  InstructionRom/oInstruction<9> (wInstruction<9>)
-     RAM16X1D:DPRA1->DPO    1   0.704   0.420  DataRam/Mram_Ram_ren1 (DataRam/_varindex0001<0>)
+     MUXCY:CI->O           7   0.459   0.712  Mcompar_rBranchTaken_cmp_le0000_cy<15> (rBranchTaken_cmp_le0000)
+     LUT4_D:I3->O          9   0.704   0.824  wIP<0>11 (N9)
+     LUT4:I3->O           15   0.704   1.096  wIP<2>1 (wIP<2>)
+     LUT4:I1->O           18   0.704   1.072  InstructionRom/oInstruction<11>1 (wInstruction<11>)
+     LUT4:I3->O           17   0.704   1.051  InstructionRom/oInstruction<10> (wInstruction<10>)
+     RAM16X1D:DPRA2->DPO    1   0.704   0.420  DataRam/Mram_Ram_ren1 (DataRam/_varindex0001<0>)
      FD:D                      0.308          DataRam/oDataOut1_0
     ----------------------------------------
-    Total                     11.259ns (6.872ns logic, 4.387ns route)
-                                       (61.0% logic, 39.0% route)
+    Total                     12.669ns (6.872ns logic, 5.797ns route)
+                                       (54.2% logic, 45.8% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'Clock'
-  Total number of paths / destination ports: 1236 / 220
+  Total number of paths / destination ports: 1141 / 198
 -------------------------------------------------------------------------
-Offset:              8.286ns (Levels of Logic = 17)
+Offset:              11.902ns (Levels of Logic = 7)
   Source:            Reset (PAD)
-  Destination:       IP/Q_15 (FF)
+  Destination:       DataRam/oDataOut1_15 (FF)
   Destination Clock: Clock rising
 
-  Data Path: Reset to IP/Q_15
+  Data Path: Reset to DataRam/oDataOut1_15
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O            57   1.218   1.445  Reset_IBUF (Reset_IBUF)
-     LUT2:I0->O            7   0.704   0.787  wIPInitialValue<1>1 (Madd__AUX_Initial_1_lut<1>)
-     LUT4:I1->O            1   0.704   0.499  Madd__AUX_Initial_1_xor<3>11 (_AUX_Initial_1<3>)
-     LUT4:I1->O            1   0.704   0.000  IP/Mcount_Q_lut<3> (IP/Mcount_Q_lut<3>)
-     MUXCY:S->O            1   0.464   0.000  IP/Mcount_Q_cy<3> (IP/Mcount_Q_cy<3>)
-     MUXCY:CI->O           1   0.059   0.000  IP/Mcount_Q_cy<4> (IP/Mcount_Q_cy<4>)
-     MUXCY:CI->O           1   0.059   0.000  IP/Mcount_Q_cy<5> (IP/Mcount_Q_cy<5>)
-     MUXCY:CI->O           1   0.059   0.000  IP/Mcount_Q_cy<6> (IP/Mcount_Q_cy<6>)
-     MUXCY:CI->O           1   0.059   0.000  IP/Mcount_Q_cy<7> (IP/Mcount_Q_cy<7>)
-     MUXCY:CI->O           1   0.059   0.000  IP/Mcount_Q_cy<8> (IP/Mcount_Q_cy<8>)
-     MUXCY:CI->O           1   0.059   0.000  IP/Mcount_Q_cy<9> (IP/Mcount_Q_cy<9>)
-     MUXCY:CI->O           1   0.059   0.000  IP/Mcount_Q_cy<10> (IP/Mcount_Q_cy<10>)
-     MUXCY:CI->O           1   0.059   0.000  IP/Mcount_Q_cy<11> (IP/Mcount_Q_cy<11>)
-     MUXCY:CI->O           1   0.059   0.000  IP/Mcount_Q_cy<12> (IP/Mcount_Q_cy<12>)
-     MUXCY:CI->O           1   0.059   0.000  IP/Mcount_Q_cy<13> (IP/Mcount_Q_cy<13>)
-     MUXCY:CI->O           0   0.059   0.000  IP/Mcount_Q_cy<14> (IP/Mcount_Q_cy<14>)
-     XORCY:CI->O           1   0.804   0.000  IP/Mcount_Q_xor<15> (IP/Mcount_Q15)
-     FD:D                      0.308          IP/Q_15
+     IBUF:I->O            44   1.218   1.441  Reset_IBUF (Reset_IBUF)
+     LUT2:I0->O            2   0.704   0.482  InstructionRom/oInstruction_and0000211_SW0 (N20)
+     LUT4_D:I2->O          3   0.704   0.566  wIP<0>21 (N12)
+     LUT4:I2->O           19   0.704   1.120  wIP<0>3 (wIP<0>)
+     LUT4:I2->O           18   0.704   1.072  InstructionRom/oInstruction<11>1 (wInstruction<11>)
+     LUT4:I3->O           17   0.704   1.051  InstructionRom/oInstruction<10> (wInstruction<10>)
+     RAM16X1D:DPRA2->DPO    1   0.704   0.420  DataRam/Mram_Ram_ren1 (DataRam/_varindex0001<0>)
+     FD:D                      0.308          DataRam/oDataOut1_0
     ----------------------------------------
-    Total                      8.286ns (5.555ns logic, 2.731ns route)
-                                       (67.0% logic, 33.0% route)
+    Total                     11.902ns (5.750ns logic, 6.152ns route)
+                                       (48.3% logic, 51.7% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'Clock'
@@ -550,14 +558,14 @@ Offset:              4.283ns (Levels of Logic = 1)
 
 
 Total REAL time to Xst completion: 19.00 secs
-Total CPU time to Xst completion: 16.18 secs
+Total CPU time to Xst completion: 16.53 secs
  
 --> 
 
 
-Total memory usage is 170828 kilobytes
+Total memory usage is 171080 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :   21 (   0 filtered)
+Number of warnings :   17 (   0 filtered)
 Number of infos    :    7 (   0 filtered)
 

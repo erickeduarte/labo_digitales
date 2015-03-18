@@ -1,0 +1,28 @@
+Command line:
+   MiniAlu_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  35189
+
+Wed Mar 18 10:23:31 2015
+
+
+ Elaboration Time: 0.07 sec
+
+ Current Memory Usage: 125.735 Meg
+
+ Total Signals          : 58
+ Total Nets             : 239
+ Total Signal Drivers   : 27
+ Total Blocks           : 10
+ Total Primitive Blocks : 9
+ Total Processes        : 37
+ Total Traceable Variables  : 41
+ Total Scalar Nets and Variables : 886
+
+ Total Simulation Time: 0.09 sec
+
+ Current Memory Usage: 134.001 Meg
+
+Wed Mar 18 10:23:38 2015
+
