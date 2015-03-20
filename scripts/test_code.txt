@@ -1,0 +1,12 @@
+define LOOP1 8'b001
+define LOOP2 8'b010
+
+NOP \\ This should be a comment
+NOP \\ sdfsd
+NOP 
+LED scr1 \\ This is a comment too
+
+BLE dest1 dato1 dato2
+ADD dest dato1 dato2
+JMP dest
+
