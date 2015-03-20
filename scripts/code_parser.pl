@@ -81,7 +81,7 @@ while ($inline = <IN_DH>) {
 		$inline =~ s/\s*\\\\.*//;
 
 		# Include NOP code in instructions
-		$instructions .= "$inst_counter: oInstruction = { `NOP ,\t24'd4000\t};";
+		$instructions .= "\t$inst_counter: oInstruction = { `NOP ,\t24'd4000\t};";
 		# Increase counter
 		$inst_counter++;
 		# Add comments
@@ -108,7 +108,7 @@ while ($inline = <IN_DH>) {
 		}
 		
 		# Include NOP code in instructions
-		$instructions .= "$inst_counter: oInstruction = { `LED ,	8'b0, $tmp_arguments[1], 8'b0 };";
+		$instructions .= "\t$inst_counter: oInstruction = { `LED ,	8'b0, $tmp_arguments[1], 8'b0 };";
 		# Increase counter
 		$inst_counter++;
 		# Add comments
@@ -135,7 +135,7 @@ while ($inline = <IN_DH>) {
 		}
 		
 		# Include NOP code in instructions
-		$instructions .= "$inst_counter: oInstruction = { `BLE , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3]};";
+		$instructions .= "\t$inst_counter: oInstruction = { `BLE , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3]};";
 		# Increase counter
 		$inst_counter++;
 		# Add comments
@@ -162,7 +162,7 @@ while ($inline = <IN_DH>) {
 		}
 		
 		# Include NOP code in instructions
-		$instructions .= "$inst_counter: oInstruction = { `STO , $tmp_arguments[1], $tmp_arguments[2]};";
+		$instructions .= "\t$inst_counter: oInstruction = { `STO , $tmp_arguments[1], $tmp_arguments[2]};";
 		# Increase instruction counter
 		$inst_counter++;
 		# Add comments
@@ -189,7 +189,7 @@ while ($inline = <IN_DH>) {
 		}
 		
 		# Include NOP code in instructions
-		$instructions .= "$inst_counter: oInstruction = { `ADD , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3]};";
+		$instructions .= "\t$inst_counter: oInstruction = { `ADD , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3]};";
 		# Increase instruction counter
 		$inst_counter++;
 		# Add comments
@@ -216,7 +216,7 @@ while ($inline = <IN_DH>) {
 		}
 		
 		# Include NOP code in instructions
-		$instructions .= "$inst_counter: oInstruction = { `SUB , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3]};";
+		$instructions .= "\t$inst_counter: oInstruction = { `SUB , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3]};";
 		# Increase instruction counter
 		$inst_counter++;
 		# Add comments
@@ -243,7 +243,7 @@ while ($inline = <IN_DH>) {
 		}
 		
 		# Include NOP code in instructions
-		$instructions .= "$inst_counter: oInstruction = { `JMP , $tmp_arguments[1], 16'b0 };";
+		$instructions .= "\t$inst_counter: oInstruction = { `JMP , $tmp_arguments[1], 16'b0 };";
 		# Increase instruction counter
 		$inst_counter++;
 		# Add comments
@@ -252,10 +252,57 @@ while ($inline = <IN_DH>) {
 		next;
 	} 
 }
-print ">> Instructions \n\n";
-print "$instructions\n";
-print "\n\n>> Definitions \n\n";
-print "$definitions\n";
+# Done with input file.
+close(IN_DH);
+
+# Now lets output. In case there is an output file given as a parameter
+if ($output_file) {
+	# Open output file 
+	myprint(">> Creating/overwritting output file: $output_file");
+	open (OUT_DH, ">", "$output_file") or die "\t-E-\tCould not open file for OUTPUT: \t $output_file \n";
+	# Output string contains the ROM module format.
+	my $output_string = "
+`timescale 1ns / 1ps
+`include \"Defintions.v\"
+";
+	# Add the definitions in file:
+	$output_string .= "$definitions";
+	
+	# Add the module definition
+	$output_string .= "
+module ROM
+(
+	input  wire[15:0]  		iAddress,
+	output reg [27:0] 		oInstruction
+);	
+always @ ( iAddress )
+begin
+	case (iAddress)
+	
+";
+	# Now add the instructions
+	$output_string .= "$instructions\n";
+	# Rest of file
+	$output_string .= "
+	default:
+		oInstruction = { `LED ,  24'b10101010 };		//NOP
+	endcase	
+end
+	
+endmodule
+";
+
+	print OUT_DH $output_string;
+	myprint(">> File created correctly.");
+	close(OUT_DH);
+} else {
+	# If no output file is given, output will be printed in terminal
+	print ">> Instructions \n\n";
+	print "$instructions\n";
+	print "\n\n>> Definitions \n\n";
+	print "$definitions\n";
+}
+
 
 ########################################################################
 ######### SUBROUTINES

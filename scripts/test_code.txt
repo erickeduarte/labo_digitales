@@ -9,4 +9,5 @@ LED scr1 \\ This is a comment too
 BLE dest1 dato1 dato2
 ADD dest dato1 dato2
 JMP dest
+STO dest value
 
