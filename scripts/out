@@ -1,0 +1,31 @@
+
+`timescale 1ns / 1ps
+`include "Defintions.v"
+`define LOOP1 8'b001 
+`define LOOP2 8'b010 
+
+module ROM
+(
+	input  wire[15:0]  		iAddress,
+	output reg [27:0] 		oInstruction
+);	
+always @ ( iAddress )
+begin
+	case (iAddress)
+	
+	0: oInstruction = { `NOP ,	24'd4000	}; \\  This should be a comment 
+	1: oInstruction = { `NOP ,	24'd4000	}; \\  sdfsd 
+	2: oInstruction = { `NOP ,	24'd4000	};
+	3: oInstruction = { `LED ,	8'b0, scr1, 8'b0 }; \\  This is a comment too 
+	4: oInstruction = { `BLE , dest1, dato1, dato2};
+	5: oInstruction = { `ADD , dest, dato1, dato2};
+	6: oInstruction = { `JMP , dest, 16'b0 };
+	7: oInstruction = { `STO , dest, value};
+
+
+	default:
+		oInstruction = { `LED ,  24'b10101010 };		//NOP
+	endcase	
+end
+	
+endmodule

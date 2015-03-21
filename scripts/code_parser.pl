@@ -1,10 +1,11 @@
-#! /usr/bin/perl
+#!/usr/bin/perl
 
 # ---- File: code_parser.pl 
 # ---- By: Fabian Melendez - fabmelb@gmail.com
 # ------- 
-# ------- This script parses code files and output a ROM module definition
-# ------- 
+# ------- This script parses code files and outputs a ROM module definition
+# ------- when an output file is specified. Else, it outputs through STDOUT
+# ------- The instructions and macro definitions separately.
 
 ########################################################################
 ########## Libraries needed
@@ -49,7 +50,7 @@ unless ($code_file) {
 myprint(">> Opening code file: $code_file \t ");
 open (IN_DH, "<", "$code_file") or die "\t-E-\tCould not open file for input: \t $code_file \n";
 
-# Parse file, line per line
+# Parse file, line per line. Searching for Specific commands
 while ($inline = <IN_DH>) {
 	# Increase line counter
 	$line_counter++;
@@ -62,11 +63,12 @@ while ($inline = <IN_DH>) {
 	# First, ignore comments. Acepted formats: '# Comment', '// Comment' (This is for lines starting with a comment)
 	# Other comments accepted will be after commands and starting with '//'
 	if ($inline =~ /^(#|\\\\)/) {
+		# We substitude '#' with \\ (For verilog compatibility)
 		$inline =~ s/^#/\\/;
 		$instructions .= "$inline \n";
 		next;  
 	} 
-	# Now for definitions within file
+	# Now for definitions within file (creates a macro)
 	elsif ($inline =~ /^(.*define)/) {
 		# Add correct format to definition (increases flexibility in coding)
 		$inline =~ s/^(.*define)/`define/;
@@ -77,8 +79,8 @@ while ($inline = <IN_DH>) {
 	elsif ($inline =~ /^NOP/) {
 		# Obtain comments and  save them in tmp_comment
 		$tmp_comment = $inline;
-		$tmp_comment =~ s/^.*\s*\\\\// or $tmp_comment =~ s/.*//; # Added in case there is no comments
-		$inline =~ s/\s*\\\\.*//;
+		$tmp_comment =~ s/^.*\s*\/\/// or $tmp_comment =~ s/.*//; # Added in case there is no comments
+		$inline =~ s/\s*\/\/.*//;
 
 		# Include NOP code in instructions
 		$instructions .= "\t$inst_counter: oInstruction = { `NOP ,\t24'd4000\t};";
@@ -93,8 +95,8 @@ while ($inline = <IN_DH>) {
 	elsif ($inline =~ /^LED/) {
 		# Obtain comments and  save them in tmp_comment
 		$tmp_comment = $inline;
-		$tmp_comment =~ s/^.*\s*\\\\// or $tmp_comment =~ s/.*//; # Added in case there is no comments
-		$inline =~ s/\s*\\\\.*//;
+		$tmp_comment =~ s/^.*\s*\/\/// or $tmp_comment =~ s/.*//; # Added in case there is no comments
+		$inline =~ s/\s*\/\/.*//;
 		
 		# Format different spaces to just one space 
 		$inline =~ s/\s+/ /g;
@@ -104,7 +106,8 @@ while ($inline = <IN_DH>) {
 		
 		# Check for correct format
 		if ($#tmp_arguments+1 != 2) {
-			die "\t-E-\t Wrong number of arguments for LED instruction. Given: $#tmp_arguments, spected: 1\t Line: <$line_counter>\n";
+			print "\t-E-\t Wrong number of arguments for LED instruction. Given: $#tmp_arguments, spected: 1\t Line: <$line_counter>\n";
+			exit;
 		}
 		
 		# Include NOP code in instructions
@@ -120,8 +123,8 @@ while ($inline = <IN_DH>) {
 	elsif ($inline =~ /^BLE/) {
 		# Obtain comments and  save them in tmp_comment
 		$tmp_comment = $inline;
-		$tmp_comment =~ s/^.*\s*\\\\// or $tmp_comment =~ s/.*//; # Added in case there is no comments
-		$inline =~ s/\s*\\\\.*//;
+		$tmp_comment =~ s/^.*\s*\/\/// or $tmp_comment =~ s/.*//; # Added in case there is no comments
+		$inline =~ s/\s*\/\/.*//;
 		
 		# Format different spaces to just one space 
 		$inline =~ s/\s+/ /g;
@@ -131,7 +134,8 @@ while ($inline = <IN_DH>) {
 		
 		# Check for correct format
 		if ($#tmp_arguments+1 != 4) {
-			die "\t-E-\t Wrong number of arguments for BLE instruction. Given $#tmp_arguments, spected: 3\t Line: <$line_counter> \n";
+			print "\t-E-\t Wrong number of arguments for BLE instruction. Given $#tmp_arguments, spected: 3\t Line: <$line_counter> \n";
+			exit;
 		}
 		
 		# Include NOP code in instructions
@@ -147,8 +151,8 @@ while ($inline = <IN_DH>) {
 	elsif ($inline =~ /^STO/) {
 		# Obtain comments and  save them in tmp_comment
 		$tmp_comment = $inline;
-		$tmp_comment =~ s/^.*\s*\\\\// or $tmp_comment =~ s/.*//; # Added in case there is no comments
-		$inline =~ s/\s*\\\\.*//;
+		$tmp_comment =~ s/^.*\s*\/\/// or $tmp_comment =~ s/.*//; # Added in case there is no comments
+		$inline =~ s/\s*\/\/.*//;
 		
 		# Format different spaces to just one space 
 		$inline =~ s/\s+/ /g;
@@ -158,7 +162,8 @@ while ($inline = <IN_DH>) {
 		
 		# Check for correct format
 		if ($#tmp_arguments+1 != 3) {
-			die "\t-E-\t Wrong number of arguments for STO instruction. Given $#tmp_arguments, spected: 2 \t Line: <$line_counter>";
+			print "\t-E-\t Wrong number of arguments for STO instruction. Given $#tmp_arguments, spected: 2 \t Line: <$line_counter> \n";
+			exit;
 		}
 		
 		# Include NOP code in instructions
@@ -174,8 +179,8 @@ while ($inline = <IN_DH>) {
 	elsif ($inline =~ /^ADD/) {
 		# Obtain comments and  save them in tmp_comment
 		$tmp_comment = $inline;
-		$tmp_comment =~ s/^.*\s*\\\\// or $tmp_comment =~ s/.*//; # Added in case there is no comments
-		$inline =~ s/\s*\\\\.*//;
+		$tmp_comment =~ s/^.*\s*\/\/// or $tmp_comment =~ s/.*//; # Added in case there is no comments
+		$inline =~ s/\s*\/\/.*//;
 		
 		# Format different spaces to just one space 
 		$inline =~ s/\s+/ /g;
@@ -185,7 +190,8 @@ while ($inline = <IN_DH>) {
 		
 		# Check for correct format
 		if ($#tmp_arguments+1 != 4) {
-			die "\t-E-\t Wrong number of arguments for ADD instruction. Given $#tmp_arguments, spected: 3 \t Line: <$line_counter>";
+			print "\t-E-\t Wrong number of arguments for ADD instruction. Given $#tmp_arguments, spected: 3 \t Line: <$line_counter> \n";
+			exit;
 		}
 		
 		# Include NOP code in instructions
@@ -201,8 +207,8 @@ while ($inline = <IN_DH>) {
 	elsif ($inline =~ /^SUB/) {
 		# Obtain comments and  save them in tmp_comment
 		$tmp_comment = $inline;
-		$tmp_comment =~ s/^.*\s*\\\\// or $tmp_comment =~ s/.*//; # Added in case there is no comments
-		$inline =~ s/\s*\\\\.*//;
+		$tmp_comment =~ s/^.*\s*\/\/// or $tmp_comment =~ s/.*//; # Added in case there is no comments
+		$inline =~ s/\s*\/\/.*//;
 		
 		# Format different spaces to just one space 
 		$inline =~ s/\s+/ /g;
@@ -212,7 +218,8 @@ while ($inline = <IN_DH>) {
 		
 		# Check for correct format
 		if ($#tmp_arguments+1 != 4) {
-			die "\t-E-\t Wrong number of arguments for SUB instruction. Given $#tmp_arguments, spected: 3 \t Line: <$line_counter>";
+			print "\t-E-\t Wrong number of arguments for SUB instruction. Given $#tmp_arguments, spected: 3 \t Line: <$line_counter> \n";
+			exit;
 		}
 		
 		# Include NOP code in instructions
@@ -228,8 +235,8 @@ while ($inline = <IN_DH>) {
 	elsif ($inline =~ /^JMP/) {
 		# Obtain comments and  save them in tmp_comment
 		$tmp_comment = $inline;
-		$tmp_comment =~ s/^.*\s*\\\\// or $tmp_comment =~ s/.*//; # Added in case there is no comments
-		$inline =~ s/\s*\\\\.*//;
+		$tmp_comment =~ s/^.*\s*\/\/// or $tmp_comment =~ s/.*//; # Added in case there is no comments
+		$inline =~ s/\s*\/\/.*//;
 		
 		# Format different spaces to just one space 
 		$inline =~ s/\s+/ /g;
@@ -239,7 +246,8 @@ while ($inline = <IN_DH>) {
 		
 		# Check for correct format
 		if ($#tmp_arguments+1 != 2) {
-			die "\t-E-\t Wrong number of arguments for JMP instruction. Given $#tmp_arguments, spected: 1 \t Line: <$line_counter>";
+			print "\t-E-\t Wrong number of arguments for JMP instruction. Given $#tmp_arguments, spected: 1 \t Line: <$line_counter> \n";
+			exit;
 		}
 		
 		# Include NOP code in instructions
@@ -247,7 +255,7 @@ while ($inline = <IN_DH>) {
 		# Increase instruction counter
 		$inst_counter++;
 		# Add comments
-		$instructions .= ($tmp_comment) ? " \\\\ $tmp_comment \n": "\n" ;
+		$instructions .= ($tmp_comment) ? " // $tmp_comment \n": "\n" ;
 		# Next line
 		next;
 	} 
@@ -308,7 +316,7 @@ endmodule
 ######### SUBROUTINES
 ########################################################################
 
-# Verbose printing subroutine
+# Verbose printing subroutine (Verbose enables a more detailed print)
 sub myprint {
 	# Get string to print
 	my $tmp_string = shift;
