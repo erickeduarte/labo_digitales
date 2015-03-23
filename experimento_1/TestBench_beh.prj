@@ -1,6 +1,0 @@
-verilog work "inputs/RAM.v"
-verilog work "inputs/Module_ROM.v"
-verilog work "inputs/Collaterals.v"
-verilog work "inputs/MiniAlu.v"
-verilog work "inputs/TestBench.v"
-verilog work "/opt/Xilinx/14.4/ISE_DS/ISE//verilog/src/glbl.v"
