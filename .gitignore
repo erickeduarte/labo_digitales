@@ -22,4 +22,5 @@
 *.map 
 *.ngd 
 *.stx 
-*.prj
+*.prj*
+experimento_1/isim

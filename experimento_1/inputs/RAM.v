@@ -16,13 +16,11 @@ reg [DATA_WIDTH-1:0] Ram [MEM_SIZE:0];
 
 always @(posedge Clock) 
 begin 
+	oDataOut0 <=  ((iWriteAddress == iReadAddress0) && iWriteEnable) ? iDataIn : Ram[iReadAddress0]; 
+	oDataOut1 <=  ((iWriteAddress == iReadAddress1) && iWriteEnable) ? iDataIn : Ram[iReadAddress1]; 
 	
-		if (iWriteEnable) 
-			Ram[iWriteAddress] <= iDataIn; 
-			
-	
-			oDataOut0 <= Ram[iReadAddress0]; 
-			oDataOut1 <= Ram[iReadAddress1]; 
+	if (iWriteEnable) 
+		Ram[iWriteAddress] <=  iDataIn; 
 		
 end 
 endmodule
