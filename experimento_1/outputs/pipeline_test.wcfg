@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="15" />
+   <WVObjectSize size="20" />
    <wvobject fp_name="/TestBench/Clock" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">Clock</obj_property>
       <obj_property name="ObjectShortName">Clock</obj_property>
@@ -24,12 +24,6 @@
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="BkColor">128 128 255</obj_property>
       <obj_property name="TextColor">230 230 230</obj_property>
-   </wvobject>
-   <wvobject fp_name="/TestBench/uut/wInstruction" type="array" db_ref_id="1">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">wInstruction[27:0]</obj_property>
-      <obj_property name="ObjectShortName">wInstruction[27:0]</obj_property>
-      <obj_property name="label">wInstruction[27:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/TestBench/uut/wOperation" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">wOperation[3:0]</obj_property>
@@ -48,35 +42,63 @@
    <wvobject fp_name="/TestBench/uut/rResult" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">rResult[15:0]</obj_property>
       <obj_property name="ObjectShortName">rResult[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/TestBench/uut/wSourceData0" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">wSourceData0[15:0]</obj_property>
       <obj_property name="ObjectShortName">wSourceData0[15:0]</obj_property>
+      <obj_property name="label">wSourceData0[15:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/TestBench/uut/wSourceData1" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">wSourceData1[15:0]</obj_property>
       <obj_property name="ObjectShortName">wSourceData1[15:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="divider19" type="divider">
-      <obj_property name="label">Flags</obj_property>
+   <wvobject fp_name="divider16" type="divider">
+      <obj_property name="label">RAM</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="BkColor">128 128 255</obj_property>
       <obj_property name="TextColor">230 230 230</obj_property>
    </wvobject>
-   <wvobject fp_name="/TestBench/uut/wReadLastValueData0" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">wReadLastValueData0</obj_property>
-      <obj_property name="ObjectShortName">wReadLastValueData0</obj_property>
+   <wvobject fp_name="/TestBench/uut/DataRam/Ram[0]" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">[0,15:0]</obj_property>
+      <obj_property name="ObjectShortName">Ram[0,15:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/TestBench/uut/wReadLastValueData1" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">wReadLastValueData1</obj_property>
-      <obj_property name="ObjectShortName">wReadLastValueData1</obj_property>
+   <wvobject fp_name="/TestBench/uut/DataRam/iWriteEnable" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">iWriteEnable</obj_property>
+      <obj_property name="ObjectShortName">iWriteEnable</obj_property>
    </wvobject>
-   <wvobject fp_name="/TestBench/uut/wRealSourceData1" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">wRealSourceData1[15:0]</obj_property>
-      <obj_property name="ObjectShortName">wRealSourceData1[15:0]</obj_property>
+   <wvobject fp_name="/TestBench/uut/DataRam/iDataIn" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">iDataIn[15:0]</obj_property>
+      <obj_property name="ObjectShortName">iDataIn[15:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/TestBench/uut/wRealSourceData0" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">wRealSourceData0[15:0]</obj_property>
-      <obj_property name="ObjectShortName">wRealSourceData0[15:0]</obj_property>
+   <wvobject fp_name="/TestBench/uut/DataRam/oDataOut0" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">oDataOut0[15:0]</obj_property>
+      <obj_property name="ObjectShortName">oDataOut0[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/DataRam/oDataOut1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">oDataOut1[15:0]</obj_property>
+      <obj_property name="ObjectShortName">oDataOut1[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/DataRam/flag_add0" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">flag_add0</obj_property>
+      <obj_property name="ObjectShortName">flag_add0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/DataRam/flag_add1" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">flag_add1</obj_property>
+      <obj_property name="ObjectShortName">flag_add1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/DataRam/iReadAddress0" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">iReadAddress0[7:0]</obj_property>
+      <obj_property name="ObjectShortName">iReadAddress0[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/DataRam/iReadAddress1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">iReadAddress1[7:0]</obj_property>
+      <obj_property name="ObjectShortName">iReadAddress1[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/DataRam/iWriteAddress" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">iWriteAddress[7:0]</obj_property>
+      <obj_property name="ObjectShortName">iWriteAddress[7:0]</obj_property>
    </wvobject>
 </wave_config>

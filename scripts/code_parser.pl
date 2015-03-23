@@ -115,7 +115,7 @@ while ($inline = <IN_DH>) {
 		# Increase counter
 		$inst_counter++;
 		# Add comments
-		$instructions .= ($tmp_comment) ? " \\\\ $tmp_comment \n": "\n" ;
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
 		# Next line
 		next;
 	}
@@ -143,7 +143,7 @@ while ($inline = <IN_DH>) {
 		# Increase counter
 		$inst_counter++;
 		# Add comments
-		$instructions .= ($tmp_comment) ? " \\\\ $tmp_comment \n": "\n" ;
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
 		# Next line
 		next;
 	} 
@@ -171,7 +171,7 @@ while ($inline = <IN_DH>) {
 		# Increase instruction counter
 		$inst_counter++;
 		# Add comments
-		$instructions .= ($tmp_comment) ? " \\\\ $tmp_comment \n": "\n" ;
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
 		# Next line
 		next;
 	} 
@@ -199,7 +199,7 @@ while ($inline = <IN_DH>) {
 		# Increase instruction counter
 		$inst_counter++;
 		# Add comments
-		$instructions .= ($tmp_comment) ? " \\\\ $tmp_comment \n": "\n" ;
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
 		# Next line
 		next;
 	} 
@@ -227,7 +227,7 @@ while ($inline = <IN_DH>) {
 		# Increase instruction counter
 		$inst_counter++;
 		# Add comments
-		$instructions .= ($tmp_comment) ? " \\\\ $tmp_comment \n": "\n" ;
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
 		# Next line
 		next;
 	} 
@@ -255,7 +255,7 @@ while ($inline = <IN_DH>) {
 		# Increase instruction counter
 		$inst_counter++;
 		# Add comments
-		$instructions .= ($tmp_comment) ? " // $tmp_comment \n": "\n" ;
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
 		# Next line
 		next;
 	} 

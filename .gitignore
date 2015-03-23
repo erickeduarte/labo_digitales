@@ -1,3 +1,4 @@
+*.xreport
 *.o
 *.didat
 *.c
