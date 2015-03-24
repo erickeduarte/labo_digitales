@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 
 # ---- File: code_parser.pl 
-# ---- By: Fabian Melendez - fabmelb@gmail.com
 # ------- 
 # ------- This script parses code files and outputs a ROM module definition
 # ------- when an output file is specified. Else, it outputs through STDOUT

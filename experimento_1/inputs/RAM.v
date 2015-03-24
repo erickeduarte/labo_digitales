@@ -12,10 +12,13 @@ module RAM_DUAL_READ_PORT # ( parameter DATA_WIDTH= 16, parameter ADDR_WIDTH=8, 
 	output reg [DATA_WIDTH-1:0] 		oDataOut1
 );
 
-reg [DATA_WIDTH-1:0] Ram [MEM_SIZE:0];		
+reg [DATA_WIDTH-1:0] Ram [MEM_SIZE-1:0];		
 
 always @(posedge Clock) 
 begin 
+	//////// FIX for PIPELINE
+	//In case we try to read the value we are being told to write, give that value back
+	// Else, just give the data stored
 	oDataOut0 <=  ((iWriteAddress == iReadAddress0) && iWriteEnable) ? iDataIn : Ram[iReadAddress0]; 
 	oDataOut1 <=  ((iWriteAddress == iReadAddress1) && iWriteEnable) ? iDataIn : Ram[iReadAddress1]; 
 	
