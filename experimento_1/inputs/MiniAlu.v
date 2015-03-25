@@ -1,4 +1,3 @@
-
 `timescale 1ns / 1ps
 `include "Defintions.v"
 
@@ -97,11 +96,16 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 	.Q( oLed    )
 );
 
+
+////////////////////////////////////////////////////////////////////////
+/////// InmediateValue is taken directly from SourceAddr1 and SourceAddr2
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
+////////////////////////////////////////////////////////////////////////
+/////// FOR THE ADD/SUB
 assign wSourceData0_tmp = (rDoComplement) ? -wSourceData0 : wSourceData0;
 assign wAddSubResult = wSourceData1 + wSourceData0_tmp;
-
+////////////////////////////////////////////////////////////////////////
 
 always @ ( * )
 begin
@@ -113,7 +117,7 @@ begin
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b0;
 		rDoComplement <= 1'b0;
-		rResult      <= 0;
+		rResult      <= 16'b0;
 	end
 	//-------------------------------------
 	`ADD:
