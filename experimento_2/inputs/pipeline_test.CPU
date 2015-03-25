@@ -1,0 +1,18 @@
+define NUM1 8'b0
+define NUM2 8'b1
+
+STO `NUM1 16'b0
+STO `NUM2 16'b1
+NOP
+NOP
+// Loop1
+define LOOP1 8'd0
+ADD `NUM1 	`NUM1	`NUM2 // Suma de NUM1 y NUM2 en NUM1
+NOP
+NOP
+NOP
+ADD `NUM1 	`NUM1	`NUM2 // Misma operación
+JMP `LOOP1
+
+
+
