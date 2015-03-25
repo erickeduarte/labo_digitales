@@ -9,12 +9,12 @@ module MiniAlu
  output wire [7:0] oLed
 );
 
-wire [15:0]  wIP,wIP_temp;
+wire [15:0] wIP,wIP_temp;
 reg         rWriteEnable,rBranchTaken,rDoComplement;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
-reg [15:0]   rResult;
-wire [15:0]   wAddSubResult;
+reg  [15:0] rResult;
+wire [15:0] wAddSubResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData0_tmp,wSourceData1,wIPInitialValue,wImmediateValue;
 
@@ -107,7 +107,7 @@ assign wAddSubResult = wSourceData1 + wSourceData0_tmp;
 
 ////////////////////////////////////////////////////////////////////////
 /////// SMUL
-wire  signed[15:0] wSSourceData0,wSSourceData1 //entradas con signo
+wire  signed[15:0] wSSourceData0,wSSourceData1; //entradas con signo
 assign  wSSourceData0 =  wSourceData0;
 assign  wSSourceData1 =  wSourceData1;
 ////////////////////////////////////////////////////////////////////////
@@ -117,14 +117,14 @@ assign  wSSourceData1 =  wSourceData1;
 wire [7:0] wResult;
 wire [5:0] wCarry;
 
-assign wResult[0]    				<= wSourceData0[0]&wSourceData1[0];
-assign{wCarry[0], wResult[1]}    	<= wSourceData0[1]& wSourceData1[0]+wSourceData0[0]&wSourceData1[1];  
-assign{wCarry[1], wResult[2]}    	<= wSourceData0[2]& wSourceData1[0]+wSourceData0[1]&wSourceData1[1]+wSourceData0[0]&wSourceData1[2]+wCarry[0];
-assign{wCarry[2], wResult[3]}    	<= wSourceData0[3]& wSourceData1[0]+wSourceData0[2]&wSourceData1[1]+wSourceData0[1]&wSourceData1[2]+wSourceData0[0]&wSourceData1[3]+wCarry[1];
-assign{wCarry[3], wResult[4]}    	<= wSourceData0[3]& wB[1]+wSourceData0[2]&wSourceData1[2]+wSourceData0[1]&wSourceData1[3]+wCarry[2];
-assign{wCarry[4], wResult[5]}    	<= wSourceData0[3]& wSourceData1[2]+wSourceData0[2]&wSourceData1[3]+wCarry[3];
-assign{wCarry[5], wResult[6]}		<= wSourceData0[3]& wSourceData1[3]+wCarry[4];
-assign wResult[7]     	 			<= wCarry[5];
+assign wResult[0]    				= wSourceData0[0]&wSourceData1[0];
+assign{wCarry[0], wResult[1]}    = wSourceData0[1]& wSourceData1[0]+wSourceData0[0]&wSourceData1[1];  
+assign{wCarry[1], wResult[2]}    = wSourceData0[2]& wSourceData1[0]+wSourceData0[1]&wSourceData1[1]+wSourceData0[0]&wSourceData1[2]+wCarry[0];
+assign{wCarry[2], wResult[3]}    = wSourceData0[3]& wSourceData1[0]+wSourceData0[2]&wSourceData1[1]+wSourceData0[1]&wSourceData1[2]+wSourceData0[0]&wSourceData1[3]+wCarry[1];
+assign{wCarry[3], wResult[4]}    = wSourceData0[3]& wSourceData1[1]+wSourceData0[2]&wSourceData1[2]+wSourceData0[1]&wSourceData1[3]+wCarry[2];
+assign{wCarry[4], wResult[5]}    = wSourceData0[3]& wSourceData1[2]+wSourceData0[2]&wSourceData1[3]+wCarry[3];
+assign{wCarry[5], wResult[6]}		= wSourceData0[3]& wSourceData1[3]+wCarry[4];
+assign wResult[7]     	 			= wCarry[5];
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -134,16 +134,15 @@ wire [15:0] LUT_Mult_Result; // LUT multiplication output
 
 LUT_MULT lut_mult
 (
-iData_A(wSourceData2),
-iData_B(wSourceData1),
-oResult(LUT_Mult_Result)
+.iData_A(wSourceData1),
+.iData_B(wSourceData0),
+.oResult(LUT_Mult_Result)
 );
 ////////////////////////////////////////////////////////////////////////
 
 
 
 always @ ( * )
-begin
 	case (wOperation)
 	//-------------------------------------
 	`NOP:
@@ -262,7 +261,5 @@ begin
 	end	
 	//-------------------------------------	
 	endcase	
-end
-
 
 endmodule
