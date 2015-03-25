@@ -1,32 +1,36 @@
+
 `timescale 1ns / 1ps
 `include "Defintions.v"
-
-`define NUM1 8'd0 
-`define NUM2 8'd1 
-`define LOOP1 8'd3 
+`define 	SIGUE1	7 
+`define SIGUE 14 
 
 module ROM
 (
 	input  wire[15:0]  		iAddress,
 	output reg [27:0] 		oInstruction
 );	
-
 always @ ( iAddress )
 begin
 	case (iAddress)
-	0: oInstruction = { `STO , `NUM1, 16'b0};
-	1: oInstruction = { `STO , `NUM2, 16'b1};
-	2: oInstruction = { `STO , `NUM1, 16'b0};
-	3: oInstruction = { `NOP ,	24'd0000	};
-	4: oInstruction = { `ADD , `NUM1, `NUM2, `NUM1}; //  Suma de NUM1 y NUM2 en NUM1 
-	5: oInstruction = { `ADD , `NUM1, `NUM2, `NUM1}; //  Misma operación 
-	6: oInstruction = { `ADD , `NUM1, `NUM2, `NUM1}; //  Misma operación 
-	7: oInstruction = { `JMP , `LOOP1, 16'd0 };
-
-
-
-
 	
+	0: oInstruction = { `NOP ,	24'd4000	};
+	1: oInstruction = { `STO , `R2, 16'd65000};
+	2: oInstruction = { `STO , `R1, 16'd1};
+	3: oInstruction = { `STO , `R7, 16'd5};
+	4: oInstruction = { `STO , `R6, 16'd4};
+	5: oInstruction = { `MUL , `R5, `R6, `R7 };
+	6: oInstruction = { `LED ,	8'b0, `R5, 8'b0 };
+	7: oInstruction = { `ADD , `R3, `R1, `R3};
+	8: oInstruction = { `BLE , `SIGUE1, `R1, `R2};
+	9: oInstruction = { `STO , `R7, 16'd5};
+	10: oInstruction = { `STO , `R6, 16'd4};
+	11: oInstruction = { `MUL , `R5, `R6, `R7 };
+	12: oInstruction = { `LED ,	8'b0, `R5, 8'b0 };
+	13: oInstruction = { `ADD , `R3, `R1, `R3};
+	14: oInstruction = { `BLE , `SIGUE, `R1, `R2};
+	15: oInstruction = { `SMUL , `R5, `R6, `R7 };
+
+
 	default:
 		oInstruction = { `LED ,  24'b10101010 };		//NOP
 	endcase	
