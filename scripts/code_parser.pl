@@ -258,6 +258,85 @@ while ($inline = <IN_DH>) {
 		# Next line
 		next;
 	} 
+	# For MUL
+	elsif ($inline =~ /^MUL/) {
+		set_vars();
+		
+		# Check for correct format
+		if ($#tmp_arguments != 3) {
+			print "\t-E-\t Wrong number of arguments for MUL instruction. Given $#tmp_arguments, spected: 2 \t Line: <$line_counter> \n";
+			exit;
+		}
+		
+		# Include MUL code in instructions
+		$instructions .= "\t$inst_counter: oInstruction = { `MUL , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3] };";
+		# Increase instruction counter
+		$inst_counter++;
+		# Add comments
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
+		# Next line
+		next;
+	} 
+	# For SMUL
+	elsif ($inline =~ /^SMUL/) {
+		# Set and clean $tmp_comment, $inline 
+		set_vars();
+		
+		# Check for correct format
+		if ($#tmp_arguments != 3) {
+			print "\t-E-\t Wrong number of arguments for SMUL instruction. Given $#tmp_arguments, spected: 3 \t Line: <$line_counter> \n";
+			exit;
+		}
+		
+		# Include MUL code in instructions
+		$instructions .= "\t$inst_counter: oInstruction = { `SMUL , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3] };";
+		# Increase instruction counter
+		$inst_counter++;
+		# Add comments
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
+		# Next line
+		next;
+	} 
+	# For IMUL
+	elsif ($inline =~ /^IMUL\s/) {
+		# Set and clean $tmp_comment, $inline 
+		set_vars();
+		
+		# Check for correct format
+		if ($#tmp_arguments != 3) {
+			print "\t-E-\t Wrong number of arguments for IMUL instruction. Given $#tmp_arguments, spected: 3 \t Line: <$line_counter> \n";
+			exit;
+		}
+		
+		# Include MUL code in instructions
+		$instructions .= "\t$inst_counter: oInstruction = { `IMUL , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3] };";
+		# Increase instruction counter
+		$inst_counter++;
+		# Add comments
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
+		# Next line
+		next;
+	} 
+	# For IMUL2
+	elsif ($inline =~ /^IMUL2\s/) {
+		# Set and clean $tmp_comment, $inline 
+		set_vars();
+		
+		# Check for correct format
+		if ($#tmp_arguments != 3) {
+			print "\t-E-\t Wrong number of arguments for IMUL instruction. Given $#tmp_arguments, spected: 3 \t Line: <$line_counter> \n";
+			exit;
+		}
+		
+		# Include MUL code in instructions
+		$instructions .= "\t$inst_counter: oInstruction = { `IMUL2 , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3] };";
+		# Increase instruction counter
+		$inst_counter++;
+		# Add comments
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
+		# Next line
+		next;
+	} 
 }
 # Done with input file.
 close(IN_DH);
@@ -323,4 +402,16 @@ sub myprint {
 	$verbose and print "$tmp_string \n";
 }
 
+sub set_vars {
+	# Obtain comments and  save them in tmp_comment
+	$tmp_comment = $inline;
+	$tmp_comment =~ s/^.*\s*\/\/// or $tmp_comment =~ s/.*//; # Added in case there is no comments
+	$inline =~ s/\s*\/\/.*//;
+	
+	# Format different spaces to just one space 
+	$inline =~ s/\s+/ /g;
+	
+	# Obtain arguments spliting by space
+	@tmp_arguments = split(' ', $inline);
+}
 
