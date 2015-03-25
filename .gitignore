@@ -25,3 +25,6 @@
 *.stx 
 *.prj*
 experimento_1/isim
+*.ipf
+*.xsl
+*.xwbt
