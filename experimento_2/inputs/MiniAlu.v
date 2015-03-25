@@ -7,8 +7,6 @@ module MiniAlu
  input wire Clock,
  input wire Reset,
  output wire [7:0] oLed
-
- 
 );
 
 wire [15:0]  wIP,wIP_temp;
@@ -107,6 +105,43 @@ assign wSourceData0_tmp = (rDoComplement) ? -wSourceData0 : wSourceData0;
 assign wAddSubResult = wSourceData1 + wSourceData0_tmp;
 ////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////
+/////// SMUL
+wire  signed[15:0] wSSourceData0,wSSourceData1 //entradas con signo
+assign  wSSourceData0 =  wSourceData0;
+assign  wSSourceData1 =  wSourceData1;
+////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////
+////// IMUL
+wire [7:0] wResult;
+wire [5:0] wCarry;
+
+assign wResult[0]    				<= wSourceData0[0]&wSourceData1[0];
+assign{wCarry[0], wResult[1]}    	<= wSourceData0[1]& wSourceData1[0]+wSourceData0[0]&wSourceData1[1];  
+assign{wCarry[1], wResult[2]}    	<= wSourceData0[2]& wSourceData1[0]+wSourceData0[1]&wSourceData1[1]+wSourceData0[0]&wSourceData1[2]+wCarry[0];
+assign{wCarry[2], wResult[3]}    	<= wSourceData0[3]& wSourceData1[0]+wSourceData0[2]&wSourceData1[1]+wSourceData0[1]&wSourceData1[2]+wSourceData0[0]&wSourceData1[3]+wCarry[1];
+assign{wCarry[3], wResult[4]}    	<= wSourceData0[3]& wB[1]+wSourceData0[2]&wSourceData1[2]+wSourceData0[1]&wSourceData1[3]+wCarry[2];
+assign{wCarry[4], wResult[5]}    	<= wSourceData0[3]& wSourceData1[2]+wSourceData0[2]&wSourceData1[3]+wCarry[3];
+assign{wCarry[5], wResult[6]}		<= wSourceData0[3]& wSourceData1[3]+wCarry[4];
+assign wResult[7]     	 			<= wCarry[5];
+
+////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////
+/////// IMUL2
+wire [15:0] LUT_Mult_Result; // LUT multiplication output
+
+LUT_MULT lut_mult
+(
+iData_A(wSourceData2),
+iData_B(wSourceData1),
+oResult(LUT_Mult_Result)
+);
+////////////////////////////////////////////////////////////////////////
+
+
+
 always @ ( * )
 begin
 	case (wOperation)
@@ -179,6 +214,44 @@ begin
 		rDoComplement <= 1'b0;
 	end
 	//-------------------------------------
+	`MUL:
+	begin
+		rFFLedEN     <= 1'b0;
+		rBranchTaken <= 1'b0;
+		rWriteEnable <= 1'b1;
+		rDoComplement <= 1'b0;
+		rResult      <= wSourceData1 * wSourceData0; //multiplicacion        
+	end
+	//-------------------------------------
+	`SMUL:
+	begin
+		rFFLedEN     <= 1'b0;
+		rBranchTaken <= 1'b0;
+		rWriteEnable <= 1'b1;
+		rDoComplement <= 1'b0;
+		rResult      <= wSSourceData1 * wSSourceData0; //nuevas entradas para rResult
+	end
+	//-------------------------------------
+	`IMUL:
+	begin
+		rFFLedEN     <= 1'b0;
+		rBranchTaken <= 1'b0;
+		rWriteEnable <= 1'b1;
+		rDoComplement <= 1'b0; // No need for complement first argument
+        rResult[15:8]  <= 8'd0; //Bits no utilizados de rResult van a 0
+		rResult[7:0]   <= wResult; //Asignacion del resultado de la multiplicacion a rResult    
+	end
+	//-------------------------------------
+	`IMUL2: // LUT multiplication
+		begin
+			rFFLedEN     <= 1'b0;
+			rBranchTaken <= 1'b0;
+			rDoComplement <= 1'b0;
+			rWriteEnable <= 1'b1; // Write output to RAM
+			rResult      <= LUT_Mult_Result; // Asign result to output of LUT multiplication module
+		end
+	//-------------------------------------
+	
 	default:
 	begin
 		rFFLedEN     <= 1'b1;
