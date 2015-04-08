@@ -337,6 +337,26 @@ while ($inline = <IN_DH>) {
 		# Next line
 		next;
 	} 
+	# For LMUL
+	elsif ($inline =~ /^LMUL\s/) {
+		# Set and clean $tmp_comment, $inline 
+		set_vars();
+		
+		# Check for correct format
+		if ($#tmp_arguments != 3) {
+			print "\t-E-\t Wrong number of arguments for LMUL instruction. Given $#tmp_arguments, spected: 3 \t Line: <$line_counter> \n";
+			exit;
+		}
+		
+		# Include MUL code in instructions
+		$instructions .= "\t$inst_counter: oInstruction = { `LMUL , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3] };";
+		# Increase instruction counter
+		$inst_counter++;
+		# Add comments
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
+		# Next line
+		next;
+	} 
 }
 # Done with input file.
 close(IN_DH);

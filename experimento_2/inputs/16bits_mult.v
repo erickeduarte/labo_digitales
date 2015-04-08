@@ -1,11 +1,11 @@
 `define MAX_ROWS 16 
 `define MAX_COLS 16 
 
-module UPCOUNTER_POSEDGE # (parameter SIZE=16)
+module LMUL 
 (
-input wire  iData_A [15:0];
-input wire  iData_B [15:0];
-output wire oResult [31:0];
+input wire [15:0] iData_A ,
+input wire [15:0] iData_B ,
+output wire [31:0] oResult 
 );
 
 
@@ -15,9 +15,9 @@ wire[15:0] wPartial_Results[14:0];
 	genvar CurrentRow, CurrentCol;
 	generate
 	for ( CurrentCol = 0; CurrentCol < `MAX_COLS; CurrentCol = CurrentCol + 1)
-		begin : MUL_ROW
-			for ( CurrentRow = 0; CurrentRow < `MAX_ROWS -1; CurrentRow = CurrentCol + 1)
-				begin
+		begin : MUL_COL
+			for ( CurrentRow = 0; CurrentRow < `MAX_ROWS -1; CurrentRow = CurrentRow + 1)
+				begin : MUL_ROW
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					// Case for the first row 
 					if(CurrentRow == 0)
@@ -51,10 +51,11 @@ wire[15:0] wPartial_Results[14:0];
 									// First element of row
 									MODULE_ADDER MyAdder
 									(
-										.A(iData_B[CurrentRow] & iData_A[CurrentCol+1]),
-										.B(iData_B[CurrentRow+1] & iData_A[CurrentCol]),
-										.Ci( wCarry[ CurrentRow ][ CurrentCol-1 ] ),
-										.Co( wCarry[ CurrentRow ][ CurrentCol]),
+										.iData_A(iData_B[CurrentRow] & iData_A[CurrentCol+1]),
+										.iData_B(iData_B[CurrentRow+1] & iData_A[CurrentCol]),
+										.iData_Ci( wCarry[ CurrentRow ][ CurrentCol-1 ] ),
+										.oData_Co( wCarry[ CurrentRow ][ CurrentCol]),
+										.oPartialResult( wPartial_Results[CurrentRow][CurrentCol])
 									);
 								end
 						end
@@ -101,10 +102,11 @@ wire[15:0] wPartial_Results[14:0];
 						end
 						
 				end
-			assign oResult [CurrentCol+1] = wPartial_Results[CurrentCol][0]; 	
-			if(CurrentCol < `MAX_ROWS-2) {
-				assign oResult [CurrentCol+17] = wPartial_Results[`MAX_ROWS - 2][CurrentCol+1];
-			}
+			if(CurrentCol < 15)
+				begin
+					assign oResult [CurrentCol+1] = wPartial_Results[CurrentCol][0]; 	
+					assign oResult [CurrentCol+16] = wPartial_Results[`MAX_ROWS - 2][CurrentCol+1];
+				end
 		end
 				
 	endgenerate

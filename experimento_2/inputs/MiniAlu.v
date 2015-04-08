@@ -144,6 +144,17 @@ LUT_MULT lut_mult
 );
 ////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////
+///// LMUL
+wire [31:0] wLMUL_result;
+
+LMUL lmul
+(
+.iData_A(wSourceData1),
+.iData_B(wSourceData0),
+.oResult(wLMUL_result)
+);
+////////////////////////////////////////////////////////////////////////
 
 
 always @ ( * )
@@ -274,6 +285,17 @@ always @ ( * )
 			rWriteEnable1 <= 1'b0;
 			rResult0      <= LUT_Mult_Result; // Asign result to output of LUT multiplication module
 			rResult1      <= 0;
+		end
+	//-------------------------------------
+	`LMUL:
+		begin
+			rFFLedEN      <= 1'b0;
+			rBranchTaken  <= 1'b0;
+			rDoComplement <= 1'b0;
+			rWriteEnable0 <= 1'b1; // Write output to RAM
+			rWriteEnable1 <= 1'b1; // Write 32 bits output to RAM 
+			rResult0      <= wLMUL_result[15:0]; // Asign result to output of LUT multiplication module
+			rResult1      <= wLMUL_result[31:16]; // Asign result to output of LUT multiplication module
 		end
 	//-------------------------------------
 	

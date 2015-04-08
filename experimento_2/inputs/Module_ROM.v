@@ -12,9 +12,9 @@ begin
 	case (iAddress)
 	
 	0: oInstruction = { `NOP ,	24'd4000	};
-	1: oInstruction = { `STO , `R1, 16'd8};
-	2: oInstruction = { `STO , `R7, 16'd5};
-	3: oInstruction = { `IMUL2 , `R1, `R1, `R7 }; //  Multiplicacion de 8*5 
+	1: oInstruction = { `STO , `R1, 16'd21896};
+	2: oInstruction = { `STO , `R7, 16'd64677};
+	3: oInstruction = { `LMUL , `R1, `R1, `R7 }; //  Multiplicacion de 8*5 
 
 
 	default:

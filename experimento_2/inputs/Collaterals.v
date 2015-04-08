@@ -47,6 +47,14 @@ end//always
 
 endmodule
 
+module MODULE_ADDER (
+	input wire iData_A, iData_B, iData_Ci, 
+	output wire oData_Co, oPartialResult
+);
+
+assign {oData_Co, oPartialResult} = iData_A + iData_B + iData_Ci;
+
+endmodule
 
 //----------------------------------------------------------------------
 

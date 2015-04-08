@@ -57,3 +57,6 @@ experimento_1/isim
 *.log
 *.xml
 *.cmd
+*.ngc
+*.ngr
+*.syr
