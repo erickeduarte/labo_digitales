@@ -10,10 +10,11 @@ module MiniAlu
 );
 
 wire [15:0] wIP,wIP_temp;
-reg         rWriteEnable,rBranchTaken,rDoComplement;
+reg         rWriteEnable0, rWriteEnable1, rBranchTaken, rDoComplement;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
-reg  [15:0] rResult;
+reg  [15:0] rResult0;
+reg  [15:0] rResult1;
 wire [15:0] wAddSubResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData0_tmp,wSourceData1,wIPInitialValue,wImmediateValue;
@@ -24,16 +25,19 @@ ROM InstructionRom
 	.oInstruction( wInstruction )
 );
 
-RAM_DUAL_READ_PORT DataRam
+RAM_DUAL_RW_PORT DataRam
 (
 	.Clock(         Clock        ),
-	.iWriteEnable(  rWriteEnable ),
+	.iWriteEnable0(  rWriteEnable0 ),
+	.iWriteEnable1(  rWriteEnable1 ),
 	.iReadAddress0( wInstruction[7:0] ),
 	.iReadAddress1( wInstruction[15:8] ),
-	.iWriteAddress( wDestination ),
-	.iDataIn(       rResult      ),
-	.oDataOut0(     wSourceData0 ),
-	.oDataOut1(     wSourceData1 )
+	.iWriteAddress0( wDestination ),
+	.iWriteAddress1( wDestination+1 ),
+	.iDataIn0  (       rResult0   ),
+	.iDataIn1  (       rResult1   ),
+	.oDataOut0 (     wSourceData0 ),
+	.oDataOut1 (     wSourceData1 )
 );
 
 assign wIPInitialValue = (Reset) ? 8'b0 : wDestination;
@@ -98,7 +102,7 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 ////////////////////////////////////////////////////////////////////////
 /////// InmediateValue is taken directly from SourceAddr1 and SourceAddr2
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
-
+//
 ////////////////////////////////////////////////////////////////////////
 /////// FOR THE ADD/SUB
 assign wSourceData0_tmp = (rDoComplement) ? -wSourceData0 : wSourceData0;
@@ -149,44 +153,54 @@ always @ ( * )
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rWriteEnable <= 1'b0;
+		rWriteEnable0 <= 1'b0;
+		rWriteEnable1 <= 1'b0;
 		rDoComplement <= 1'b0;
-		rResult      <= 16'b0;
+		rResult0      <= 0;
+		rResult1      <= 0;
 	end
 	//-------------------------------------
 	`ADD:
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rWriteEnable <= 1'b1;
+		rWriteEnable0 <= 1'b1;
+		rWriteEnable1 <= 1'b0;
 		rDoComplement <= 1'b0;
-		rResult      <= wAddSubResult;
+		rResult0      <= wAddSubResult;
+		rResult1      <= 0;
 	end
 		//-------------------------------------
 	`SUB:
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rWriteEnable <= 1'b1;
+		rWriteEnable0 <= 1'b1;
+		rWriteEnable1 <= 1'b0;
 		rDoComplement <= 1'b1;
-		rResult      <= wAddSubResult;
+		rResult0      <= wAddSubResult;
+		rResult1      <= 0;
 	end
 	//-------------------------------------
 	`STO:
 	begin
 		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b1;
+		rWriteEnable0 <= 1'b1;
+		rWriteEnable1 <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rDoComplement <= 1'b0;
-		rResult      <= wImmediateValue;
+		rResult0      <= wImmediateValue;
+		rResult1      <= 0;
 	end
 	//-------------------------------------
 	`BLE:
 	begin
 		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b0;
+		rWriteEnable0 <= 1'b0;
+		rWriteEnable1 <= 1'b0;
 		rDoComplement <= 1'b0;
-		rResult      <= 0;
+		rResult0      <= 0;
+		rResult1      <= 0;
 		if (wSourceData1 <= wSourceData0 )
 			rBranchTaken <= 1'b1;
 		else
@@ -197,8 +211,10 @@ always @ ( * )
 	`JMP:
 	begin
 		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b0;
-		rResult      <= 0;
+		rWriteEnable0 <= 1'b0;
+		rWriteEnable1 <= 1'b0;
+		rResult0      <= 0;
+		rResult1      <= 0;
 		rDoComplement <= 1'b0;
 		
 		rBranchTaken <= 1'b1;
@@ -207,8 +223,10 @@ always @ ( * )
 	`LED:
 	begin
 		rFFLedEN     <= 1'b1;
-		rWriteEnable <= 1'b0;
-		rResult      <= 0;
+		rWriteEnable0 <= 1'b0;
+		rWriteEnable1 <= 1'b0;
+		rResult0      <= 0;
+		rResult1      <= 0;
 		rBranchTaken <= 1'b0;
 		rDoComplement <= 1'b0;
 	end
@@ -217,46 +235,56 @@ always @ ( * )
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rWriteEnable <= 1'b1;
+		rWriteEnable0 <= 1'b1;
+		rWriteEnable1 <= 1'b0;
 		rDoComplement <= 1'b0;
-		rResult      <= wSourceData1 * wSourceData0; //multiplicacion        
+		rResult0      <= wSourceData1 * wSourceData0; //multiplicacion   
+		rResult1      <= 0;     
 	end
 	//-------------------------------------
 	`SMUL:
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rWriteEnable <= 1'b1;
+		rWriteEnable0 <= 1'b1;
+		rWriteEnable1 <= 1'b0;
 		rDoComplement <= 1'b0;
-		rResult      <= wSSourceData1 * wSSourceData0; //nuevas entradas para rResult
+		rResult0      <= wSSourceData1 * wSSourceData0; //nuevas entradas para rResult0
+		rResult1      <= 0;
 	end
 	//-------------------------------------
 	`IMUL:
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rWriteEnable <= 1'b1;
+		rWriteEnable0 <= 1'b1;
+		rWriteEnable1 <= 1'b0;
 		rDoComplement <= 1'b0; // No need for complement first argument
-        rResult[15:8]  <= 8'd0; //Bits no utilizados de rResult van a 0
-		rResult[7:0]   <= wResult; //Asignacion del resultado de la multiplicacion a rResult    
+        rResult0[15:8]  <= 8'd0; //Bits no utilizados de rResult0 van a 0
+		rResult0[7:0]   <= wResult; //Asignacion del resultado de la multiplicacion a rResult0    
+		rResult1      <= 0;
 	end
 	//-------------------------------------
 	`IMUL2: // LUT multiplication
 		begin
-			rFFLedEN     <= 1'b0;
-			rBranchTaken <= 1'b0;
+			rFFLedEN      <= 1'b0;
+			rBranchTaken  <= 1'b0;
 			rDoComplement <= 1'b0;
-			rWriteEnable <= 1'b1; // Write output to RAM
-			rResult      <= LUT_Mult_Result; // Asign result to output of LUT multiplication module
+			rWriteEnable0 <= 1'b1; // Write output to RAM
+			rWriteEnable1 <= 1'b0;
+			rResult0      <= LUT_Mult_Result; // Asign result to output of LUT multiplication module
+			rResult1      <= 0;
 		end
 	//-------------------------------------
 	
 	default:
 	begin
-		rFFLedEN     <= 1'b1;
-		rWriteEnable <= 1'b0;
-		rResult      <= 0;
-		rBranchTaken <= 1'b0;
+		rFFLedEN      <= 1'b1;
+		rWriteEnable0 <= 1'b0;
+		rWriteEnable1 <= 1'b0;
+		rResult0      <= 0;
+		rResult1      <= 0;
+		rBranchTaken  <= 1'b0;
 		rDoComplement <= 1'b0;
 	end	
 	//-------------------------------------	

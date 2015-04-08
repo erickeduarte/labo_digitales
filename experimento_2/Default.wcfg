@@ -10,7 +10,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="7" />
+   <WVObjectSize size="8" />
    <wvobject fp_name="/TestBench/oLed" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">oLed[7:0]</obj_property>
       <obj_property name="ObjectShortName">oLed[7:0]</obj_property>
@@ -28,19 +28,23 @@
       <obj_property name="ObjectShortName">wOperation[3:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
+   <wvobject fp_name="/TestBench/uut/wDestination" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">wDestination[7:0]</obj_property>
+      <obj_property name="ObjectShortName">wDestination[7:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/TestBench/uut/wSourceData0" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">wSourceData0[15:0]</obj_property>
       <obj_property name="ObjectShortName">wSourceData0[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/TestBench/uut/wSourceData1" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">wSourceData1[15:0]</obj_property>
       <obj_property name="ObjectShortName">wSourceData1[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/TestBench/uut/rResult" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">rResult[15:0]</obj_property>
       <obj_property name="ObjectShortName">rResult[15:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
    </wvobject>
 </wave_config>
