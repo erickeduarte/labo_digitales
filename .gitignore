@@ -1,3 +1,6 @@
+**/isim/*
+*.xmsgs
+*.ini
 *.xreport
 *.o
 *.didat
@@ -51,4 +54,6 @@ experimento_1/isim
 *.bit
 *.bld
 *.drc
-*.logg
+*.log
+*.xml
+*.cmd
