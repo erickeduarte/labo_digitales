@@ -244,7 +244,7 @@ begin
 				if (rTimeCount > 32'd2000 )
 					begin
 						rTimeCountReset = 1'b1;
-						rNextState = `FUNCTION_SET_STATE;
+						rNextState = `FUNCTION_SET_UPPER_BITS;
 					end
 				else
 					begin
