@@ -81,9 +81,7 @@ begin
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h0;
 				oLCD_RegisterSelect = 1'b0; //these are commands
-				//
-				rStateAfterWait = 
-				// 
+
 				if (rTimeCount > 32'd750000 )
 					begin
 						rTimeCountReset = 1'b1;
