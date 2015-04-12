@@ -13,27 +13,31 @@
 `define FUNCTION_SET_LOWER_BITS	11
 `define ENTRY_MODE_UPPER_BITS	12
 `define ENTRY_MODE_LOWER_BITS	10
-	
-module Module_LCD_Control
-(
-	input wire Clock,
-	input wire Reset,
-	output wire oLCD_Enabled,
-	output reg oLCD_RegisterSelect, //0=Command, 1=Data
-	output wire oLCD_StrataFlashControl,
-	output wire oLCD_ReadWrite,
-	output reg[3:0] oLCD_Data
-);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-///// Variables
+///// MODULE: Module_LCD_Control
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+module Module_LCD_Control
+(
+	input wire	 		Clock,							// 	Runs @50MHz
+	input wire 		Reset,							// 	Resets state machine, and counter
+	output wire 		oLCD_Enabled,					// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
+	output reg 		oLCD_RegisterSelect, 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
+	output wire 		oLCD_StrataFlashControl,		//	
+	output wire 		oLCD_ReadWrite,					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
+	output reg[3:0] 	oLCD_Data						// 	4 BIT Data OutPut to LCD Display
+);
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///// Variables ///////////////////////////////////////////////////////////////////////////////////////////
 reg rWrite_Enabled;						// Enable
 assign oLCD_ReadWrite = 0; 			// I only Write to the LCD display, never Read from it
 assign oLCD_StrataFlashControl = 1; 	// StrataFlash disabled. Full read/write access to LCD
 reg [7:0] rCurrentState,rNextState;		// Current and NextState 
 reg [31:0] rTimeCount;					// Time counter
 reg rTimeCountReset;					// Reset time counter
-wire wWriteDone;						// 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //----------------------------------------------------------------------//
@@ -134,8 +138,122 @@ begin
 						rNextState = `STATE_POWERON_INIT_2;
 					end
 			end
+
 		//--------------------------------------------------------------
+		/*
+			Write SF_D<11:8> = 0x3, pulse LCD_E High for 12 clock cycles
+		*/
+		`STATE_POWERON_INIT_3:
+			begin
+				rWrite_Enabled = 1'b1;
+				oLCD_Data = 4'h3;
+				oLCD_RegisterSelect = 1'b0; //these are commands
+				rTimeCountReset = 1'b1;
+				// Loop 
+				if ( wWriteDone )
+					rNextState = `STATE_POWERON_INIT_4;
+				else
+					rNextState = `STATE_POWERON_INIT_3;
+			end
+		
 		//--------------------------------------------------------------
+		/*
+			Wait 100 us or longer, which is 5,000 clock cycles at 50 MHz.
+		*/
+		`STATE_POWERON_INIT_4:
+			begin
+				rWrite_Enabled = 1'b0;
+				LCD_Data = 4'h3;
+				oLCD_RegisterSelect = 1'b0; //these are commands
+				if (rTimeCount > 32'd5000 )
+					begin
+						rTimeCountReset = 1'b1;
+						rNextState = `STATE_POWERON_INIT_5;
+					end
+				else
+					begin
+						rTimeCountReset = 1'b0;
+						rNextState = `STATE_POWERON_INIT_4;
+					end
+			end
+
+		//--------------------------------------------------------------
+		/*
+			Write SF_D<11:8> = 0x3, pulse LCD_E High for 12 clock cycles
+		*/
+		`STATE_POWERON_INIT_5:
+			begin
+				rWrite_Enabled = 1'b1;
+				oLCD_Data = 4'h3;
+				oLCD_RegisterSelect = 1'b0; //these are commands
+				rTimeCountReset = 1'b1;
+				// Loop 
+				if ( wWriteDone )
+					rNextState = `STATE_POWERON_INIT_6;
+				else
+					rNextState = `STATE_POWERON_INIT_5;
+			end
+			
+		//--------------------------------------------------------------
+		/*
+			Wait 40 us or longer, which is 2,000 clock cycles at 50 MHz.
+		*/
+		`STATE_POWERON_INIT_6:
+			begin
+				rWrite_Enabled = 1'b0;
+				LCD_Data = 4'h3;
+				oLCD_RegisterSelect = 1'b0; //these are commands
+				if (rTimeCount > 32'd2000 )
+					begin
+						rTimeCountReset = 1'b1;
+						rNextState = `STATE_POWERON_INIT_7;
+					end
+				else
+					begin
+						rTimeCountReset = 1'b0;
+						rNextState = `STATE_POWERON_INIT_6;
+					end
+			end
+			
+		//--------------------------------------------------------------
+		/*
+			Write SF_D<11:8> = 0x2, pulse LCD_E High for 12 clock cycles
+		*/
+		`STATE_POWERON_INIT_7:
+			begin
+				rWrite_Enabled = 1'b1;
+				oLCD_Data = 4'h2;
+				oLCD_RegisterSelect = 1'b0; //these are commands
+				rTimeCountReset = 1'b1;
+				// Loop 
+				if ( wWriteDone )
+					rNextState = `STATE_POWERON_INIT_8;
+				else
+					rNextState = `STATE_POWERON_INIT_7;
+			end
+			
+		//--------------------------------------------------------------
+		/*
+			Wait 40 us or longer, which is 2,000 clock cycles at 50 MHz.
+		*/
+		`STATE_POWERON_INIT_8:
+			begin
+				rWrite_Enabled = 1'b0;
+				LCD_Data = 4'h2;
+				oLCD_RegisterSelect = 1'b0; //these are commands
+				if (rTimeCount > 32'd2000 )
+					begin
+						rTimeCountReset = 1'b1;
+						rNextState = `FUNCTION_SET_STATE;
+					end
+				else
+					begin
+						rTimeCountReset = 1'b0;
+						rNextState = `STATE_POWERON_INIT_8;
+					end
+			end
+		//////////////////////////////////////////////////////////////// 
+		/////  FUNCTION_SET_UPPER_BITS
 		`FUNCTION_SET_UPPER_BITS:
 		/*
 			Function Set Up:
@@ -170,8 +288,8 @@ begin
 						rNextState = `FUNCTION_SET_LOWER_BITS; // Next state to sent lower bits
 					end
 			end
-		//--------------------------------------------------------------
-		//--------------------------------------------------------------
+		////////////////////////////////////////////////////////////////
+		///// FUNCTION_SET_LOWER_BITS
 		`FUNCTION_SET_LOWER_BITS:
 		/*
 			Function Set Up:
@@ -206,6 +324,8 @@ begin
 						rNextState = `FUNCTION_SET_LOWER_BITS; // Next state to sent lower bits
 					end
 			end
+		////////////////////////////////////////////////////////////////
+		///// DEFAULT CASE
 		default:
 			begin
 				rWrite_Enabled = 1'b0;
