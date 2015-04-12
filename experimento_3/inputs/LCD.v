@@ -1,14 +1,19 @@
 `timescale 1ns / 1ps
-`define STATE_RESET 0
-`define STATE_POWERON_INIT_0 1
-`define STATE_POWERON_INIT_1 2
-`define STATE_POWERON_INIT_2 3
-`define STATE_POWERON_INIT_3 4
-`define STATE_POWERON_INIT_4 5
-`define STATE_POWERON_INIT_5 6
-`define STATE_POWERON_INIT_6 7
-`define STATE_POWERON_INIT_7 8
-`define STATE_POWERON_INIT_8 9
+`define STATE_RESET 			0
+`define STATE_POWERON_INIT_0 	1
+`define STATE_POWERON_INIT_1 	2
+`define STATE_POWERON_INIT_2 	3
+`define STATE_POWERON_INIT_3 	4
+`define STATE_POWERON_INIT_4 	5
+`define STATE_POWERON_INIT_5 	6
+`define STATE_POWERON_INIT_6 	7
+`define STATE_POWERON_INIT_7 	8
+`define STATE_POWERON_INIT_8 	9
+`define FUNCTION_SET_UPPER_BITS	10
+`define FUNCTION_SET_LOWER_BITS	11
+`define ENTRY_MODE_UPPER_BITS	12
+`define ENTRY_MODE_LOWER_BITS	10
+	
 module Module_LCD_Control
 (
 	input wire Clock,
@@ -129,7 +134,78 @@ begin
 						rNextState = `STATE_POWERON_INIT_2;
 					end
 			end
-		//------------------------------------------
+		//--------------------------------------------------------------
+		//--------------------------------------------------------------
+		`FUNCTION_SET_UPPER_BITS:
+		/*
+			Function Set Up:
+				Sends 0x28 though a 8bit-write method. Sends upper bits, 
+				then lower bits. 
+				
+			Upper Bits:
+				Sends 0x2, and keeps rWrite_Enabled = 1, through 15 cycles, then
+				lowers it and waits for >1us (60 cycles ~ 1.2us)
+		*/
+			begin
+				if (rTimeCount < 32'd'15 ) 		// First 15 cycles -> Send first data
+					begin
+						rTimeCountReset = 1'b0; // Keep counting
+						rWrite_Enabled = 1'b1;	// Write data 0x2
+						oLCD_Data = 4'h2;		// Write data 0x2
+						oLCD_RegisterSelect = 1'b0; //these are commands
+						rNextState = `FUNCTION_SET_UPPER_BITS;
+					end
+				else if( rTimeCount < 32'd'75 ) 	// Wait 1.2us (counting the first 15 cycles).
+					begin
+						rTimeCountReset = 1'b0;		// Keep counting
+						rWrite_Enabled = 1'b0;		// We are waiting
+						oLCD_RegisterSelect = 1'b0; // These are commands
+						rNextState = `FUNCTION_SET_UPPER_BITS; // Keep looping
+					end
+				else 	// Move on to next state
+					begin
+						rTimeCountReset = 1'b1; 	// Reset timer
+						rWrite_Enabled = 1'b0;  	// Not enabled 
+						oLCD_RegisterSelect = 1'b0; // These are commands 
+						rNextState = `FUNCTION_SET_LOWER_BITS; // Next state to sent lower bits
+					end
+			end
+		//--------------------------------------------------------------
+		//--------------------------------------------------------------
+		`FUNCTION_SET_LOWER_BITS:
+		/*
+			Function Set Up:
+				Sends 0x28 though a 8bit-write method. Sends upper bits, 
+				then lower bits. 
+				
+			LOWER Bits:
+				Sends 0x8, and keeps rWrite_Enabled = 1, through 15 cycles, then
+				lowers it and waits for >40us (2050 cycles ~ 41us)
+		*/
+			begin
+				if (rTimeCount < 32'd'15 ) 		// First 15 cycles -> Send first data
+					begin
+						rTimeCountReset = 1'b0; // Keep counting
+						rWrite_Enabled = 1'b1;	// Write data 0x8
+						oLCD_Data = 4'h8;		// Write data 0x8
+						oLCD_RegisterSelect = 1'b0; //these are commands
+						rNextState = `FUNCTION_SET_LOWER_BITS;
+					end
+				else if( rTimeCount < 32'd'2065 ) 	// Wait 41us (counting the first 15 cycles).
+					begin
+						rTimeCountReset = 1'b0;		// Keep counting
+						rWrite_Enabled = 1'b0;		// We are waiting
+						oLCD_RegisterSelect = 1'b0; // These are commands
+						rNextState = `FUNCTION_SET_LOWER_BITS; // Keep looping
+					end
+				else 	// Move on to next state
+					begin
+						rTimeCountReset = 1'b1; 	// Reset timer
+						rWrite_Enabled = 1'b0;  	// Not enabled 
+						oLCD_RegisterSelect = 1'b0; // These are commands 
+						rNextState = `FUNCTION_SET_LOWER_BITS; // Next state to sent lower bits
+					end
+			end
 		default:
 			begin
 				rWrite_Enabled = 1'b0;
