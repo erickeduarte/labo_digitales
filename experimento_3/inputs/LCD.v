@@ -22,13 +22,13 @@ module Module_LCD_Control
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// Variables
-reg rWrite_Enabled;
-assign oLCD_ReadWrite = 0; //I only Write to the LCD display, never Read from it
-assign oLCD_StrataFlashControl = 1; //StrataFlash disabled. Full read/write access to LCD
-reg [7:0] rCurrentState,rNextState;
-reg [31:0] rTimeCount;
-reg rTimeCountReset;
-wire wWriteDone;
+reg rWrite_Enabled;						// Enable
+assign oLCD_ReadWrite = 0; 			// I only Write to the LCD display, never Read from it
+assign oLCD_StrataFlashControl = 1; 	// StrataFlash disabled. Full read/write access to LCD
+reg [7:0] rCurrentState,rNextState;		// Current and NextState 
+reg [31:0] rTimeCount;					// Time counter
+reg rTimeCountReset;					// Reset time counter
+wire wWriteDone;						// 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //----------------------------------------------------------------------//
@@ -59,7 +59,10 @@ end
 always @ ( * )
 begin
 	case (rCurrentState)
-		//------------------------------------------
+		//--------------------------------------------------------------
+		/*
+			Resets the state machine. Sets all signals to 0.
+		*/
 		`STATE_RESET:
 			begin
 				rWrite_Enabled = 1'b0;
@@ -68,7 +71,7 @@ begin
 				rTimeCountReset = 1'b0;
 				rNextState = `STATE_POWERON_INIT_0;
 			end
-		//------------------------------------------
+		//--------------------------------------------------------------
 		/*
 			Wait 15 ms or longer.
 			The 15 ms interval is 750,000 clock cycles at 50 MHz.
@@ -78,7 +81,9 @@ begin
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h0;
 				oLCD_RegisterSelect = 1'b0; //these are commands
-				
+				//
+				rStateAfterWait = 
+				// 
 				if (rTimeCount > 32'd750000 )
 					begin
 						rTimeCountReset = 1'b1;
@@ -90,7 +95,7 @@ begin
 						rNextState = `STATE_POWERON_INIT_0;
 				end
 			end
-		//------------------------------------------
+		//--------------------------------------------------------------
 		/*
 			Write SF_D<11:8> = 0x3, pulse LCD_E High for 12 clock cycles
 		*/
@@ -100,13 +105,13 @@ begin
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
 				rTimeCountReset = 1'b1;
-				
+				// Loop 
 				if ( wWriteDone )
 					rNextState = `STATE_POWERON_INIT_2;
 				else
 					rNextState = `STATE_POWERON_INIT_1;
 			end
-		//------------------------------------------
+		//--------------------------------------------------------------
 		/*
 			Wait 4.1 ms or longer, which is 205,000 clock cycles at 50 MHz.
 		*/

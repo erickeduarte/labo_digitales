@@ -29,14 +29,28 @@ NET "oLed[7]" IOSTANDARD = LVTTL;
 NET "oLed[7]" DRIVE = 8;
 
 # For LCD Display
-NET "LCD_E"  LOC = "M18" | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = SLOW ;
-NET "LCD_RS" LOC = "L18" | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = SLOW ;
-NET "LCD_RW" LOC = "L17" | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = SLOW ;
-
-# The LCD four-bit data interface is shared with the
-NET "SF_D<8>"  LOC = "R15" | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = SLOW ;
-NET "SF_D<9>"  LOC = "R16" | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = SLOW ;
-NET "SF_D<10>" LOC = "P17" | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = SLOW ;
-NET "SF_D<11>" LOC = "M15" | IOSTANDARD = LVCMOS33 | DRIVE = 4 | SLEW = SLOW ;
-
+NET "oLCD_Enabled" LOC = M18; 
+NET "oLCD_Enabled" IOSTANDARD = LVCMOS33; 
+NET "oLCD_Enabled" DRIVE = 4;
+NET "oLCD_RegisterSelect" LOC = L18; 
+NET "oLCD_RegisterSelect" IOSTANDARD = LVCMOS33; 
+NET "oLCD_RegisterSelect" DRIVE = 4;
+NET "oLCD_ReadWrite" LOC = L17; 
+NET "oLCD_ReadWrite" IOSTANDARD = LVCMOS33; 
+NET "oLCD_ReadWrite" DRIVE = 4;
+NET "oLCD_Data[0]" LOC = R15; 
+NET "oLCD_Data[0]" IOSTANDARD = LVCMOS33; 
+NET "oLCD_Data[0]" DRIVE = 4;
+NET "oLCD_Data[1]" LOC = R16; 
+NET "oLCD_Data[1]" IOSTANDARD = LVCMOS33; 
+NET "oLCD_Data[1]" DRIVE = 4;
+NET "oLCD_Data[2]" LOC = P17; 
+NET "oLCD_Data[2]" IOSTANDARD = LVCMOS33; 
+NET "oLCD_Data[2]" DRIVE = 4;
+NET "oLCD_Data[3]" LOC = M15; 
+NET "oLCD_Data[3]" IOSTANDARD = LVCMOS33; 
+NET "oLCD_Data[3]" DRIVE = 4;
+NET "oLCD_StrataFlashControl" LOC = D16;
+NET "oLCD_StrataFlashControl" IOSTANDARD = LVCMOS33;
+NET "oLCD_StrataFlashControl" DRIVE = 4;
 
