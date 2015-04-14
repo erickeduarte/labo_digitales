@@ -18,7 +18,7 @@ reg  [15:0] rResult1;
 wire [15:0] wAddSubResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData0_tmp,wSourceData1,wIPInitialValue,wImmediateValue;
-
+// --------------------------
 ROM InstructionRom 
 (
 	.iAddress(     wIP          ),
@@ -110,49 +110,26 @@ assign wAddSubResult = wSourceData1 + wSourceData0_tmp;
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
-/////// SMUL
-wire  signed[15:0] wSSourceData0,wSSourceData1; //entradas con signo
-assign  wSSourceData0 =  wSourceData0;
-assign  wSSourceData1 =  wSourceData1;
+//// LCD Display Controller
 ////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////
-////// IMUL
-wire [7:0] wResult;
-wire [5:0] wCarry;
-
-assign wResult[0]    				= wSourceData0[0]&wSourceData1[0];
-assign{wCarry[0], wResult[1]}    = wSourceData0[1]& wSourceData1[0]+wSourceData0[0]&wSourceData1[1];  
-assign{wCarry[1], wResult[2]}    = wSourceData0[2]& wSourceData1[0]+wSourceData0[1]&wSourceData1[1]+wSourceData0[0]&wSourceData1[2]+wCarry[0];
-assign{wCarry[2], wResult[3]}    = wSourceData0[3]& wSourceData1[0]+wSourceData0[2]&wSourceData1[1]+wSourceData0[1]&wSourceData1[2]+wSourceData0[0]&wSourceData1[3]+wCarry[1];
-assign{wCarry[3], wResult[4]}    = wSourceData0[3]& wSourceData1[1]+wSourceData0[2]&wSourceData1[2]+wSourceData0[1]&wSourceData1[3]+wCarry[2];
-assign{wCarry[4], wResult[5]}    = wSourceData0[3]& wSourceData1[2]+wSourceData0[2]&wSourceData1[3]+wCarry[3];
-assign{wCarry[5], wResult[6]}		= wSourceData0[3]& wSourceData1[3]+wCarry[4];
-assign wResult[7]     	 			= wCarry[5];
-
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-/////// IMUL2
-wire [15:0] LUT_Mult_Result; // LUT multiplication output
-
-LUT_MULT lut_mult
+// ----- FOR LCD Display ----
+wire 		wLCD_Ready;			// Handshake protocol -- ready to receive
+reg			rLCD_Data_Ready;	// Handshake protocol -- send data ready
+wire 		wLCD_Enabled, wLCD_RegisterSelect, wLCD_StrataFlashControl, wLCD_ReadWrite; // Outputs from the module
+wire [3:0] 	wLCD_Data; 			// Output data to LCD display 
+Module_LCD_Control LCD
 (
-.iData_A(wSourceData1),
-.iData_B(wSourceData0),
-.oResult(LUT_Mult_Result)
-);
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///// LMUL
-wire [31:0] wLMUL_result;
-
-LMUL lmul
-(
-.iData_A(wSourceData1),
-.iData_B(wSourceData0),
-.oResult(wLMUL_result)
+	.Clock(Clock),										// 	Runs @50MHz
+	.Reset(Reset),										// 	Resets state machine, and counter
+	.oLCD_Enabled(wLCD_Enabled),						// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
+	.oLCD_RegisterSelect(wLCD_RegisterSelect), 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
+	.oLCD_StrataFlashControl(wLCD_StrataFlashControl),	//	
+	.oLCD_ReadWrite(wLCD_ReadWrite),					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
+	.oLCD_Data(wLCD_Data),								// 	4 BIT Data OutPut to LCD Display
+	.iData(rResult0[15:7]),								// 	8 BIT Data to be shown on the LCD screen
+	.oReadyForData(wLCD_Ready),							// 	Flag that indicates wheter or not the controller is ready to print data
+	.iData_Ready(rLCD_Data_Ready)						// 	Flag that indicates that the data is ready to be acepted by controller
 );
 ////////////////////////////////////////////////////////////////////////
 
@@ -162,6 +139,7 @@ always @ ( * )
 	//-------------------------------------
 	`NOP:
 	begin
+		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable0 <= 1'b0;
@@ -173,6 +151,7 @@ always @ ( * )
 	//-------------------------------------
 	`ADD:
 	begin
+		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable0 <= 1'b1;
@@ -184,6 +163,7 @@ always @ ( * )
 		//-------------------------------------
 	`SUB:
 	begin
+		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable0 <= 1'b1;
@@ -195,6 +175,7 @@ always @ ( * )
 	//-------------------------------------
 	`STO:
 	begin
+		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rWriteEnable0 <= 1'b1;
 		rWriteEnable1 <= 1'b0;
@@ -206,6 +187,7 @@ always @ ( * )
 	//-------------------------------------
 	`BLE:
 	begin
+		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rWriteEnable0 <= 1'b0;
 		rWriteEnable1 <= 1'b0;
@@ -221,6 +203,7 @@ always @ ( * )
 	//-------------------------------------	
 	`JMP:
 	begin
+		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rWriteEnable0 <= 1'b0;
 		rWriteEnable1 <= 1'b0;
@@ -233,6 +216,7 @@ always @ ( * )
 	//-------------------------------------	
 	`LED:
 	begin
+		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b1;
 		rWriteEnable0 <= 1'b0;
 		rWriteEnable1 <= 1'b0;
@@ -244,6 +228,7 @@ always @ ( * )
 	//-------------------------------------
 	`MUL:
 	begin
+		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable0 <= 1'b1;
@@ -253,62 +238,45 @@ always @ ( * )
 		rResult1      <= 0;     
 	end
 	//-------------------------------------
-	`SMUL:
-	begin
-		rFFLedEN     <= 1'b0;
-		rBranchTaken <= 1'b0;
-		rWriteEnable0 <= 1'b1;
-		rWriteEnable1 <= 1'b0;
-		rDoComplement <= 1'b0;
-		rResult0      <= wSSourceData1 * wSSourceData0; //nuevas entradas para rResult0
-		rResult1      <= 0;
-	end
-	//-------------------------------------
-	`IMUL:
-	begin
-		rFFLedEN     <= 1'b0;
-		rBranchTaken <= 1'b0;
-		rWriteEnable0 <= 1'b1;
-		rWriteEnable1 <= 1'b0;
-		rDoComplement <= 1'b0; // No need for complement first argument
-        rResult0[15:8]  <= 8'd0; //Bits no utilizados de rResult0 van a 0
-		rResult0[7:0]   <= wResult; //Asignacion del resultado de la multiplicacion a rResult0    
-		rResult1      <= 0;
-	end
-	//-------------------------------------
-	`IMUL2: // LUT multiplication
+	`BNLCD: // Branch if LCD not ready
 		begin
 			rFFLedEN      <= 1'b0;
-			rBranchTaken  <= 1'b0;
-			rDoComplement <= 1'b0;
-			rWriteEnable0 <= 1'b1; // Write output to RAM
+			rWriteEnable0 <= 1'b0;
 			rWriteEnable1 <= 1'b0;
-			rResult0      <= LUT_Mult_Result; // Asign result to output of LUT multiplication module
+			rDoComplement <= 1'b0;
 			rResult1      <= 0;
+			/////////////////////////////////
+			rLCD_Data_Ready <= 0; // Not ready to send data to LCD
+			if (wLCD_Ready)
+				rBranchTaken <= 1'b0;
+			else
+				rBranchTaken <= 1'b1;
 		end
 	//-------------------------------------
-	`LMUL:
+	`LCD:
 		begin
 			rFFLedEN      <= 1'b0;
-			rBranchTaken  <= 1'b0;
+			rWriteEnable0 <= 1'b0;
+			rWriteEnable1 <= 1'b0;
 			rDoComplement <= 1'b0;
-			rWriteEnable0 <= 1'b1; // Write output to RAM
-			rWriteEnable1 <= 1'b1; // Write 32 bits output to RAM 
-			rResult0      <= wLMUL_result[15:0]; // Asign result to output of LUT multiplication module
-			rResult1      <= wLMUL_result[31:16]; // Asign result to output of LUT multiplication module
+			rResult1      <= 0;
+			rBranchTaken <= 1'b0;
+			/////////////////////////////////
+			rLCD_Data_Ready <= 1; 				// Ready to send data
+			rResult0      	<= wImmediateValue; // LCD reads from first 8 bits of rResult0
+			
 		end
 	//-------------------------------------
-	
 	default:
-	begin
-		rFFLedEN      <= 1'b1;
-		rWriteEnable0 <= 1'b0;
-		rWriteEnable1 <= 1'b0;
-		rResult0      <= 0;
-		rResult1      <= 0;
-		rBranchTaken  <= 1'b0;
-		rDoComplement <= 1'b0;
-	end	
+		begin
+			rFFLedEN      <= 1'b1;
+			rWriteEnable0 <= 1'b0;
+			rWriteEnable1 <= 1'b0;
+			rResult0      <= 0;
+			rResult1      <= 0;
+			rBranchTaken  <= 1'b0;
+			rDoComplement <= 1'b0;
+		end	
 	//-------------------------------------	
 	endcase	
 

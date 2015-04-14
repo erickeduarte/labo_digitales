@@ -567,6 +567,10 @@ begin
 			end
 		////////////////////////////////////////////////////////////////
 		///// WAIT FOR DATA
+		/*
+			- State where the controller is ready to receive data from ALU
+			- Implements a HANDSHAKE protocol to receive given data
+		*/
 		`WAIT_FOR_DATA_STATE:
 			begin
 				oReadyForData = 1;			// We are ready to acept data

@@ -357,6 +357,46 @@ while ($inline = <IN_DH>) {
 		# Next line
 		next;
 	} 
+	# FOR BNLCD
+	elsif ($inline =~ /^BNLCD\s/) {
+		# Set and clean $tmp_comment, $inline 
+		set_vars();
+		
+		# Check for correct format
+		if ($#tmp_arguments != 1) {
+			print "\t-E-\t Wrong number of arguments for BNLCD instruction. Given $#tmp_arguments, spected: 1 \t Line: <$line_counter> \n";
+			exit;
+		}
+		
+		# Include MUL code in instructions
+		$instructions .= "\t$inst_counter: oInstruction = { `BNLCD , $tmp_arguments[1], 16'b0  };";
+		# Increase instruction counter
+		$inst_counter++;
+		# Add comments
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
+		# Next line
+		next;
+	} 
+	# FOR LCD
+	elsif ($inline =~ /^LCD\s/) {
+		# Set and clean $tmp_comment, $inline 
+		set_vars();
+		
+		# Check for correct format
+		if ($#tmp_arguments != 1) {
+			print "\t-E-\t Wrong number of arguments for LCD instruction. Given $#tmp_arguments, spected: 1 \t Line: <$line_counter> \n";
+			exit;
+		}
+		
+		# Include MUL code in instructions
+		$instructions .= "\t$inst_counter: oInstruction = { `LCD , 8'd0 ,$tmp_arguments[1]  };";
+		# Increase instruction counter
+		$inst_counter++;
+		# Add comments
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
+		# Next line
+		next;
+	} 
 }
 # Done with input file.
 close(IN_DH);

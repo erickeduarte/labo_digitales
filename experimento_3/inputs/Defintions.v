@@ -11,10 +11,8 @@
 `define SUB		4'd6
 `define JMP		4'd7
 `define MUL		4'd8
-`define SMUL	4'd9
-`define IMUL	4'd10
-`define IMUL2	4'd11
-`define LMUL	4'd12
+`define BNLCD	4'd9
+`define LCD		4'd10
 
 `define R0 8'd0
 `define R1 8'd1
