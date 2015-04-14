@@ -10,11 +10,12 @@ module MiniAlu
 );
 
 wire [15:0] wIP,wIP_temp;
-reg         rWriteEnable0, rWriteEnable1, rBranchTaken, rDoComplement;
+reg         rWriteEnable0, rWriteEnable1, rBranchTaken, rDoComplement,rSubR,rReturn ;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
 reg  [15:0] rResult0;
 reg  [15:0] rResult1;
+reg  [7:0]  wInstructiontmep,wDestinationtemp ;
 wire [15:0] wAddSubResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData0_tmp,wSourceData1,wIPInitialValue,wImmediateValue;
@@ -25,14 +26,33 @@ ROM InstructionRom
 	.oInstruction( wInstruction )
 );
 
+// Reviso si se esta brincando a una subrurina o retornando
+if (rSubR = 1)
+	begin
+		wInstructiontmep = wInstruction[7:0]	
+		wDestinationtemp = R7				
+	end
+
+if (rReturn = 1)
+	begin
+		wInstructiontmep = R7
+		wDestinationtemp = wDestination
+	end
+else 
+	begin
+		wInstructiontmep = wInstruction[7:0]	
+		wDestinationtemp = wDestination
+	end
+
+
 RAM_DUAL_RW_PORT DataRam
 (
 	.Clock(         Clock        ),
 	.iWriteEnable0(  rWriteEnable0 ),
 	.iWriteEnable1(  rWriteEnable1 ),
-	.iReadAddress0( wInstruction[7:0] ),
+	.iReadAddress0( wInstructiontmep ),
 	.iReadAddress1( wInstruction[15:8] ),
-	.iWriteAddress0( wDestination ),
+	.iWriteAddress0( wDestinationtemp ),
 	.iWriteAddress1( wDestination+1 ),
 	.iDataIn0  (       rResult0   ),
 	.iDataIn1  (       rResult1   ),
@@ -49,6 +69,9 @@ UPCOUNTER_POSEDGE # ( 16 ) IP
 .Enable(  1'b1                 ),
 .Q(       wIP_temp             )
 );
+
+
+
 assign wIP = (rBranchTaken) ? wIPInitialValue : wIP_temp;
 
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 4 ) FFD1 
@@ -147,6 +170,8 @@ always @ ( * )
 		rDoComplement <= 1'b0;
 		rResult0      <= 0;
 		rResult1      <= 0;
+		rReturn		<=1'b0;
+		rSubR		<=1'b0;
 	end
 	//-------------------------------------
 	`ADD:
@@ -159,6 +184,8 @@ always @ ( * )
 		rDoComplement <= 1'b0;
 		rResult0      <= wAddSubResult;
 		rResult1      <= 0;
+		rReturn		<=1'b0;
+		rSubR		<=1'b0;
 	end
 		//-------------------------------------
 	`SUB:
@@ -171,6 +198,8 @@ always @ ( * )
 		rDoComplement <= 1'b1;
 		rResult0      <= wAddSubResult;
 		rResult1      <= 0;
+		rReturn		<=1'b0;
+		rSubR		<=1'b0;
 	end
 	//-------------------------------------
 	`STO:
@@ -183,6 +212,8 @@ always @ ( * )
 		rDoComplement <= 1'b0;
 		rResult0      <= wImmediateValue;
 		rResult1      <= 0;
+		rReturn		<=1'b0;
+		rSubR		<=1'b0;
 	end
 	//-------------------------------------
 	`BLE:
@@ -194,10 +225,13 @@ always @ ( * )
 		rDoComplement <= 1'b0;
 		rResult0      <= 0;
 		rResult1      <= 0;
+		rReturn		<=1'b0;
+		rSubR		<=1'b0;
 		if (wSourceData1 <= wSourceData0 )
 			rBranchTaken <= 1'b1;
 		else
 			rBranchTaken <= 1'b0;
+
 		
 	end
 	//-------------------------------------	
@@ -212,6 +246,34 @@ always @ ( * )
 		rDoComplement <= 1'b0;
 		
 		rBranchTaken <= 1'b1;
+		rReturn		<=1'b0;
+		rSubR		<=1'b0;
+	end
+	//-------------------------------------	
+	`CALL:
+	begin
+		rFFLedEN     <= 1'b0;
+		rWriteEnable0 <= 1'b1;
+		rWriteEnable1 <= 1'b1;
+		rResult0      <= wIPInitialValue;
+		rResult1      <= 0;
+		rDoComplement <= 1'b0;
+		rBranchTaken <= 1'b1;
+		rReturn		<=1'b0;
+		rSubR		<=1'b1;
+	end
+	//-------------------------------------	
+	`RET:
+	begin
+		rFFLedEN     <= 1'b0;
+		rWriteEnable0 <= 1'b0;
+		rWriteEnable1 <= 1'b0;
+		rResult0      <= 0;
+		rResult1      <= 0;
+		rDoComplement <= 1'b0;
+		rBranchTaken <= 1'b1;
+		rReturn		<=1'b1;
+		rSubR		<=1'b0;
 	end
 	//-------------------------------------	
 	`LED:
@@ -224,6 +286,8 @@ always @ ( * )
 		rResult1      <= 0;
 		rBranchTaken <= 1'b0;
 		rDoComplement <= 1'b0;
+		rReturn		<=1'b0;
+		rSubR		<=1'b0;
 	end
 	//-------------------------------------
 	`MUL:
@@ -236,6 +300,8 @@ always @ ( * )
 		rDoComplement <= 1'b0;
 		rResult0      <= wSourceData1 * wSourceData0; //multiplicacion   
 		rResult1      <= 0;     
+		rReturn		<=1'b0;
+		rSubR		<=1'b0;
 	end
 	//-------------------------------------
 	`BNLCD: // Branch if LCD not ready
@@ -245,6 +311,8 @@ always @ ( * )
 			rWriteEnable1 <= 1'b0;
 			rDoComplement <= 1'b0;
 			rResult1      <= 0;
+			rReturn		<=1'b0;
+			rSubR		<=1'b0;
 			/////////////////////////////////
 			rLCD_Data_Ready <= 0; // Not ready to send data to LCD
 			if (wLCD_Ready)
@@ -255,6 +323,8 @@ always @ ( * )
 	//-------------------------------------
 	`LCD:
 		begin
+			rReturn		<=1'b0;
+			rSubR		<=1'b0;
 			rFFLedEN      <= 1'b0;
 			rWriteEnable0 <= 1'b0;
 			rWriteEnable1 <= 1'b0;
@@ -276,6 +346,8 @@ always @ ( * )
 			rResult1      <= 0;
 			rBranchTaken  <= 1'b0;
 			rDoComplement <= 1'b0;
+			rReturn		<=1'b0;
+			rSubR		<=1'b0;
 		end	
 	//-------------------------------------	
 	endcase	
