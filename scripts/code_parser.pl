@@ -389,7 +389,7 @@ while ($inline = <IN_DH>) {
 		}
 		
 		# Include MUL code in instructions
-		$instructions .= "\t$inst_counter: oInstruction = { `LCD , 8'd0 ,$tmp_arguments[1]  };";
+		$instructions .= "\t$inst_counter: oInstruction = { `LCD , 8'd0 , $tmp_arguments[1], 8'b0  };"; # No need for destination
 		# Increase instruction counter
 		$inst_counter++;
 		# Add comments
