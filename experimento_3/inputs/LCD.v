@@ -29,15 +29,15 @@
 module Module_LCD_Control
 (
 	input wire	 		Clock,							// 	Runs @50MHz
-	input wire 		Reset,							// 	Resets state machine, and counter
+	input wire 			Reset,							// 	Resets state machine, and counter
 	output wire 		oLCD_Enabled,					// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
-	output reg 		oLCD_RegisterSelect, 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
+	output reg 			oLCD_RegisterSelect, 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
 	output wire 		oLCD_StrataFlashControl,		//	
 	output wire 		oLCD_ReadWrite,					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
 	output reg[3:0] 	oLCD_Data,						// 	4 BIT Data OutPut to LCD Display
 	input wire[7:0]	iData,							// 	8 BIT Data to be shown on the LCD screen
 	output reg			oReadyForData,					// 	Flag that indicates wheter or not the controller is ready to print data
-	input wire 		iData_Ready						// 	Flag that indicates that the data is ready to be acepted by controller
+	input wire 			iData_Ready						// 	Flag that indicates that the data is ready to be acepted by controller
 );
 
 
@@ -51,14 +51,14 @@ reg [31:0] rTimeCount;					// Time counter
 reg rTimeCountReset;					// Reset time counter
 reg [7:0] rStored_Data;					// FF that save the data input 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+assign oLCD_Enabled = rWrite_Enabled;
 //----------------------------------------------------------------------//
 //	Next State and delay logic
 always @ ( posedge Clock )
 begin
 	if (Reset)
 		begin
-			CurrentState = `STATE_RESET;
+			rCurrentState = `STATE_RESET;
 			rTimeCount <= 32'b0;
 			oReadyForData <= 0;
 		end
@@ -125,11 +125,16 @@ begin
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
 				rTimeCountReset = 1'b1;
-				// Loop 
-				if ( wWriteDone )
-					rNextState = `STATE_POWERON_INIT_2;
+				if ( rTimeCount > 32'd12 )
+					begin
+						rNextState = `STATE_POWERON_INIT_2;
+						rTimeCountReset = 1'b1;
+					end
 				else
-					rNextState = `STATE_POWERON_INIT_1;
+					begin
+						rNextState = `STATE_POWERON_INIT_1;
+						rTimeCountReset = 1'b0;
+					end
 			end
 		//--------------------------------------------------------------
 		/*
@@ -138,7 +143,7 @@ begin
 		`STATE_POWERON_INIT_2:
 			begin
 				rWrite_Enabled = 1'b0;
-				LCD_Data = 4'h3;
+				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
 				if (rTimeCount > 32'd205000 )
 					begin
@@ -161,12 +166,17 @@ begin
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
-				rTimeCountReset = 1'b1;
 				// Loop 
-				if ( wWriteDone )
-					rNextState = `STATE_POWERON_INIT_4;
+				if ( rTimeCount > 32'd12 )
+					begin
+						rNextState = `STATE_POWERON_INIT_4;
+						rTimeCountReset = 1'b1;
+					end
 				else
-					rNextState = `STATE_POWERON_INIT_3;
+					begin
+						rNextState = `STATE_POWERON_INIT_3;
+						rTimeCountReset = 1'b0;
+					end
 			end
 		
 		//--------------------------------------------------------------
@@ -176,7 +186,7 @@ begin
 		`STATE_POWERON_INIT_4:
 			begin
 				rWrite_Enabled = 1'b0;
-				LCD_Data = 4'h3;
+				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
 				if (rTimeCount > 32'd5000 )
 					begin
@@ -201,10 +211,16 @@ begin
 				oLCD_RegisterSelect = 1'b0; //these are commands
 				rTimeCountReset = 1'b1;
 				// Loop 
-				if ( wWriteDone )
-					rNextState = `STATE_POWERON_INIT_6;
+				if ( rTimeCount > 32'd12 )
+					begin
+						rNextState = `STATE_POWERON_INIT_6;
+						rTimeCountReset = 1'b1;
+					end
 				else
-					rNextState = `STATE_POWERON_INIT_5;
+					begin
+						rNextState = `STATE_POWERON_INIT_5;
+						rTimeCountReset = 1'b0;
+					end
 			end
 			
 		//--------------------------------------------------------------
@@ -214,7 +230,7 @@ begin
 		`STATE_POWERON_INIT_6:
 			begin
 				rWrite_Enabled = 1'b0;
-				LCD_Data = 4'h3;
+				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
 				if (rTimeCount > 32'd2000 )
 					begin
@@ -239,10 +255,16 @@ begin
 				oLCD_RegisterSelect = 1'b0; //these are commands
 				rTimeCountReset = 1'b1;
 				// Loop 
-				if ( wWriteDone )
-					rNextState = `STATE_POWERON_INIT_8;
+				if ( rTimeCount > 32'd12 )
+					begin
+						rNextState = `STATE_POWERON_INIT_8;
+						rTimeCountReset = 1'b1;
+					end
 				else
-					rNextState = `STATE_POWERON_INIT_7;
+					begin
+						rNextState = `STATE_POWERON_INIT_7;
+						rTimeCountReset = 1'b0;
+					end
 			end
 			
 		//--------------------------------------------------------------
@@ -252,7 +274,7 @@ begin
 		`STATE_POWERON_INIT_8:
 			begin
 				rWrite_Enabled = 1'b0;
-				LCD_Data = 4'h2;
+				oLCD_Data = 4'h2;
 				oLCD_RegisterSelect = 1'b0; //these are commands
 				if (rTimeCount > 32'd2000 )
 					begin
@@ -512,21 +534,21 @@ begin
 						rWrite_Enabled = 1'b1;	// Write data HEX 0
 						oLCD_Data = 4'h0;		// Write data HEX 0
 						oLCD_RegisterSelect = 1'b0; //these are commands
-						rNextState = `DISPLAY_CONTROL_UPPER_BITS;
+						rNextState = `DISPLAY_CLEAR_UPPER_BITS;
 					end
 				else if( rTimeCount < 32'd75 ) 	// Wait 1.2us (counting the first 15 cycles).
 					begin
 						rTimeCountReset = 1'b0;		// Keep counting
 						rWrite_Enabled = 1'b0;		// We are waiting
 						oLCD_RegisterSelect = 1'b0; // These are commands
-						rNextState = `DISPLAY_CONTROL_UPPER_BITS; // Keep looping
+						rNextState = `DISPLAY_CLEAR_UPPER_BITS; // Keep looping
 					end
 				else 	// Move on to next state
 					begin
 						rTimeCountReset = 1'b1; 	// Reset timer
 						rWrite_Enabled = 1'b0;  	// Not enabled 
 						oLCD_RegisterSelect = 1'b0; // These are commands 
-						rNextState = `DISPLAY_CONTROL_LOWER_BITS; // Next state to sent lower bits
+						rNextState = `DISPLAY_CLEAR_LOWER_BITS; // Next state to sent lower bits
 					end
 			end
 		////////////////////////////////////////////////////////////////
@@ -548,14 +570,14 @@ begin
 						rWrite_Enabled = 1'b1;	// Write data HEX 1
 						oLCD_Data = 4'h1;		// Write data HEX 1
 						oLCD_RegisterSelect = 1'b0; //these are commands
-						rNextState = `DISPLAY_CONTROL_LOWER_BITS;
+						rNextState = `DISPLAY_CLEAR_LOWER_BITS;
 					end
-				else if( rTimeCount < 32'd825150 ) // Wait 1.65ms (counting the first 15 cycles).
+				else if( rTimeCount < 32'd82515 ) // Wait 1.65ms (counting the first 15 cycles).
 					begin
 						rTimeCountReset = 1'b0;		// Keep counting
 						rWrite_Enabled = 1'b0;		// We are waiting
 						oLCD_RegisterSelect = 1'b0; // These are commands
-						rNextState = `DISPLAY_CONTROL_LOWER_BITS; // Keep looping
+						rNextState = `DISPLAY_CLEAR_LOWER_BITS; // Keep looping
 					end
 				else 	// Move on to next state
 					begin

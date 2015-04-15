@@ -12,9 +12,19 @@ begin
 	case (iAddress)
 	
 	0: oInstruction = { `NOP ,	24'd4000	};
-	1: oInstruction = { `STO , `R1, 16'd21896};
-	2: oInstruction = { `STO , `R7, 16'd64677};
-	3: oInstruction = { `LMUL , `R1, `R1, `R7 }; //  Multiplicacion de 8*5 
+	1: oInstruction = { `BNLCD , 8'b0, 16'b0  }; //  	Loop untill LCD display is ready 
+	2: oInstruction = { `LCD , 8'd0 , 8'b01001000, 8'b0  }; // 	H is 01001000 -- Write to LCD 
+	3: oInstruction = { `NOP ,	24'd4000	};
+	4: oInstruction = { `BNLCD , 8'd3, 16'b0  }; // 	Loop untill LCD display is ready 
+	5: oInstruction = { `LCD , 8'd0 , 8'b01001111, 8'b0  }; // 	O is 01001111-- Write to LCD 
+	6: oInstruction = { `NOP ,	24'd4000	};
+	7: oInstruction = { `BNLCD , 8'd6, 16'b0  }; // 	Loop untill LCD display is ready 
+	8: oInstruction = { `LCD , 8'd0 , 8'b01001100, 8'b0  }; // 	L is 01001110 -- Write to LCD 
+	9: oInstruction = { `NOP ,	24'd4000	};
+	10: oInstruction = { `BNLCD , 8'd9, 16'b0  }; // 	Loop untill LCD display is ready 
+	11: oInstruction = { `LCD , 8'd0 , 8'b01000001, 8'b0  }; // 	A is 01000001 -- Write to LCD 
+	12: oInstruction = { `NOP ,	24'd4000	};
+	13: oInstruction = { `JMP , 8'd12, 16'b0 };
 
 
 	default:

@@ -1,3 +1,4 @@
+*.lso
 **/iseconfig/*
 **/isim/*
 *.xmsgs

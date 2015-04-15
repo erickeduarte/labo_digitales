@@ -25,34 +25,37 @@ ROM InstructionRom
 	.iAddress(     wIP          ),
 	.oInstruction( wInstruction )
 );
+/*
+always (posedge Clock)
+begin
+	// Reviso si se esta brincando a una subrurina o retornando
+	if (rSubR = 1)
+		begin
+			wInstructiontmep = wInstruction[7:0];	
+			wDestinationtemp = R7;				
+		end
 
-// Reviso si se esta brincando a una subrurina o retornando
-if (rSubR = 1)
-	begin
-		wInstructiontmep = wInstruction[7:0]	
-		wDestinationtemp = R7				
-	end
-
-if (rReturn = 1)
-	begin
-		wInstructiontmep = R7
-		wDestinationtemp = wDestination
-	end
-else 
-	begin
-		wInstructiontmep = wInstruction[7:0]	
-		wDestinationtemp = wDestination
-	end
-
+	if (rReturn = 1)
+		begin
+			wInstructiontmep = R7;
+			wDestinationtemp = wDestination;
+		end
+	else 
+		begin
+			wInstructiontmep = wInstruction[7:0];	
+			wDestinationtemp = wDestination;
+		end
+end
+*/
 
 RAM_DUAL_RW_PORT DataRam
 (
 	.Clock(         Clock        ),
 	.iWriteEnable0(  rWriteEnable0 ),
 	.iWriteEnable1(  rWriteEnable1 ),
-	.iReadAddress0( wInstructiontmep ),
+	.iReadAddress0( wInstruction[7:0] ),
 	.iReadAddress1( wInstruction[15:8] ),
-	.iWriteAddress0( wDestinationtemp ),
+	.iWriteAddress0( wDestination ),
 	.iWriteAddress1( wDestination+1 ),
 	.iDataIn0  (       rResult0   ),
 	.iDataIn1  (       rResult1   ),
@@ -150,7 +153,7 @@ Module_LCD_Control LCD
 	.oLCD_StrataFlashControl(wLCD_StrataFlashControl),	//	
 	.oLCD_ReadWrite(wLCD_ReadWrite),					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
 	.oLCD_Data(wLCD_Data),								// 	4 BIT Data OutPut to LCD Display
-	.iData(rResult0[15:7]),								// 	8 BIT Data to be shown on the LCD screen
+	.iData(rResult0[15:8]),								// 	8 BIT Data to be shown on the LCD screen
 	.oReadyForData(wLCD_Ready),							// 	Flag that indicates wheter or not the controller is ready to print data
 	.iData_Ready(rLCD_Data_Ready)						// 	Flag that indicates that the data is ready to be acepted by controller
 );
@@ -348,6 +351,7 @@ always @ ( * )
 			rDoComplement <= 1'b0;
 			rReturn		<=1'b0;
 			rSubR		<=1'b0;
+			rLCD_Data_Ready <= 0;
 		end	
 	//-------------------------------------	
 	endcase	

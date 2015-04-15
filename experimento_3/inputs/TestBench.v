@@ -40,7 +40,7 @@ module TestBench;
 	
 	always
 	begin
-		#5  Clock =  ! Clock;
+		#10  Clock =  ! Clock;
 
 	end
 
