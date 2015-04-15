@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/fabian/Development/labo_digitales/experimento_3/TestBench_isim_beh1.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="TestBench" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="16" />
+   <wvobject fp_name="/TestBench/oLed" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">oLed[7:0]</obj_property>
+      <obj_property name="ObjectShortName">oLed[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/Clock" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Clock</obj_property>
+      <obj_property name="ObjectShortName">Clock</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/Reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Reset</obj_property>
+      <obj_property name="ObjectShortName">Reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider10" type="divider">
+      <obj_property name="label">Flags</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/LCD/oLCD_Enabled" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">oLCD_Enabled</obj_property>
+      <obj_property name="ObjectShortName">oLCD_Enabled</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/LCD/oLCD_RegisterSelect" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">oLCD_RegisterSelect</obj_property>
+      <obj_property name="ObjectShortName">oLCD_RegisterSelect</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/LCD/iData_Ready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">iData_Ready</obj_property>
+      <obj_property name="ObjectShortName">iData_Ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/LCD/oReadyForData" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">oReadyForData</obj_property>
+      <obj_property name="ObjectShortName">oReadyForData</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider12" type="divider">
+      <obj_property name="label">Data</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/LCD/oLCD_Data" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">oLCD_Data[3:0]</obj_property>
+      <obj_property name="ObjectShortName">oLCD_Data[3:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/LCD/iData" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">iData[7:0]</obj_property>
+      <obj_property name="ObjectShortName">iData[7:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider13" type="divider">
+      <obj_property name="label">States</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/LCD/rCurrentState" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rCurrentState[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rCurrentState[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/LCD/rNextState" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rNextState[7:0]</obj_property>
+      <obj_property name="ObjectShortName">rNextState[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider14" type="divider">
+      <obj_property name="label">Time</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/LCD/rTimeCount" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">rTimeCount[31:0]</obj_property>
+      <obj_property name="ObjectShortName">rTimeCount[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>
