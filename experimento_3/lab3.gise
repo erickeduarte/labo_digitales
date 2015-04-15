@@ -168,31 +168,31 @@
     <transform xil_pn:end_ts="1429105277" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1429105277">
       <status xil_pn:value="SuccessfullyRun"/>
     </transform>
-    <transform xil_pn:end_ts="1429111537" xil_pn:name="TRAN_schematicsToHdl" xil_pn:prop_ck="5424661167082445512" xil_pn:start_ts="1429111537">
+    <transform xil_pn:end_ts="1429117206" xil_pn:name="TRAN_schematicsToHdl" xil_pn:prop_ck="5424661167082445512" xil_pn:start_ts="1429117206">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1429111537" xil_pn:name="TRAN_regenerateCores" xil_pn:prop_ck="-4627384786173660305" xil_pn:start_ts="1429111537">
+    <transform xil_pn:end_ts="1429117206" xil_pn:name="TRAN_regenerateCores" xil_pn:prop_ck="-4627384786173660305" xil_pn:start_ts="1429117206">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1429111537" xil_pn:name="TRAN_SubProjectAbstractToPreProxy" xil_pn:start_ts="1429111537">
+    <transform xil_pn:end_ts="1429117206" xil_pn:name="TRAN_SubProjectAbstractToPreProxy" xil_pn:start_ts="1429117206">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1429111537" xil_pn:name="TRAN_xawsTohdl" xil_pn:prop_ck="2692027152206144454" xil_pn:start_ts="1429111537">
+    <transform xil_pn:end_ts="1429117206" xil_pn:name="TRAN_xawsTohdl" xil_pn:prop_ck="2692027152206144454" xil_pn:start_ts="1429117206">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1429111537" xil_pn:name="TRAN_SubProjectPreToStructuralProxy" xil_pn:prop_ck="-3893270297158069842" xil_pn:start_ts="1429111537">
+    <transform xil_pn:end_ts="1429117206" xil_pn:name="TRAN_SubProjectPreToStructuralProxy" xil_pn:prop_ck="-3893270297158069842" xil_pn:start_ts="1429117206">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1429111537" xil_pn:name="TRAN_platgen" xil_pn:prop_ck="4375376525778753337" xil_pn:start_ts="1429111537">
+    <transform xil_pn:end_ts="1429117206" xil_pn:name="TRAN_platgen" xil_pn:prop_ck="4375376525778753337" xil_pn:start_ts="1429117206">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1429111860" xil_pn:in_ck="-1742949976490265178" xil_pn:name="TRANEXT_xstsynthesize_spartan3e" xil_pn:prop_ck="-6680239318375732266" xil_pn:start_ts="1429111850">
+    <transform xil_pn:end_ts="1429118076" xil_pn:in_ck="-1742949976490265178" xil_pn:name="TRANEXT_xstsynthesize_spartan3e" xil_pn:prop_ck="-6680239318375732266" xil_pn:start_ts="1429118067">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
@@ -214,7 +214,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1429111864" xil_pn:in_ck="122964055924656309" xil_pn:name="TRANEXT_ngdbuild_FPGA" xil_pn:prop_ck="-4166645668958350958" xil_pn:start_ts="1429111860">
+    <transform xil_pn:end_ts="1429118081" xil_pn:in_ck="122964055924656309" xil_pn:name="TRANEXT_ngdbuild_FPGA" xil_pn:prop_ck="-4166645668958350958" xil_pn:start_ts="1429118076">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="MiniAlu.bld"/>
@@ -223,12 +223,10 @@
       <outfile xil_pn:name="_ngo"/>
       <outfile xil_pn:name="_xmsgs/ngdbuild.xmsgs"/>
     </transform>
-    <transform xil_pn:end_ts="1429111869" xil_pn:in_ck="122964055924656310" xil_pn:name="TRANEXT_map_spartan3" xil_pn:prop_ck="-1309755933173654900" xil_pn:start_ts="1429111864">
+    <transform xil_pn:end_ts="1429118086" xil_pn:in_ck="122964055924656310" xil_pn:name="TRANEXT_map_spartan3" xil_pn:prop_ck="-1309755933173654900" xil_pn:start_ts="1429118081">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="MiniAlu.pcf"/>
       <outfile xil_pn:name="MiniAlu_map.map"/>
       <outfile xil_pn:name="MiniAlu_map.mrp"/>
@@ -239,8 +237,9 @@
       <outfile xil_pn:name="MiniAlu_usage.xml"/>
       <outfile xil_pn:name="_xmsgs/map.xmsgs"/>
     </transform>
-    <transform xil_pn:end_ts="1429111964" xil_pn:in_ck="4144265637123719887" xil_pn:name="TRANEXT_par_spartan3" xil_pn:prop_ck="-5563652517805085498" xil_pn:start_ts="1429111869">
+    <transform xil_pn:end_ts="1429118106" xil_pn:in_ck="4144265637123719887" xil_pn:name="TRANEXT_par_spartan3" xil_pn:prop_ck="-5563652517805085498" xil_pn:start_ts="1429118086">
       <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="MiniAlu.ncd"/>
       <outfile xil_pn:name="MiniAlu.pad"/>
@@ -253,7 +252,7 @@
       <outfile xil_pn:name="MiniAlu_par.xrpt"/>
       <outfile xil_pn:name="_xmsgs/par.xmsgs"/>
     </transform>
-    <transform xil_pn:end_ts="1429111973" xil_pn:in_ck="122964055924656178" xil_pn:name="TRANEXT_bitFile_spartan3e" xil_pn:prop_ck="287829442711806529" xil_pn:start_ts="1429111964">
+    <transform xil_pn:end_ts="1429118185" xil_pn:in_ck="122964055924656178" xil_pn:name="TRANEXT_bitFile_spartan3e" xil_pn:prop_ck="287829442711806529" xil_pn:start_ts="1429118176">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
@@ -266,11 +265,11 @@
       <outfile xil_pn:name="webtalk.log"/>
       <outfile xil_pn:name="webtalk_pn.xml"/>
     </transform>
-    <transform xil_pn:end_ts="1429112187" xil_pn:in_ck="122964055924643324" xil_pn:name="TRAN_configureTargetDevice" xil_pn:prop_ck="5582947192412673156" xil_pn:start_ts="1429112185">
+    <transform xil_pn:end_ts="1429118210" xil_pn:in_ck="122964055924643324" xil_pn:name="TRAN_configureTargetDevice" xil_pn:prop_ck="5582947192412673156" xil_pn:start_ts="1429118208">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1429111964" xil_pn:in_ck="122964055924656178" xil_pn:name="TRAN_postRouteTrce" xil_pn:prop_ck="445577401284416187" xil_pn:start_ts="1429111962">
+    <transform xil_pn:end_ts="1429118106" xil_pn:in_ck="122964055924656178" xil_pn:name="TRAN_postRouteTrce" xil_pn:prop_ck="445577401284416187" xil_pn:start_ts="1429118103">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="MiniAlu.twr"/>
