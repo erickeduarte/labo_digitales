@@ -1,3 +1,6 @@
+STO		8'b1	16'bffff
+NOP			
+LED		8'b1		
 NOP
 BNLCD	8'b0  			// 	Loop untill LCD display is ready
 LCD		8'b01001000		//	H is 01001000 -- Write to LCD
