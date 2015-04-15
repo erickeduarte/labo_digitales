@@ -58,9 +58,8 @@ always @ ( posedge Clock )
 begin
 	if (Reset)
 		begin
-			rCurrentState = `STATE_RESET;
+			rCurrentState <= `STATE_RESET;
 			rTimeCount <= 32'b0;
-			oReadyForData <= 0;
 		end
 	else
 		begin
@@ -87,6 +86,7 @@ begin
 		*/
 		`STATE_RESET:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h0;
 				oLCD_RegisterSelect = 1'b0;
@@ -100,6 +100,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_0:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h0;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -121,6 +122,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_1:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -142,6 +144,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_2:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -163,6 +166,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_3:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -185,6 +189,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_4:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -206,6 +211,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_5:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -229,6 +235,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_6:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -250,6 +257,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_7:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h2;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -273,6 +281,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_8:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h2;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -312,6 +321,7 @@ begin
 				lowers it and waits for >1us (60 cycles ~ 1.2us)
 		*/
 			begin
+				oReadyForData = 0;
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
@@ -348,6 +358,7 @@ begin
 				lowers it and waits for >40us (2050 cycles ~ 41us)
 		*/
 			begin
+				oReadyForData = 0;
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
@@ -384,6 +395,7 @@ begin
 				lowers it and waits for >1us (60 cycles ~ 1.2us)
 		*/
 			begin
+				oReadyForData = 0;
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
@@ -420,6 +432,7 @@ begin
 				lowers it and waits for >40us (2050 cycles ~ 41us)
 		*/
 			begin
+				oReadyForData = 0;	
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
@@ -456,6 +469,7 @@ begin
 				lowers it and waits for >1us (60 cycles ~ 1.2us)
 		*/
 			begin
+				oReadyForData = 0;
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
@@ -492,6 +506,7 @@ begin
 				lowers it and waits for >40us (2050 cycles ~ 41us)
 		*/
 			begin
+				oReadyForData = 0;
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
@@ -528,6 +543,7 @@ begin
 				lowers it and waits for >1us (60 cycles ~ 1.2us)
 		*/
 			begin
+				oReadyForData = 0;
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
@@ -564,6 +580,7 @@ begin
 				lowers it and waits for >1.65ms (82500 cycles ~ 41us)
 		*/
 			begin
+				oReadyForData = 0;
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
