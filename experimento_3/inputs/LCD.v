@@ -124,7 +124,7 @@ begin
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
-				rTimeCountReset = 1'b1;
+				//rTimeCountReset = 1'b1;
 				if ( rTimeCount > 32'd12 )
 					begin
 						rNextState = `STATE_POWERON_INIT_2;
@@ -209,7 +209,7 @@ begin
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
-				rTimeCountReset = 1'b1;
+				//rTimeCountReset = 1'b1;
 				// Loop 
 				if ( rTimeCount > 32'd12 )
 					begin
@@ -253,7 +253,7 @@ begin
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h2;
 				oLCD_RegisterSelect = 1'b0; //these are commands
-				rTimeCountReset = 1'b1;
+				//rTimeCountReset = 1'b1;
 				// Loop 
 				if ( rTimeCount > 32'd12 )
 					begin
