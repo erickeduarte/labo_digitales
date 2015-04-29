@@ -58,9 +58,8 @@ always @ ( posedge Clock )
 begin
 	if (Reset)
 		begin
-			rCurrentState = `STATE_RESET;
+			rCurrentState <= `STATE_RESET;
 			rTimeCount <= 32'b0;
-			oReadyForData <= 0;
 		end
 	else
 		begin
@@ -87,6 +86,7 @@ begin
 		*/
 		`STATE_RESET:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h0;
 				oLCD_RegisterSelect = 1'b0;
@@ -100,6 +100,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_0:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h0;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -121,6 +122,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_1:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -142,6 +144,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_2:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -163,6 +166,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_3:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -185,6 +189,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_4:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -206,6 +211,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_5:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -229,6 +235,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_6:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h3;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -250,6 +257,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_7:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b1;
 				oLCD_Data = 4'h2;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -273,6 +281,7 @@ begin
 		*/
 		`STATE_POWERON_INIT_8:
 			begin
+				oReadyForData = 0;
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h2;
 				oLCD_RegisterSelect = 1'b0; //these are commands
@@ -312,11 +321,12 @@ begin
 				lowers it and waits for >1us (60 cycles ~ 1.2us)
 		*/
 			begin
+				oReadyForData = 0;
+				oLCD_Data = 4'h2;		// Write data HEX 2
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
 						rWrite_Enabled = 1'b1;	// Write data HEX 2
-						oLCD_Data = 4'h2;		// Write data HEX 2
 						oLCD_RegisterSelect = 1'b0; //these are commands
 						rNextState = `FUNCTION_SET_UPPER_BITS;
 					end
@@ -348,11 +358,12 @@ begin
 				lowers it and waits for >40us (2050 cycles ~ 41us)
 		*/
 			begin
+				oReadyForData = 0;
+				oLCD_Data = 4'h8;		// Write data HEX 8
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
 						rWrite_Enabled = 1'b1;	// Write data HEX 8
-						oLCD_Data = 4'h8;		// Write data HEX 8
 						oLCD_RegisterSelect = 1'b0; //these are commands
 						rNextState = `FUNCTION_SET_LOWER_BITS;
 					end
@@ -384,11 +395,12 @@ begin
 				lowers it and waits for >1us (60 cycles ~ 1.2us)
 		*/
 			begin
+				oReadyForData = 0;
+				oLCD_Data = 4'h0;		// Write data HEX 0
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
 						rWrite_Enabled = 1'b1;	// Write data HEX 0
-						oLCD_Data = 4'h0;		// Write data HEX 0
 						oLCD_RegisterSelect = 1'b0; //these are commands
 						rNextState = `ENTRY_MODE_UPPER_BITS;
 					end
@@ -420,11 +432,12 @@ begin
 				lowers it and waits for >40us (2050 cycles ~ 41us)
 		*/
 			begin
+				oReadyForData = 0;	
+				oLCD_Data = 4'h6;		// Write data HEX 6
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
 						rWrite_Enabled = 1'b1;	// Write data HEX 6
-						oLCD_Data = 4'h6;		// Write data HEX 6
 						oLCD_RegisterSelect = 1'b0; //these are commands
 						rNextState = `ENTRY_MODE_LOWER_BITS;
 					end
@@ -456,11 +469,12 @@ begin
 				lowers it and waits for >1us (60 cycles ~ 1.2us)
 		*/
 			begin
+				oReadyForData = 0;
+				oLCD_Data = 4'h0;		// Write data HEX 0
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
 						rWrite_Enabled = 1'b1;	// Write data HEX 0
-						oLCD_Data = 4'h0;		// Write data HEX 0
 						oLCD_RegisterSelect = 1'b0; //these are commands
 						rNextState = `DISPLAY_CONTROL_UPPER_BITS;
 					end
@@ -492,11 +506,12 @@ begin
 				lowers it and waits for >40us (2050 cycles ~ 41us)
 		*/
 			begin
+				oReadyForData = 0;
+				oLCD_Data = 4'hC;		// Write data HEX C
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
 						rWrite_Enabled = 1'b1;	// Write data HEX C
-						oLCD_Data = 4'hC;		// Write data HEX C
 						oLCD_RegisterSelect = 1'b0; //these are commands
 						rNextState = `DISPLAY_CONTROL_LOWER_BITS;
 					end
@@ -528,11 +543,12 @@ begin
 				lowers it and waits for >1us (60 cycles ~ 1.2us)
 		*/
 			begin
+				oReadyForData = 0;
+				oLCD_Data = 4'h0;		// Write data HEX 0
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
 						rWrite_Enabled = 1'b1;	// Write data HEX 0
-						oLCD_Data = 4'h0;		// Write data HEX 0
 						oLCD_RegisterSelect = 1'b0; //these are commands
 						rNextState = `DISPLAY_CLEAR_UPPER_BITS;
 					end
@@ -564,11 +580,13 @@ begin
 				lowers it and waits for >1.65ms (82500 cycles ~ 41us)
 		*/
 			begin
+				oReadyForData = 0;
+				oLCD_Data = 4'h1;		// Write data HEX 1
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; // Keep counting
 						rWrite_Enabled = 1'b1;	// Write data HEX 1
-						oLCD_Data = 4'h1;		// Write data HEX 1
+						
 						oLCD_RegisterSelect = 1'b0; //these are commands
 						rNextState = `DISPLAY_CLEAR_LOWER_BITS;
 					end
@@ -595,6 +613,7 @@ begin
 		*/
 		`WAIT_FOR_DATA_STATE:
 			begin
+				oLCD_Data = 4'h0;		// Write data HEX 1
 				oReadyForData = 1;			// We are ready to acept data
 				rWrite_Enabled = 1'b0;  	// Not writting yet
 				oLCD_RegisterSelect = 1'b0; // Doesnt matter, LCD is not enabled
@@ -622,12 +641,12 @@ begin
 				lowers it and waits for 1.2us > (60 cycles)		
 		*/
 			begin
+				oLCD_Data = rStored_Data[7:4];	// Write upper bits of data
 				oReadyForData = 0; 				// Will not receive data, untill we are done showing
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; 		// Keep counting
 						rWrite_Enabled = 1'b1;			// Write data HEX 1
-						oLCD_Data = rStored_Data[7:4];	// Write upper bits of data
 						oLCD_RegisterSelect = 1'b1; 	// We are sending DATA NOW!!
 						rNextState = `OUTPUT_DATA_UPPER_BITS;
 					end
@@ -660,11 +679,12 @@ begin
 		*/
 			begin
 				oReadyForData = 0; 				// Will not receive data, untill we are done showing
+				oLCD_Data = rStored_Data[3:0];	// Write lower bits of data
 				if (rTimeCount < 32'd15 ) 		// First 15 cycles -> Send first data
 					begin
 						rTimeCountReset = 1'b0; 		// Keep counting
 						rWrite_Enabled = 1'b1;			// Write data HEX 1
-						oLCD_Data = rStored_Data[3:0];	// Write lower bits of data
+						
 						oLCD_RegisterSelect = 1'b1; 	// We are sending DATA NOW!!
 						rNextState = `OUTPUT_DATA_LOWER_BITS;
 					end
@@ -690,6 +710,7 @@ begin
 				rWrite_Enabled = 1'b0;
 				oLCD_Data = 4'h0;
 				oLCD_RegisterSelect = 1'b0;
+				oReadyForData = 0; 	
 				rTimeCountReset = 1'b0;
 				rNextState = `STATE_RESET;
 			end

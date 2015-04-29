@@ -4,17 +4,21 @@
 
 module MiniAlu
 (
- input wire Clock,
- input wire Reset,
- output wire [7:0] oLed
+	input wire Clock,
+	input wire Reset,
+	output wire [7:0] oLed,
+	output wire 		wLCD_Enabled,						// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
+	output wire 		wLCD_RegisterSelect, 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
+	output wire 		wLCD_StrataFlashControl,		//	
+	output wire 		wLCD_ReadWrite,					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
+	output wire [3:0] wLCD_Data
 );
 
 wire [15:0] wIP,wIP_temp;
-reg         rWriteEnable0, rWriteEnable1, rBranchTaken, rDoComplement,rSubR,rReturn ;
+reg         rWriteEnable, rBranchTaken, rDoComplement,rSubR,rReturn ;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
-reg  [15:0] rResult0;
-reg  [15:0] rResult1;
+reg  [15:0] rResult;
 reg  [7:0]  wInstructiontmep,wDestinationtemp ;
 wire [15:0] wAddSubResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
@@ -25,42 +29,17 @@ ROM InstructionRom
 	.iAddress(     wIP          ),
 	.oInstruction( wInstruction )
 );
-/*
-always (posedge Clock)
-begin
-	// Reviso si se esta brincando a una subrurina o retornando
-	if (rSubR = 1)
-		begin
-			wInstructiontmep = wInstruction[7:0];	
-			wDestinationtemp = R7;				
-		end
 
-	if (rReturn = 1)
-		begin
-			wInstructiontmep = R7;
-			wDestinationtemp = wDestination;
-		end
-	else 
-		begin
-			wInstructiontmep = wInstruction[7:0];	
-			wDestinationtemp = wDestination;
-		end
-end
-*/
-
-RAM_DUAL_RW_PORT DataRam
+RAM_DUAL_READ_PORT DataRam
 (
 	.Clock(         Clock        ),
-	.iWriteEnable0(  rWriteEnable0 ),
-	.iWriteEnable1(  rWriteEnable1 ),
+	.iWriteEnable(  rWriteEnable ),
 	.iReadAddress0( wInstruction[7:0] ),
 	.iReadAddress1( wInstruction[15:8] ),
-	.iWriteAddress0( wDestination ),
-	.iWriteAddress1( wDestination+1 ),
-	.iDataIn0  (       rResult0   ),
-	.iDataIn1  (       rResult1   ),
-	.oDataOut0 (     wSourceData0 ),
-	.oDataOut1 (     wSourceData1 )
+	.iWriteAddress( wDestination ),
+	.iDataIn(       rResult      ),
+	.oDataOut0(     wSourceData0 ),
+	.oDataOut1(     wSourceData1 )
 );
 
 assign wIPInitialValue = (Reset) ? 8'b0 : wDestination;
@@ -140,10 +119,9 @@ assign wAddSubResult = wSourceData1 + wSourceData0_tmp;
 ////////////////////////////////////////////////////////////////////////
 
 // ----- FOR LCD Display ----
-wire 		wLCD_Ready;			// Handshake protocol -- ready to receive
-reg			rLCD_Data_Ready;	// Handshake protocol -- send data ready
-wire 		wLCD_Enabled, wLCD_RegisterSelect, wLCD_StrataFlashControl, wLCD_ReadWrite; // Outputs from the module
-wire [3:0] 	wLCD_Data; 			// Output data to LCD display 
+
+reg	rLCD_Data_Ready;	// Handshake protocol -- send data ready
+wire	wLCD_Ready;
 Module_LCD_Control LCD
 (
 	.Clock(Clock),										// 	Runs @50MHz
@@ -153,7 +131,7 @@ Module_LCD_Control LCD
 	.oLCD_StrataFlashControl(wLCD_StrataFlashControl),	//	
 	.oLCD_ReadWrite(wLCD_ReadWrite),					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
 	.oLCD_Data(wLCD_Data),								// 	4 BIT Data OutPut to LCD Display
-	.iData(rResult0[15:8]),								// 	8 BIT Data to be shown on the LCD screen
+	.iData(rResult[15:8]),								// 	8 BIT Data to be shown on the LCD screen
 	.oReadyForData(wLCD_Ready),							// 	Flag that indicates wheter or not the controller is ready to print data
 	.iData_Ready(rLCD_Data_Ready)						// 	Flag that indicates that the data is ready to be acepted by controller
 );
@@ -168,11 +146,9 @@ always @ ( * )
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rWriteEnable0 <= 1'b0;
-		rWriteEnable1 <= 1'b0;
+		rWriteEnable <= 1'b0;
 		rDoComplement <= 1'b0;
-		rResult0      <= 0;
-		rResult1      <= 0;
+		rResult 			<= 0;
 		rReturn		<=1'b0;
 		rSubR		<=1'b0;
 	end
@@ -182,11 +158,9 @@ always @ ( * )
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rWriteEnable0 <= 1'b1;
-		rWriteEnable1 <= 1'b0;
+		rWriteEnable <= 1'b1;
 		rDoComplement <= 1'b0;
-		rResult0      <= wAddSubResult;
-		rResult1      <= 0;
+		rResult      <= wAddSubResult;
 		rReturn		<=1'b0;
 		rSubR		<=1'b0;
 	end
@@ -196,11 +170,9 @@ always @ ( * )
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rWriteEnable0 <= 1'b1;
-		rWriteEnable1 <= 1'b0;
+		rWriteEnable <= 1'b1;
 		rDoComplement <= 1'b1;
-		rResult0      <= wAddSubResult;
-		rResult1      <= 0;
+		rResult      <= wAddSubResult;
 		rReturn		<=1'b0;
 		rSubR		<=1'b0;
 	end
@@ -209,12 +181,10 @@ always @ ( * )
 	begin
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
-		rWriteEnable0 <= 1'b1;
-		rWriteEnable1 <= 1'b0;
+		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
 		rDoComplement <= 1'b0;
-		rResult0      <= wImmediateValue;
-		rResult1      <= 0;
+		rResult      <= wImmediateValue;
 		rReturn		<=1'b0;
 		rSubR		<=1'b0;
 	end
@@ -223,11 +193,9 @@ always @ ( * )
 	begin
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
-		rWriteEnable0 <= 1'b0;
-		rWriteEnable1 <= 1'b0;
+		rWriteEnable <= 1'b0;
 		rDoComplement <= 1'b0;
-		rResult0      <= 0;
-		rResult1      <= 0;
+		rResult      <= 0;
 		rReturn		<=1'b0;
 		rSubR		<=1'b0;
 		if (wSourceData1 <= wSourceData0 )
@@ -242,10 +210,8 @@ always @ ( * )
 	begin
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
-		rWriteEnable0 <= 1'b0;
-		rWriteEnable1 <= 1'b0;
-		rResult0      <= 0;
-		rResult1      <= 0;
+		rWriteEnable <= 1'b0;
+		rResult      <= 0;
 		rDoComplement <= 1'b0;
 		
 		rBranchTaken <= 1'b1;
@@ -256,10 +222,8 @@ always @ ( * )
 	`CALL:
 	begin
 		rFFLedEN     <= 1'b0;
-		rWriteEnable0 <= 1'b1;
-		rWriteEnable1 <= 1'b1;
-		rResult0      <= wIPInitialValue;
-		rResult1      <= 0;
+		rWriteEnable <= 1'b1;
+		rResult      <= wIPInitialValue;
 		rDoComplement <= 1'b0;
 		rBranchTaken <= 1'b1;
 		rReturn		<=1'b0;
@@ -269,10 +233,8 @@ always @ ( * )
 	`RET:
 	begin
 		rFFLedEN     <= 1'b0;
-		rWriteEnable0 <= 1'b0;
-		rWriteEnable1 <= 1'b0;
-		rResult0      <= 0;
-		rResult1      <= 0;
+		rWriteEnable <= 1'b0;
+		rResult      <= 0;
 		rDoComplement <= 1'b0;
 		rBranchTaken <= 1'b1;
 		rReturn		<=1'b1;
@@ -283,14 +245,12 @@ always @ ( * )
 	begin
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b1;
-		rWriteEnable0 <= 1'b0;
-		rWriteEnable1 <= 1'b0;
-		rResult0      <= 0;
-		rResult1      <= 0;
+		rWriteEnable <= 1'b0;
+		rResult      <= 0;
 		rBranchTaken <= 1'b0;
 		rDoComplement <= 1'b0;
 		rReturn		<=1'b0;
-		rSubR		<=1'b0;
+		rSubR			<=1'b0;
 	end
 	//-------------------------------------
 	`MUL:
@@ -298,24 +258,21 @@ always @ ( * )
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
-		rWriteEnable0 <= 1'b1;
-		rWriteEnable1 <= 1'b0;
+		rWriteEnable <= 1'b1;
 		rDoComplement <= 1'b0;
-		rResult0      <= wSourceData1 * wSourceData0; //multiplicacion   
-		rResult1      <= 0;     
-		rReturn		<=1'b0;
-		rSubR		<=1'b0;
+		rResult      <= wSourceData1 * wSourceData0; //multiplicacion       
+		rReturn			<=1'b0;
+		rSubR				<=1'b0;
 	end
 	//-------------------------------------
 	`BNLCD: // Branch if LCD not ready
 		begin
 			rFFLedEN      <= 1'b0;
-			rWriteEnable0 <= 1'b0;
-			rWriteEnable1 <= 1'b0;
+			rWriteEnable  <= 1'b0;
 			rDoComplement <= 1'b0;
-			rResult1      <= 0;
-			rReturn		<=1'b0;
-			rSubR		<=1'b0;
+			rResult     	 <= 0;
+			rReturn			<=1'b0;
+			rSubR				<=1'b0;
 			/////////////////////////////////
 			rLCD_Data_Ready <= 0; // Not ready to send data to LCD
 			if (wLCD_Ready)
@@ -329,24 +286,21 @@ always @ ( * )
 			rReturn		<=1'b0;
 			rSubR		<=1'b0;
 			rFFLedEN      <= 1'b0;
-			rWriteEnable0 <= 1'b0;
-			rWriteEnable1 <= 1'b0;
+			rWriteEnable <= 1'b0;
 			rDoComplement <= 1'b0;
-			rResult1      <= 0;
+			rResult      <= 0;
 			rBranchTaken <= 1'b0;
 			/////////////////////////////////
 			rLCD_Data_Ready <= 1; 				// Ready to send data
-			rResult0      	<= wImmediateValue; // LCD reads from first 8 bits of rResult0
+			rResult      	<= wImmediateValue; // LCD reads from first 8 bits of rResult0
 			
 		end
 	//-------------------------------------
 	default:
 		begin
 			rFFLedEN      <= 1'b1;
-			rWriteEnable0 <= 1'b0;
-			rWriteEnable1 <= 1'b0;
-			rResult0      <= 0;
-			rResult1      <= 0;
+			rWriteEnable <= 1'b0;
+			rResult      <= 0;
 			rBranchTaken  <= 1'b0;
 			rDoComplement <= 1'b0;
 			rReturn		<=1'b0;

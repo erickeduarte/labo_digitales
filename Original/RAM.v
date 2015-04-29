@@ -21,8 +21,9 @@ begin
 			Ram[iWriteAddress] <= iDataIn; 
 			
 	
-		oDataOut0 <=  ((iWriteAddress == iReadAddress0) && iWriteEnable) ? iDataIn : Ram[iReadAddress0]; 
-		oDataOut1 <=  ((iWriteAddress == iReadAddress1) && iWriteEnable) ? iDataIn : Ram[iReadAddress1]; 
+		oDataOut0 <=  ((iWriteAddress0 == iReadAddress0) && iWriteEnable0) ? iDataIn0 : Ram[iReadAddress0]; 
+		oDataOut1 <=  ((iWriteAddress0 == iReadAddress1) && iWriteEnable0) ? iDataIn0 : Ram[iReadAddress1]; 
 		
 end 
 endmodule
+

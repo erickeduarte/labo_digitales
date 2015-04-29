@@ -1,17 +1,15 @@
 `timescale 1ns / 1ps
 `include "Defintions.v"
 
-`define NUM1 8'd0 
-`define NUM2 8'd1 
-`define LOOP1 8'd3 
-
+`define LOOP1 8'd8
+`define LOOP2 8'd5
 module ROM
 (
 	input  wire[15:0]  		iAddress,
 	output reg [27:0] 		oInstruction
 );	
-
 always @ ( iAddress )
+begin
 	case (iAddress)
 
 	0: oInstruction = { `NOP ,24'd4000    };
@@ -35,5 +33,6 @@ always @ ( iAddress )
 	default:
 		oInstruction = { `LED ,  24'b10101010 };		//NOP
 	endcase	
+end
 	
 endmodule
