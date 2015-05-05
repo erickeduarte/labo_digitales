@@ -7,12 +7,19 @@ module MiniAlu
 	input wire Clock,
 	input wire Reset,
 	output wire [7:0] oLed,
-	output wire 		wLCD_Enabled,						// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
+	output wire 		wLCD_Enabled,					// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
 	output wire 		wLCD_RegisterSelect, 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
 	output wire 		wLCD_StrataFlashControl,		//	
 	output wire 		wLCD_ReadWrite,					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
-	output wire [3:0] 	wLCD_Data
+	output wire [3:0] 	wLCD_Data,						//	
+	output wire 		oVGA_RED,						//	VGA output of color RED
+	output wire 		oVGA_GREEN,						//	VGA output of color GREEN
+	output wire 		oVGA_BLUE,						//	VGA output of color BLUE
+	output wire 		oVGA_HSYNC,						//	VGA Horizontal Switch
+	output wire 		oVGA_VSYNC,						//	VGA Vertical Switch
 );
+
+
 
 wire [15:0] wIP,wIP_temp;
 reg         rWriteEnable, rBranchTaken, rDoComplement,rSubR,rReturn ;
