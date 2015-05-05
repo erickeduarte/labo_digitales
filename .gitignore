@@ -1,3 +1,9 @@
+*.stx
+*.twr
+*.ptwx
+*.pad
+*.bgn
+*.ngd
 *.lso
 **/iseconfig/*
 **/isim/*
