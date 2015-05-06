@@ -17,12 +17,13 @@ module MiniAlu
 	output wire 		oVGA_BLUE,						//	VGA output of color BLUE
 	output wire 		oVGA_HSYNC,						//	VGA Horizontal Switch
 	output wire 		oVGA_VSYNC,						//	VGA Vertical Switch
+	output wire [3:0] 	wLCD_Data,
 );
 
 
 
 wire [15:0] wIP,wIP_temp;
-reg         rWriteEnable, rBranchTaken, rDoComplement,rSubR,rReturn ;
+reg         rWriteEnable, rBranchTaken, rDoComplement,rSubR,rReturn, rVGAWriteEnable ;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
 reg  [15:0] rResult;
@@ -30,6 +31,7 @@ reg  [7:0]  wInstructiontmep,wDestinationtemp ;
 wire [15:0] wAddSubResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData0_tmp,wSourceData1,wIPInitialValue,wImmediateValue;
+wire        wColorFromVideoMemory;
 // --------------------------
 ROM InstructionRom 
 (
@@ -48,6 +50,19 @@ RAM_DUAL_READ_PORT DataRam
 	.oDataOut0(     wSourceData0 ),
 	.oDataOut1(     wSourceData1 )
 );
+
+RAM_SINGLE_READ_PORT # (3,24,256*256) VideoMemory
+(
+	.Clock( Clock ),
+	.iWriteEnable( rVGAWriteEnable ),
+	.iReadAddress( 24'b0 ),
+	.iWriteAddress( {wSourceData1[7:0],wSourceData0} ),
+	.iDataIn( wInstruction[23:21] ),
+	.oDataOut( {wVGA_R,wVGA_G,wVGA_B} )
+);
+
+assign {wVGA_R,wVGA_G,wVGA_B} = ( wCurrentRow < 192 || wCurrentRow > 448 ||
+CurrentCol < 112 || CurrentCol > 368 ) : {0,0,0} : wColorFromVideoMemory;
 
 assign wIPInitialValue = (Reset) ? 8'b0 : wDestination;
 UPCOUNTER_POSEDGE # ( 16 ) IP
