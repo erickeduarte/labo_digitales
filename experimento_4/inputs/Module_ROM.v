@@ -1,6 +1,13 @@
 
 `timescale 1ns / 1ps
 `include "Defintions.v"
+`define COLS 8'b0 
+`define ROWS 8'b1 
+`define ONE 8'd2 
+`define GREENLOOP 8'd4 
+`define REDLOOP 8'd10 
+`define WHITELOOP 8'd16 
+`define BLUELOOP 8'd22 
 
 module ROM
 (
@@ -11,23 +18,36 @@ always @ ( iAddress )
 begin
 	case (iAddress)
 	
-	0: oInstruction = { `STO , 8'b1, 16'bffff};
-	1: oInstruction = { `NOP ,	24'd4000	};
-	2: oInstruction = { `LED ,	8'b0, 8'b1, 8'b0 };
-	3: oInstruction = { `NOP ,	24'd4000	};
-	4: oInstruction = { `BNLCD , 8'b0, 16'b0  }; //  	Loop untill LCD display is ready 
-	5: oInstruction = { `LCD , 8'd0 , 8'b01001000, 8'b0  }; // 	H is 01001000 -- Write to LCD 
-	6: oInstruction = { `NOP ,	24'd4000	};
-	7: oInstruction = { `BNLCD , 8'd3, 16'b0  }; // 	Loop untill LCD display is ready 
-	8: oInstruction = { `LCD , 8'd0 , 8'b01001111, 8'b0  }; // 	O is 01001111-- Write to LCD 
-	9: oInstruction = { `NOP ,	24'd4000	};
-	10: oInstruction = { `BNLCD , 8'd6, 16'b0  }; // 	Loop untill LCD display is ready 
-	11: oInstruction = { `LCD , 8'd0 , 8'b01001100, 8'b0  }; // 	L is 01001110 -- Write to LCD 
-	12: oInstruction = { `NOP ,	24'd4000	};
-	13: oInstruction = { `BNLCD , 8'd9, 16'b0  }; // 	Loop untill LCD display is ready 
-	14: oInstruction = { `LCD , 8'd0 , 8'b01000001, 8'b0  }; // 	A is 01000001 -- Write to LCD 
-	15: oInstruction = { `NOP ,	24'd4000	};
-	16: oInstruction = { `JMP , 8'd12, 16'b0 };
+	0: oInstruction = { `NOP ,	24'd4000	};
+	1: oInstruction = { `STO , `COLS, 16'b0};
+	2: oInstruction = { `STO , `ROWS, 16'b0};
+	3: oInstruction = { `STO , `ONE, 16'b1};
+	4: oInstruction = { `NOP ,	24'd4000	};
+	5: oInstruction = { `VGA , `COLOR_GREEN,5'b0 , `COLS, `ROWS  };
+	6: oInstruction = { `ADD , `COLS, `COLS, `ONE};
+	7: oInstruction = { `BLE , `GREENLOOP, `COLS, 8'd255};
+	8: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
+	9: oInstruction = { `BLE , `GREENLOOP, `ROWS, 8'd63};
+	10: oInstruction = { `NOP ,	24'd4000	};
+	11: oInstruction = { `VGA , `COLOR_RED,5'b0 , `COLS, `ROWS  };
+	12: oInstruction = { `ADD , `COLS, `COLS, `ONE};
+	13: oInstruction = { `BLE , `REDLOOP, `COLS, 8'd255};
+	14: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
+	15: oInstruction = { `BLE , `REDLOOP, `ROWS, 8'd127};
+	16: oInstruction = { `NOP ,	24'd4000	};
+	17: oInstruction = { `VGA , `COLOR_RED,5'b0 , `COLS, `ROWS  };
+	18: oInstruction = { `ADD , `COLS, `COLS, `ONE};
+	19: oInstruction = { `BLE , `WHITELOOP, `COLS, 8'd255};
+	20: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
+	21: oInstruction = { `BLE , `WHITELOOP, `ROWS, 8'd191};
+	22: oInstruction = { `NOP ,	24'd4000	};
+	23: oInstruction = { `VGA , `COLOR_RED,5'b0 , `COLS, `ROWS  };
+	24: oInstruction = { `ADD , `COLS, `COLS, `ONE};
+	25: oInstruction = { `BLE , `BLUELOOP, `COLS, 8'd255};
+	26: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
+	27: oInstruction = { `BLE , `BLUELOOP, `ROWS, 8'd255};
+	28: oInstruction = { `NOP ,	24'd4000	};
+	29: oInstruction = { `JMP , 8'd28, 16'b0 };
 
 
 	default:
