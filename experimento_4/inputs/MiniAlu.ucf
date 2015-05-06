@@ -29,6 +29,7 @@ NET "oLed[7]" IOSTANDARD = LVTTL;
 NET "oLed[7]" DRIVE = 8;
 
 # For LCD Display
+
 NET "oLCD_Enabled" LOC = M18; 
 NET "oLCD_Enabled" IOSTANDARD = LVCMOS33; 
 NET "oLCD_Enabled" DRIVE = 4;
@@ -79,3 +80,17 @@ NET "oVGA_VSync" LOC = "F14";
 NET "oVGA_VSync" IOSTANDARD = LVTTL;
 NET "oVGA_VSync" DRIVE = 8;
 NET "oVGA_VSync" SLEW = FAST;
+
+# Keyboard
+#NET "oPS2_DATA" LOC = "G13";
+#NET "oPS2_DATA" IOSTANDARD = LVTTL;
+#NET "oPS2_DATA" DRIVE = 8;
+#NET "oPS2_DATA" SLEW = FAST;
+
+#NET "oPS2_CLK" LOC = "G14";
+#NET "oPS2_CLK" IOSTANDARD = LVTTL;
+#NET "oPS2_CLK" DRIVE = 8;
+#NET "oPS2_CLK" SLEW = FAST;
+
+
+
