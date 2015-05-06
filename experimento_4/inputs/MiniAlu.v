@@ -12,11 +12,11 @@ module MiniAlu
 	output wire 		wLCD_StrataFlashControl,		//	
 	output wire 		wLCD_ReadWrite,					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
 	output wire [3:0] 	wLCD_Data,						//	
-	output wire 		oVGA_RED,						//	VGA output of color RED
-	output wire 		oVGA_GREEN,						//	VGA output of color GREEN
-	output wire 		oVGA_BLUE,						//	VGA output of color BLUE
-	output wire 		oVGA_HSYNC,						//	VGA Horizontal Switch
-	output wire 		oVGA_VSYNC,						//	VGA Vertical Switch
+	output wire 		oVGA_Red,						//	VGA output of color RED
+	output wire 		oVGA_Green,						//	VGA output of color GREEN
+	output wire 		oVGA_Blue,						//	VGA output of color BLUE
+	output wire 		oVGA_HSync,						//	VGA Horizontal Switch
+	output wire 		oVGA_VSync,						//	VGA Vertical Switch
 	output wire [3:0] 	wLCD_Data,
 );
 
@@ -51,23 +51,9 @@ RAM_DUAL_READ_PORT DataRam
 	.oDataOut1(     wSourceData1 )
 );
 
-wire [15:0]wDestinationVGA;
-assign wDestinationVGA = (wSourceData0)*256+wSourceData1;
-RAM_SINGLE_READ_PORT # (3,19,256*256) VideoMemory
-(
-	.Clock( Clock ),
-	.iWriteEnable( rWriteEnableVGA ),
-	.iReadAddress( 24'b0 ),
-	.iWriteAddress(wDestinationVGA),
-	.iDataIn( wInstruction[23:21] ),
-	.oDataOut( {wVGA_R,wVGA_G,wVGA_B} )
-);
-
-assign {wVGA_R,wVGA_G,wVGA_B} = ( wCurrentRow < 112 || wCurrentRow > 368 ||
-CurrentCol < 192 || CurrentCol > 448 ) : {0,0,0} : wColorFromVideoMemory;
 
 
-
+//////////////////////////////////////////////////////////////////////////
 assign wIPInitialValue = (Reset) ? 8'b0 : wDestination;
 UPCOUNTER_POSEDGE # ( 16 ) IP
 (
@@ -165,19 +151,36 @@ Module_LCD_Control LCD
 
 ////////////////////////////////////////////////////////////////////////
 ////// For the VGA Display
-
-// ------------------------------------------------------------------- //
-// RAM Memory 480x640
-// ------------------------------------------------------------------- //
-RAM_SINGLE_READ_PORT # (3,24,640*480) VideoMemory
+// ---------------------------------------------------------------------
+//// VGA RAM
+wire [15:0] wDestinationVGA;
+wire [15:0] wReadAddressVGA;
+wire [2:0] wColorFromVideoMemory;
+assign wDestinationVGA = (wSourceData0)*256+wSourceData1;
+RAM_SINGLE_READ_PORT # (3,19,256*256) VideoMemory
 (
-.Clock( Clock ),
-.iWriteEnable( rVGAWritEnable ),
-.iReadAddress( 24'b0 ),
-.iWriteAddress( {wSourceData1[7:0],wSourceData0} ),
-.iDataIn( wInstruction[23:21] )
-.oDataOut( {oVGA_R,oVGA_G,oVGA_B} )
+	.Clock( Clock ),
+	.iWriteEnable( rWriteEnableVGA ),
+	.iReadAddress( wReadAddressVGA),
+	.iWriteAddress(wDestinationVGA),
+	.iDataIn( wInstruction[23:21] ),
+	.oDataOut(  wColorFromVideoMemory)
 );
+// ---------------------------------------------------------------------
+//// VGA CONTROLLER
+VGA_Controller VGA
+(
+.Clock(Clock),
+.Reset(Reset),
+.oReadAddress(wReadAddressVGA);
+.oVGA_Red(oVGA_Red),
+.oVGA_Green(oVGA_Green),
+.oVGA_Blue(oVGA_Blue),
+.wColorFromVideoMemory(wColorFromVideoMemory),
+.oHSync(oVGA_HSync),
+.oVSync(oVGA_VSync),
+);	
+
 ////////////////////////////////////////////////////////////////////////
 
 always @ ( * )
