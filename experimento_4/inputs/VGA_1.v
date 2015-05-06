@@ -3,14 +3,14 @@
 ////////////////////////////////////////////////////////////////////////
 module VGA_Controller
 (
-input  wire		  	Clock,
-input  wire		  	Reset,
-output reg [19:0] 		oReadAddress,
-output	wire 			oVGA_Red,
-output	wire 			oVGA_Green,
-output	wire 			oVGA_Blue,
-input 	wire [2:0]		wColorFromVideoMemory,
-output reg				oHSync,
+input  	wire		  		Clock,
+input  	wire		  		Reset,
+output 	reg 	[15:0] 	oReadAddress,
+output	wire 				oVGA_Red,
+output	wire 				oVGA_Green,
+output	wire 				oVGA_Blue,
+input 	wire 	[2:0]		wColorFromVideoMemory,
+output 	reg				oHSync,
 output	reg				oVSync
 );	
 
