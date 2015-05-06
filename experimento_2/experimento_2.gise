@@ -22,7 +22,11 @@
   <sourceproject xmlns="http://www.xilinx.com/XMLSchema" xil_pn:fileType="FILE_XISE" xil_pn:name="experimento_2.xise"/>
 
   <files xmlns="http://www.xilinx.com/XMLSchema">
+    <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_LSO" xil_pn:name=".lso"/>
     <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="LMUL_stx_beh.prj"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="LUT_MULT.prj"/>
+    <file xil_pn:fileType="FILE_XST_STX" xil_pn:name="LUT_MULT.stx"/>
+    <file xil_pn:fileType="FILE_XST" xil_pn:name="LUT_MULT.xst"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_BITGEN_REPORT" xil_pn:name="MiniAlu.bgn" xil_pn:subbranch="FPGAConfiguration"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_BIT" xil_pn:name="MiniAlu.bit" xil_pn:subbranch="FPGAConfiguration"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_NGDBUILD_LOG" xil_pn:name="MiniAlu.bld"/>
@@ -65,6 +69,9 @@
     <file xil_pn:fileType="FILE_XRPT" xil_pn:name="MiniAlu_xst.xrpt"/>
     <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="RAM_DUAL_RW_PORT_stx_beh.prj"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="ROM_isim_beh.exe"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="TestBench.prj"/>
+    <file xil_pn:fileType="FILE_XST_STX" xil_pn:name="TestBench.stx"/>
+    <file xil_pn:fileType="FILE_XST" xil_pn:name="TestBench.xst"/>
     <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="TestBench_beh.prj"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="TestBench_isim_beh.exe"/>
     <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="TestBench_isim_beh.wdb"/>
@@ -96,6 +103,10 @@
     <transform xil_pn:end_ts="1428509341" xil_pn:in_ck="4669957375620519947" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1428509341">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="inputs/16bits_mult.v"/>
       <outfile xil_pn:name="inputs/Collaterals.v"/>
       <outfile xil_pn:name="inputs/Defintions.v"/>
@@ -120,6 +131,11 @@
     <transform xil_pn:end_ts="1428509341" xil_pn:in_ck="4669957375620519947" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1428509341">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="inputs/16bits_mult.v"/>
       <outfile xil_pn:name="inputs/Collaterals.v"/>
       <outfile xil_pn:name="inputs/Defintions.v"/>
@@ -132,7 +148,10 @@
     <transform xil_pn:end_ts="1428509344" xil_pn:in_ck="4669957375620519947" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="4248203717376029071" xil_pn:start_ts="1428509341">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
       <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="TestBench_beh.prj"/>
       <outfile xil_pn:name="TestBench_isim_beh.exe"/>
@@ -144,6 +163,7 @@
     <transform xil_pn:end_ts="1428509344" xil_pn:in_ck="-171597121504176308" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-3913207672986833550" xil_pn:start_ts="1428509344">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
       <outfile xil_pn:name="TestBench_isim_beh.wdb"/>
       <outfile xil_pn:name="isim.cmd"/>
       <outfile xil_pn:name="isim.log"/>
@@ -176,12 +196,13 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1428508394" xil_pn:in_ck="4669957375620519947" xil_pn:name="TRANEXT_xstsynthesize_spartan3e" xil_pn:prop_ck="-4776406651679495647" xil_pn:start_ts="1428508363">
+    <transform xil_pn:end_ts="1430011782" xil_pn:in_ck="4669957375620519947" xil_pn:name="TRANEXT_xstsynthesize_spartan3e" xil_pn:prop_ck="-4776406651679495647" xil_pn:start_ts="1430011772">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name=".lso"/>
       <outfile xil_pn:name="MiniAlu.lso"/>
       <outfile xil_pn:name="MiniAlu.ngc"/>
       <outfile xil_pn:name="MiniAlu.ngr"/>
@@ -200,61 +221,72 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1427301512" xil_pn:in_ck="122964055924656309" xil_pn:name="TRANEXT_ngdbuild_FPGA" xil_pn:prop_ck="8666630588369004465" xil_pn:start_ts="1427301508">
+    <transform xil_pn:end_ts="1430011809" xil_pn:in_ck="122964055924656309" xil_pn:name="TRANEXT_ngdbuild_FPGA" xil_pn:prop_ck="8666630588369004465" xil_pn:start_ts="1430011804">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="MiniAlu.bld"/>
+      <outfile xil_pn:name="MiniAlu.ngd"/>
+      <outfile xil_pn:name="MiniAlu_ngdbuild.xrpt"/>
+      <outfile xil_pn:name="_ngo"/>
+      <outfile xil_pn:name="_xmsgs/ngdbuild.xmsgs"/>
+    </transform>
+    <transform xil_pn:end_ts="1430011816" xil_pn:in_ck="122964055924656310" xil_pn:name="TRANEXT_map_spartan3" xil_pn:prop_ck="-5849673150125579957" xil_pn:start_ts="1430011809">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="MiniAlu.pcf"/>
+      <outfile xil_pn:name="MiniAlu_map.map"/>
+      <outfile xil_pn:name="MiniAlu_map.mrp"/>
+      <outfile xil_pn:name="MiniAlu_map.ncd"/>
+      <outfile xil_pn:name="MiniAlu_map.ngm"/>
+      <outfile xil_pn:name="MiniAlu_map.xrpt"/>
+      <outfile xil_pn:name="MiniAlu_summary.xml"/>
+      <outfile xil_pn:name="MiniAlu_usage.xml"/>
+      <outfile xil_pn:name="_xmsgs/map.xmsgs"/>
+    </transform>
+    <transform xil_pn:end_ts="1430011832" xil_pn:in_ck="4144265637123719887" xil_pn:name="TRANEXT_par_spartan3" xil_pn:prop_ck="-5563652517805085498" xil_pn:start_ts="1430011816">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="MiniAlu.ncd"/>
+      <outfile xil_pn:name="MiniAlu.pad"/>
+      <outfile xil_pn:name="MiniAlu.par"/>
+      <outfile xil_pn:name="MiniAlu.ptwx"/>
+      <outfile xil_pn:name="MiniAlu.unroutes"/>
+      <outfile xil_pn:name="MiniAlu.xpi"/>
+      <outfile xil_pn:name="MiniAlu_pad.csv"/>
+      <outfile xil_pn:name="MiniAlu_pad.txt"/>
+      <outfile xil_pn:name="MiniAlu_par.xrpt"/>
+      <outfile xil_pn:name="_xmsgs/par.xmsgs"/>
+    </transform>
+    <transform xil_pn:end_ts="1429588237" xil_pn:in_ck="122964055924656178" xil_pn:name="TRANEXT_bitFile_spartan3e" xil_pn:prop_ck="-7817169320884990698" xil_pn:start_ts="1429588227">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
+      <outfile xil_pn:name="MiniAlu.bgn"/>
+      <outfile xil_pn:name="MiniAlu.bit"/>
+      <outfile xil_pn:name="MiniAlu.drc"/>
+      <outfile xil_pn:name="MiniAlu.ut"/>
+      <outfile xil_pn:name="_xmsgs/bitgen.xmsgs"/>
+      <outfile xil_pn:name="usage_statistics_webtalk.html"/>
+      <outfile xil_pn:name="webtalk.log"/>
+      <outfile xil_pn:name="webtalk_pn.xml"/>
+    </transform>
+    <transform xil_pn:end_ts="1427301749" xil_pn:in_ck="122964055924643324" xil_pn:name="TRAN_configureTargetDevice" xil_pn:prop_ck="5582947192412673156" xil_pn:start_ts="1427301746">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForPredecessor"/>
-      <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="InputAdded"/>
-      <status xil_pn:value="InputChanged"/>
-      <status xil_pn:value="InputRemoved"/>
-      <status xil_pn:value="OutputRemoved"/>
-    </transform>
-    <transform xil_pn:end_ts="1427301517" xil_pn:in_ck="122964055924656310" xil_pn:name="TRANEXT_map_spartan3" xil_pn:prop_ck="-5849673150125579957" xil_pn:start_ts="1427301512">
-      <status xil_pn:value="SuccessfullyRun"/>
-      <status xil_pn:value="NotReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
-      <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="InputRemoved"/>
-      <status xil_pn:value="OutputChanged"/>
-      <status xil_pn:value="OutputRemoved"/>
-    </transform>
-    <transform xil_pn:end_ts="1427301542" xil_pn:in_ck="4144265637123719887" xil_pn:name="TRANEXT_par_spartan3" xil_pn:prop_ck="-5563652517805085498" xil_pn:start_ts="1427301517">
-      <status xil_pn:value="SuccessfullyRun"/>
-      <status xil_pn:value="NotReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
-      <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="InputRemoved"/>
-      <status xil_pn:value="OutputRemoved"/>
-    </transform>
-    <transform xil_pn:end_ts="1427301549" xil_pn:in_ck="122964055924656178" xil_pn:name="TRANEXT_bitFile_spartan3e" xil_pn:prop_ck="-7817169320884990698" xil_pn:start_ts="1427301542">
-      <status xil_pn:value="SuccessfullyRun"/>
-      <status xil_pn:value="NotReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
-      <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="InputRemoved"/>
-      <status xil_pn:value="OutputChanged"/>
-      <status xil_pn:value="OutputRemoved"/>
-    </transform>
-    <transform xil_pn:end_ts="1427301749" xil_pn:in_ck="122964055924643324" xil_pn:name="TRAN_configureTargetDevice" xil_pn:prop_ck="5582947192412673156" xil_pn:start_ts="1427301746">
-      <status xil_pn:value="SuccessfullyRun"/>
-      <status xil_pn:value="NotReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="InputRemoved"/>
     </transform>
-    <transform xil_pn:end_ts="1427301542" xil_pn:in_ck="122964055924656178" xil_pn:name="TRAN_postRouteTrce" xil_pn:prop_ck="445577401284416186" xil_pn:start_ts="1427301539">
+    <transform xil_pn:end_ts="1430011832" xil_pn:in_ck="122964055924656178" xil_pn:name="TRAN_postRouteTrce" xil_pn:prop_ck="445577401284416186" xil_pn:start_ts="1430011829">
       <status xil_pn:value="SuccessfullyRun"/>
-      <status xil_pn:value="NotReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
-      <status xil_pn:value="OutOfDateForOutputs"/>
-      <status xil_pn:value="InputRemoved"/>
-      <status xil_pn:value="OutputRemoved"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="MiniAlu.twr"/>
+      <outfile xil_pn:name="MiniAlu.twx"/>
+      <outfile xil_pn:name="_xmsgs/trce.xmsgs"/>
     </transform>
   </transforms>
 

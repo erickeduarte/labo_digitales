@@ -110,51 +110,15 @@ assign wAddSubResult = wSourceData1 + wSourceData0_tmp;
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
-/////// SMUL
-wire  signed[15:0] wSSourceData0,wSSourceData1; //entradas con signo
-assign  wSSourceData0 =  wSourceData0;
-assign  wSSourceData1 =  wSourceData1;
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-////// IMUL
-wire [7:0] wResult;
-wire [5:0] wCarry;
-
-assign wResult[0]    				= wSourceData0[0]&wSourceData1[0];
-assign{wCarry[0], wResult[1]}    = wSourceData0[1]& wSourceData1[0]+wSourceData0[0]&wSourceData1[1];  
-assign{wCarry[1], wResult[2]}    = wSourceData0[2]& wSourceData1[0]+wSourceData0[1]&wSourceData1[1]+wSourceData0[0]&wSourceData1[2]+wCarry[0];
-assign{wCarry[2], wResult[3]}    = wSourceData0[3]& wSourceData1[0]+wSourceData0[2]&wSourceData1[1]+wSourceData0[1]&wSourceData1[2]+wSourceData0[0]&wSourceData1[3]+wCarry[1];
-assign{wCarry[3], wResult[4]}    = wSourceData0[3]& wSourceData1[1]+wSourceData0[2]&wSourceData1[2]+wSourceData0[1]&wSourceData1[3]+wCarry[2];
-assign{wCarry[4], wResult[5]}    = wSourceData0[3]& wSourceData1[2]+wSourceData0[2]&wSourceData1[3]+wCarry[3];
-assign{wCarry[5], wResult[6]}		= wSourceData0[3]& wSourceData1[3]+wCarry[4];
-assign wResult[7]     	 			= wCarry[5];
-
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-/////// IMUL2
-wire [15:0] LUT_Mult_Result; // LUT multiplication output
-
-LUT_MULT lut_mult
+wire [15:0] wLUT_result;
+LUT_2 mulut 
 (
-.iData_A(wSourceData1),
-.iData_B(wSourceData0),
-.oResult(LUT_Mult_Result)
+.iData_A(wSourceData0),
+.iData_B(wSourceData1),
+.oResult(wLUT_result)
 );
 ////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////
-///// LMUL
-wire [31:0] wLMUL_result;
-
-LMUL lmul
-(
-.iData_A(wSourceData1),
-.iData_B(wSourceData0),
-.oResult(wLMUL_result)
-);
-////////////////////////////////////////////////////////////////////////
 
 
 always @ ( * )
@@ -241,7 +205,18 @@ always @ ( * )
 		rBranchTaken <= 1'b0;
 		rDoComplement <= 1'b0;
 	end
+	`LUT_2:
+		begin
+			rFFLedEN      <= 1'b0;
+			rBranchTaken  <= 1'b0;
+			rDoComplement <= 1'b0;
+			rWriteEnable0 <= 1'b1; // Write output to RAM
+			rWriteEnable1 <= 1'b1; // Write 32 bits output to RAM 
+			rResult0      <= wLUT_result; // Asign result to output of LUT multiplication module
+			rResult1	  <= 0;
+		end
 	//-------------------------------------
+	/*
 	`MUL:
 	begin
 		rFFLedEN     <= 1'b0;
@@ -297,6 +272,8 @@ always @ ( * )
 			rResult0      <= wLMUL_result[15:0]; // Asign result to output of LUT multiplication module
 			rResult1      <= wLMUL_result[31:16]; // Asign result to output of LUT multiplication module
 		end
+		*/
+	
 	//-------------------------------------
 	
 	default:

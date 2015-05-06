@@ -15,7 +15,7 @@
 `define IMUL	4'd10
 `define IMUL2	4'd11
 `define LMUL	4'd12
-
+`define LUT_2	4'd13
 `define R0 8'd0
 `define R1 8'd1
 `define R2 8'd2
