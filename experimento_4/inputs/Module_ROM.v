@@ -11,7 +11,7 @@ always @ ( iAddress )
 begin
 	case (iAddress)
 	
-	0: oInstruction = { `STO , 8'b1, 16'bffff};
+	0: oInstruction = { `STO , 8'b1, 16'hffff};
 	1: oInstruction = { `NOP ,	24'd4000	};
 	2: oInstruction = { `LED ,	8'b0, 8'b1, 8'b0 };
 	3: oInstruction = { `NOP ,	24'd4000	};

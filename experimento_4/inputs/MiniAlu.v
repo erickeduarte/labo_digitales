@@ -16,8 +16,8 @@ module MiniAlu
 	output wire 		oVGA_Green,						//	VGA output of color GREEN
 	output wire 		oVGA_Blue,						//	VGA output of color BLUE
 	output wire 		oVGA_HSync,						//	VGA Horizontal Switch
-	output wire 		oVGA_VSync,						//	VGA Vertical Switch
-	output wire [3:0] 	wLCD_Data,
+	output wire 		oVGA_VSync						//	VGA Vertical Switch
+	//output wire [3:0] 	wLCD_Data
 );
 
 
@@ -31,7 +31,6 @@ reg  [7:0]  wInstructiontmep,wDestinationtemp ;
 wire [15:0] wAddSubResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData0_tmp,wSourceData1,wIPInitialValue,wImmediateValue;
-wire        wColorFromVideoMemory;
 // --------------------------
 ROM InstructionRom 
 (
@@ -134,7 +133,7 @@ assign wAddSubResult = wSourceData1 + wSourceData0_tmp;
 
 reg	rLCD_Data_Ready;	// Handshake protocol -- send data ready
 wire	wLCD_Ready;
-Module_LCD_Control LCD
+/*Module_LCD_Control LCD
 (
 	.Clock(Clock),										// 	Runs @50MHz
 	.Reset(Reset),										// 	Resets state machine, and counter
@@ -146,7 +145,7 @@ Module_LCD_Control LCD
 	.iData(rResult[15:8]),								// 	8 BIT Data to be shown on the LCD screen
 	.oReadyForData(wLCD_Ready),							// 	Flag that indicates wheter or not the controller is ready to print data
 	.iData_Ready(rLCD_Data_Ready)						// 	Flag that indicates that the data is ready to be acepted by controller
-);
+);*/
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
@@ -172,13 +171,13 @@ VGA_Controller VGA
 (
 .Clock(Clock),
 .Reset(Reset),
-.oReadAddress(wReadAddressVGA);
+.oReadAddress(wReadAddressVGA),
 .oVGA_Red(oVGA_Red),
 .oVGA_Green(oVGA_Green),
 .oVGA_Blue(oVGA_Blue),
 .wColorFromVideoMemory(wColorFromVideoMemory),
 .oHSync(oVGA_HSync),
-.oVSync(oVGA_VSync),
+.oVSync(oVGA_VSync)
 );	
 
 ////////////////////////////////////////////////////////////////////////

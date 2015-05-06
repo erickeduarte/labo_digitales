@@ -5,13 +5,13 @@ module VGA_Controller
 (
 input  wire		  	Clock,
 input  wire		  	Reset,
-output reg [19:0] 		oReadAddress
+output reg [19:0] 		oReadAddress,
 output	wire 			oVGA_Red,
 output	wire 			oVGA_Green,
 output	wire 			oVGA_Blue,
 input 	wire [2:0]		wColorFromVideoMemory,
 output reg				oHSync,
-output	reg				oVSync,
+output	reg				oVSync
 );	
 
 
@@ -21,9 +21,9 @@ output	reg				oVSync,
 	COLUMN starts in 192 ends in (192+256=448). Else is black
 */
 // Read next signal
-assign oReadAddress = ( wCurrentRow < 143 || wCurrentRow > 399 || CurrentCol < 336 || CurrentCol > 592 ) : 0 : (Row_index-112)*256+(Column_index-192-96-48);
+//assign oReadAddress = ( wCurrentRow < 143 || wCurrentRow > 399 || CurrentCol < 336 || CurrentCol > 592 ) : 0 : (Row_index-112)*256+(Column_index-192-96-48);
 // Assign color ouputs
-assign {oRed,oGreen,oBlue} = ( wCurrentRow < 112 || wCurrentRow > 368 || CurrentCol < 336 || CurrentCol > 592 ) : {0,0,0} : wColorFromVideoMemory;
+//assign {oRed,oGreen,oBlue} = ( wCurrentRow < 112 || wCurrentRow > 368 || CurrentCol < 336 || CurrentCol > 592 ) : {0,0,0} : wColorFromVideoMemory;
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ UPCOUNTER_POSEDGE #(10) COLUMN_COUNTER
 	.Reset(Column_reset | Reset),
 	.Initial(8'b0),
 	.Enable(1),
-+	.Q(Column_index)
+	.Q(Column_index)
 );
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////.
