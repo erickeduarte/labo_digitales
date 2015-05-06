@@ -5,7 +5,7 @@ module VGA_Controller
 (
 input  	wire		  		Clock,
 input  	wire		  		Reset,
-output 	reg 	[15:0] 	oReadAddress,
+output 	wire 	[15:0] 	oReadAddress,
 output	wire 				oVGA_Red,
 output	wire 				oVGA_Green,
 output	wire 				oVGA_Blue,
@@ -20,18 +20,22 @@ output	reg				oVSync
 	Will be using 256*256 RAM. So ROW starts in 112 ends in (112+256=368). Else is black
 	COLUMN starts in 192 ends in (192+256=448). Else is black
 */
-// Read next signal
-//assign oReadAddress = ( wCurrentRow < 143 || wCurrentRow > 399 || CurrentCol < 336 || CurrentCol > 592 ) : 0 : (Row_index-112)*256+(Column_index-192-96-48);
-// Assign color ouputs
-//assign {oRed,oGreen,oBlue} = ( wCurrentRow < 112 || wCurrentRow > 368 || CurrentCol < 336 || CurrentCol > 592 ) : {0,0,0} : wColorFromVideoMemory;
-////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////
 wire 	Clock_25;
 wire 	[8:0] Row_index;
 wire 	[9:0] Column_index;
 reg		Column_reset;
 reg		Row_reset;
+
+// Read next signal
+assign oReadAddress = ( Row_index < 143 || Row_index > 399 || Column_index < 336 || Column_index > 592 ) ? 0 : (Row_index-112)*256+(Column_index-192-96-48);
+// Assign color ouputs
+assign {oVGA_Red,oVGA_Green,oVGA_Blue} = ( Row_index < 112 || Row_index > 368 || Column_index < 336 || Column_index  > 592 ) ? {0,0,0} : wColorFromVideoMemory;
+////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////
+
+
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
