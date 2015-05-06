@@ -38,10 +38,14 @@ reg 	rTimeCountReset;		// Counter Reset
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
+/*
+	Will be using 256*256 RAM. So ROW starts in 112 ends in (112+256=368). Else is black
+	COLUMN starts in 192 ends in (192+256=448). Else is black
+*/
 // Read next signal
-assign oReadAddress = Row_index*640+Column_index;
+assign oReadAddress = ( wCurrentRow < 112 || wCurrentRow > 368 || CurrentCol < 192 || CurrentCol > 448 ) : 0 : (Row_index-112)*256+Column_index-192;
 // Assign color ouputs
-assign {oRed,oGreen,oBlue} = ( wCurrentRow < 128 || wCurrentRow > 540 || CurrentCol < 100 || CurrentCol > 380 ) : {0,0,0} : wColorFromVideoMemory;
+assign {oRed,oGreen,oBlue} = ( wCurrentRow < 112 || wCurrentRow > 368 || CurrentCol < 192 || CurrentCol > 448 ) : {0,0,0} : wColorFromVideoMemory;
 ////////////////////////////////////////////////////////////////////////
 
 //	Next State and delay logic
