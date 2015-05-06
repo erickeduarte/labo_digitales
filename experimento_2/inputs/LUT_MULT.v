@@ -137,3 +137,58 @@ assign oResult = lower_bits_result + (higher_bits_result << 8);
 
 endmodule
 ////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+/////////// LUT2
+////////////////////////////////////////////////////////////////////////
+// Implements a multiplication of 2 bits, using LUT table implementation
+// Multiplies iData_A (16b) with iTWO_BITS_Data_B (2b)
+module LUT_4bits 
+(
+input wire [15:0] iData_A, // Input data, 15Bits multiplicand
+input wire [3:0] iFOUR_BITS_Data_B, // Input data, 2Bits multiplicand
+output reg [15:0] oPartial_Result // Result of iData_A*iTWO_BITS_Data_B
+);
+
+always @ (iFOUR_BITS_Data_B)
+	case (iFOUR_BITS_Data_B)
+		0: oPartial_Result = 0; // Multiplying by 0, gives 0
+		1: oPartial_Result = iData_A; // Multiplying by 1, gives A
+		2: oPartial_Result = iData_A >> 1; // Multiplying by 2, gives 2*A -- Multiplying by 2, its the same as a displacement to the left
+		3: oPartial_Result = (iData_A >> 1) + iData_A; // Multipliying by 3, gives 3*A = A + 2*A
+		4: oPartial_Result = (iData_A >> 2); // Multiplying by 4 is shifting two bits to the left
+		5: oPartial_Result = (iData_A >> 2) + iData_A; // 5*A = 4*A + A = A>>2 + A
+		6: oPartial_Result = (iData_A >> 1) + (iData_A >> 2); // 6*A = 4*A + 2*A = A>>2 + A>>1
+		7: oPartial_Result = (iData_A >> 1) + (iData_A >> 2) + iData_A; // 7*A = 6*A + A =  A>>2 + A>>1 + A
+		8: oPartial_Result = (iData_A >> 3);
+		9: oPartial_Result = (iData_A >> 3) + iData_A;
+		10: oPartial_Result = (iData_A >> 3) + (iData_A >>1);
+		11: oPartial_Result = (iData_A >> 3) + (iData_A >>1) + iData_A;
+		12: oPartial_Result = (iData_A >> 3) + (iData_A >>2);
+		13: oPartial_Result = (iData_A >> 3) + (iData_A >>2) + iData_A;
+		14: oPartial_Result = (iData_A >> 3) + (iData_A >>2) + (iData_A>>1);
+		15: oPartial_Result = (iData_A >> 3) + (iData_A >>2) + (iData_A>>1) + iData_A;
+	endcase 
+endmodule 
+
+module LUT_2
+(
+input wire [15:0] iData_A, // Input data, 16Bits multiplicand
+input wire [15:0] iData_B, // Input data, 15Bits multiplicand
+output wire [15:0] oResult // Result of iData_A*iTWO_BITS_Data_B
+);
+wire [15:0] oPartial_Results [3:0];
+	genvar index;
+	generate
+		for ( index = 0; index < 15; index = index + 4)
+			begin : MUL_COL
+				LUT_4bits myLUT 
+				(
+				.iData_A(iData_A),
+				.iFOUR_BITS_Data_B(iData_B[index+3:index]),
+				.oPartial_Result(oPartial_Results[(index/4)])
+				);
+			end
+	endgenerate
+// Output definitions
+assign oResult = (oPartial_Results[0]) + (oPartial_Results[1] >> 4) + (oPartial_Results[2] >> 8) + (oPartial_Results[3] >> 12);
+endmodule
