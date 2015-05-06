@@ -1,5 +1,6 @@
 `timescale 1ns / 1ps
 `include "Defintions.v"
+`include "VGA_1.v"
 
 
 module MiniAlu
@@ -133,7 +134,7 @@ assign wAddSubResult = wSourceData1 + wSourceData0_tmp;
 
 reg	rLCD_Data_Ready;	// Handshake protocol -- send data ready
 wire	wLCD_Ready;
-/*Module_LCD_Control LCD
+Module_LCD_Control LCD
 (
 	.Clock(Clock),										// 	Runs @50MHz
 	.Reset(Reset),										// 	Resets state machine, and counter
@@ -145,7 +146,7 @@ wire	wLCD_Ready;
 	.iData(rResult[15:8]),								// 	8 BIT Data to be shown on the LCD screen
 	.oReadyForData(wLCD_Ready),							// 	Flag that indicates wheter or not the controller is ready to print data
 	.iData_Ready(rLCD_Data_Ready)						// 	Flag that indicates that the data is ready to be acepted by controller
-);*/
+);
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////

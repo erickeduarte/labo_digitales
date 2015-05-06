@@ -63,7 +63,7 @@ UPCOUNTER_POSEDGE #(9) ROW_COUNTER
 	.Reset(Row_reset | Reset),
 	.Initial(9'b0),
 	.Enable(1),
-	.Q(Column_index)
+	.Q(Row_index)
 );
 ////////////////////////////////////////////////////////////////////////
 always @ ( posedge Clock_25 )
@@ -71,77 +71,86 @@ always @ ( posedge Clock_25 )
 		/// TPW VSYNC
 		if (Row_index < 2)
 			begin
-				VSync = 0;
-				HSync = 1;
+				Row_reset = 0;
+				oVSync = 0;
+				oHSync = 1;
 				if(Column_index < 96+48+640+16) 
 					begin	
 						Column_reset = 0;
 					end
 				else 
 					begin
-						HSync = 1;
-						VSync = 1;
+						oHSync = 1;
+						oVSync = 1;
 						Column_reset = 1;
 					end
 			end
 		/// BACK PORCH
 		else if (Row_index < 2+29)
 			begin
-				VSync = 1;
-				HSync = 1;
+				Row_reset = 0;
+				oVSync = 1;
+				oHSync = 1;
 				if(Column_index < 96+48+640+16) 
 					begin	
 						Column_reset = 0;
 					end
 				else 
 					begin
-						HSync = 1;
-						VSync = 1;
+						oHSync = 1;
+						oVSync = 1;
 						Column_reset = 1;
 					end
 			end
 		// SEND COLUMNS
 		else if (Row_index < 480+2+29) 
 			begin
+			Row_reset = 0;
 				// TPW HSYNC
 				if(Column_index < 96) 
 					begin	
-						HSync = 0;
-						VSync = 1;
+						oHSync = 0;
+						oVSync = 1;
 						Column_reset = 0;
 					end
 				// BACH PORCH HSYNC
 				else if ( Column_index < 96+48+640+16) 
 					begin	
-						HSync = 1;
-						VSync = 1;
+						oHSync = 1;
+						oVSync = 1;
 						Column_reset = 0;
 					end
 				// SEND COLUMNS
 				else 
 					begin
-						HSync = 1;
-						VSync = 1;
+						oHSync = 1;
+						oVSync = 1;
 						Column_reset = 1;
 					end
 			end
 		/// FRONT PORCH VSYNC
 		else if (Row_index < 480+10+2+29)
 			begin
-				HSync = 1;
-				VSync = 1;
+				oHSync = 1;
+				oVSync = 1;
 				
 				if(Column_index < 96+48+640+16) 
 					begin	
 						Column_reset = 0;
+						Row_reset = 0;
 					end
 				else 
 					begin
-						HSync = 1;
-						VSync = 1;
+						oHSync = 1;
+						oVSync = 1;
 						Column_reset = 1;
+						Row_reset = 1;
 					end
 			end
 				
 	end
 //----------------------------------------------------------------------//
+
+endmodule
+
+

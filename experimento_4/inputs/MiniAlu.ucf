@@ -29,6 +29,7 @@ NET "oLed[7]" IOSTANDARD = LVTTL;
 NET "oLed[7]" DRIVE = 8;
 
 # For LCD Display
+
 NET "oLCD_Enabled" LOC = M18; 
 NET "oLCD_Enabled" IOSTANDARD = LVCMOS33; 
 NET "oLCD_Enabled" DRIVE = 4;
