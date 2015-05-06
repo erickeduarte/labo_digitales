@@ -8,17 +8,16 @@ module MiniAlu
 	input wire Clock,
 	input wire Reset,
 	output wire [7:0] oLed,
-	output wire 		wLCD_Enabled,					// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
-	output wire 		wLCD_RegisterSelect, 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
-	output wire 		wLCD_StrataFlashControl,		//	
-	output wire 		wLCD_ReadWrite,					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
-	output wire [3:0] 	wLCD_Data,						//	
+	output wire 		oLCD_Enabled,						// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
+	output wire 		oLCD_RegisterSelect, 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
+	output wire 		oLCD_StrataFlashControl,	//	
+	output wire 		oLCD_ReadWrite,					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
+	output wire [3:0]	oLCD_Data,
 	output wire 		oVGA_Red,						//	VGA output of color RED
 	output wire 		oVGA_Green,						//	VGA output of color GREEN
 	output wire 		oVGA_Blue,						//	VGA output of color BLUE
 	output wire 		oVGA_HSync,						//	VGA Horizontal Switch
 	output wire 		oVGA_VSync						//	VGA Vertical Switch
-	//output wire [3:0] 	wLCD_Data
 );
 
 
@@ -138,11 +137,11 @@ Module_LCD_Control LCD
 (
 	.Clock(Clock),										// 	Runs @50MHz
 	.Reset(Reset),										// 	Resets state machine, and counter
-	.oLCD_Enabled(wLCD_Enabled),						// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
-	.oLCD_RegisterSelect(wLCD_RegisterSelect), 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
-	.oLCD_StrataFlashControl(wLCD_StrataFlashControl),	//	
-	.oLCD_ReadWrite(wLCD_ReadWrite),					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
-	.oLCD_Data(wLCD_Data),								// 	4 BIT Data OutPut to LCD Display
+	.oLCD_Enabled(oLCD_Enabled),						// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
+	.oLCD_RegisterSelect(oLCD_RegisterSelect), 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
+	.oLCD_StrataFlashControl(oLCD_StrataFlashControl),	//	
+	.oLCD_ReadWrite(oLCD_ReadWrite),					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
+	.oLCD_Data(oLCD_Data),								// 	4 BIT Data OutPut to LCD Display
 	.iData(rResult[15:8]),								// 	8 BIT Data to be shown on the LCD screen
 	.oReadyForData(wLCD_Ready),							// 	Flag that indicates wheter or not the controller is ready to print data
 	.iData_Ready(rLCD_Data_Ready)						// 	Flag that indicates that the data is ready to be acepted by controller
