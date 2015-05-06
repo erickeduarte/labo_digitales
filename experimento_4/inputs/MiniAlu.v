@@ -23,7 +23,7 @@ module MiniAlu
 
 
 wire [15:0] wIP,wIP_temp;
-reg         rWriteEnable, rBranchTaken, rDoComplement,rSubR,rReturn, rVGAWriteEnable ;
+reg         rWriteEnable, rBranchTaken, rDoComplement,rSubR,rReturn, rWriteEnableVGA ;
 wire [27:0] wInstruction;
 wire [3:0]  wOperation;
 reg  [15:0] rResult;
@@ -51,18 +51,22 @@ RAM_DUAL_READ_PORT DataRam
 	.oDataOut1(     wSourceData1 )
 );
 
-RAM_SINGLE_READ_PORT # (3,24,256*256) VideoMemory
+wire [15:0]wDestinationVGA;
+assign wDestinationVGA = (wSourceData0)*256+wSourceData1;
+RAM_SINGLE_READ_PORT # (3,19,256*256) VideoMemory
 (
 	.Clock( Clock ),
-	.iWriteEnable( rVGAWriteEnable ),
+	.iWriteEnable( rWriteEnableVGA ),
 	.iReadAddress( 24'b0 ),
-	.iWriteAddress( {wSourceData1[7:0],wSourceData0} ),
+	.iWriteAddress(wDestinationVGA),
 	.iDataIn( wInstruction[23:21] ),
 	.oDataOut( {wVGA_R,wVGA_G,wVGA_B} )
 );
 
-assign {wVGA_R,wVGA_G,wVGA_B} = ( wCurrentRow < 192 || wCurrentRow > 448 ||
-CurrentCol < 112 || CurrentCol > 368 ) : {0,0,0} : wColorFromVideoMemory;
+assign {wVGA_R,wVGA_G,wVGA_B} = ( wCurrentRow < 112 || wCurrentRow > 368 ||
+CurrentCol < 192 || CurrentCol > 448 ) : {0,0,0} : wColorFromVideoMemory;
+
+
 
 assign wIPInitialValue = (Reset) ? 8'b0 : wDestination;
 UPCOUNTER_POSEDGE # ( 16 ) IP
@@ -185,6 +189,7 @@ always @ ( * )
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rWriteEnableVGA <= 1'b0;
 		rDoComplement <= 1'b0;
 		rResult 			<= 0;
 		rReturn		<=1'b0;
@@ -197,6 +202,7 @@ always @ ( * )
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
+		rWriteEnableVGA <= 1'b0;
 		rDoComplement <= 1'b0;
 		rResult      <= wAddSubResult;
 		rReturn		<=1'b0;
@@ -209,6 +215,7 @@ always @ ( * )
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
+		rWriteEnableVGA <= 1'b0;
 		rDoComplement <= 1'b1;
 		rResult      <= wAddSubResult;
 		rReturn		<=1'b0;
@@ -220,6 +227,7 @@ always @ ( * )
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
+		rWriteEnableVGA <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rDoComplement <= 1'b0;
 		rResult      <= wImmediateValue;
@@ -232,6 +240,7 @@ always @ ( * )
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rWriteEnableVGA <= 1'b0;
 		rDoComplement <= 1'b0;
 		rResult      <= 0;
 		rReturn		<=1'b0;
@@ -249,6 +258,7 @@ always @ ( * )
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rWriteEnableVGA <= 1'b0;
 		rResult      <= 0;
 		rDoComplement <= 1'b0;
 		
@@ -261,6 +271,7 @@ always @ ( * )
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
+		rWriteEnableVGA <= 1'b0;
 		rResult      <= wIPInitialValue;
 		rDoComplement <= 1'b0;
 		rBranchTaken <= 1'b1;
@@ -272,6 +283,7 @@ always @ ( * )
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
+		rWriteEnableVGA <= 1'b0;
 		rResult      <= 0;
 		rDoComplement <= 1'b0;
 		rBranchTaken <= 1'b1;
@@ -284,6 +296,7 @@ always @ ( * )
 		rLCD_Data_Ready <= 0;
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
+		rWriteEnableVGA <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b0;
 		rDoComplement <= 1'b0;
@@ -297,6 +310,7 @@ always @ ( * )
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
+		rWriteEnableVGA <= 1'b0;
 		rDoComplement <= 1'b0;
 		rResult      <= wSourceData1 * wSourceData0; //multiplicacion       
 		rReturn			<=1'b0;
@@ -307,6 +321,7 @@ always @ ( * )
 		begin
 			rFFLedEN      <= 1'b0;
 			rWriteEnable  <= 1'b0;
+			rWriteEnableVGA <= 1'b0;
 			rDoComplement <= 1'b0;
 			rResult     	 <= 0;
 			rReturn			<=1'b0;
@@ -325,6 +340,7 @@ always @ ( * )
 			rSubR		<=1'b0;
 			rFFLedEN      <= 1'b0;
 			rWriteEnable <= 1'b0;
+			rWriteEnableVGA <= 1'b0;
 			rDoComplement <= 1'b0;
 			rResult      <= 0;
 			rBranchTaken <= 1'b0;
@@ -334,10 +350,24 @@ always @ ( * )
 			
 		end
 	//-------------------------------------
+	`VGA:
+	begin
+		rLCD_Data_Ready <= 0;
+		rFFLedEN     <= 1'b0;
+		rWriteEnable <= 1'b0;
+		rWriteEnableVGA <= 1'b1;
+		rBranchTaken <= 1'b0;
+		rDoComplement <= 1'b0;
+		rResult      <= wImmediateValue;
+		rReturn		<=1'b0;
+		rSubR		<=1'b0;
+	end
+	//-------------------------------------
 	default:
 		begin
 			rFFLedEN      <= 1'b1;
 			rWriteEnable <= 1'b0;
+			rWriteEnableVGA <= 1'b0;
 			rResult      <= 0;
 			rBranchTaken  <= 1'b0;
 			rDoComplement <= 1'b0;
