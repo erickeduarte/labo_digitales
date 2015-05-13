@@ -362,7 +362,7 @@ always @ ( * )
 		rDoComplement <= 1'b0;
 		rResult      <= wImmediateValue;
 		rReturn		<=1'b0;
-		rSubR		<=1'b0;
+		rSubR		   <=1'b0;
 	end
 	//-------------------------------------
 	default:

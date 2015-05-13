@@ -30,7 +30,7 @@ reg		Row_reset;
 // Read next signal
 assign oReadAddress = ( Row_index < 143 || Row_index > 399 || Column_index < 336 || Column_index > 592 ) ? 0 : (Row_index-112)*256+(Column_index-192-96-48);
 // Assign color ouputs
-assign {oVGA_Red,oVGA_Green,oVGA_Blue} = ( Row_index < 112 || Row_index > 368 || Column_index < 336 || Column_index  > 592 ) ? {0,0,0} : wColorFromVideoMemory;
+assign {oVGA_Red,oVGA_Green,oVGA_Blue} = ( Row_index < 112 || Row_index > 368 || Column_index < 336 || Column_index  > 592 ) ? {1,0,0} : wColorFromVideoMemory;
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
@@ -53,8 +53,8 @@ UPCOUNTER_POSEDGE #(1) Clock_25MHz
 UPCOUNTER_POSEDGE #(10) COLUMN_COUNTER
 (
 	.Clock(Clock_25),
-	.Reset(Column_reset | Reset),
-	.Initial(8'b0),
+	.Reset(Column_reset),
+	.Initial(10'b0),
 	.Enable(1),
 	.Q(Column_index)
 );
@@ -64,12 +64,24 @@ UPCOUNTER_POSEDGE #(10) COLUMN_COUNTER
 UPCOUNTER_POSEDGE #(9) ROW_COUNTER
 (
 	.Clock(Column_reset),
-	.Reset(Row_reset | Reset),
+	.Reset(Row_reset),
 	.Initial(9'b0),
 	.Enable(1),
 	.Q(Row_index)
 );
 ////////////////////////////////////////////////////////////////////////
+
+///////////////////////////// RESET
+always @ ( posedge Reset ) 
+	begin
+		oVSync = 1;
+		oHSync = 1;
+		Column_reset = 1;
+		Row_reset = 1;
+	end
+/////////////////////////////	
+
+///////////////////////////// ALL
 always @ ( posedge Clock_25 )
 	begin
 		/// TPW VSYNC
