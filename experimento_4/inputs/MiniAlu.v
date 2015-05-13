@@ -156,28 +156,28 @@ wire [15:0] wDestinationVGA;
 wire [15:0] wReadAddressVGA;
 wire [2:0] wColorFromVideoMemory;
 assign wDestinationVGA = (wSourceData0)*256+wSourceData1;
-RAM_SINGLE_READ_PORT # (3,19,256*256) VideoMemory
+RAM_SINGLE_READ_PORT VideoMemory
 (
 	.Clock( Clock ),
 	.iWriteEnable( rWriteEnableVGA ),
 	.iReadAddress( wReadAddressVGA),
 	.iWriteAddress(wDestinationVGA),
-	.iDataIn( wInstruction[23:21] ),
+	.iDataIn( wDestination[7:5] ),
 	.oDataOut(  wColorFromVideoMemory)
 );
 // ---------------------------------------------------------------------
 //// VGA CONTROLLER
 VGA_Controller VGA
 (
-.Clock(Clock),
-.Reset(Reset),
-.oReadAddress(wReadAddressVGA),
-.oVGA_Red(oVGA_Red),
-.oVGA_Green(oVGA_Green),
-.oVGA_Blue(oVGA_Blue),
-.wColorFromVideoMemory(wColorFromVideoMemory),
-.oHSync(oVGA_HSync),
-.oVSync(oVGA_VSync)
+	.Clock(Clock),
+	.Reset(Reset),
+	.oReadAddress(wReadAddressVGA),
+	.oVGA_Red(oVGA_Red),
+	.oVGA_Green(oVGA_Green),
+	.oVGA_Blue(oVGA_Blue),
+	.wColorFromVideoMemory(wColorFromVideoMemory),
+	.oHSync(oVGA_HSync),
+	.oVSync(oVGA_VSync)
 );	
 
 ////////////////////////////////////////////////////////////////////////

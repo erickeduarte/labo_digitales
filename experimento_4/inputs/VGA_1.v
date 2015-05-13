@@ -28,9 +28,9 @@ reg		Column_reset;
 reg		Row_reset;
 
 // Read next signal
-assign oReadAddress = ( Row_index < 143 || Row_index > 399 || Column_index < 336 || Column_index > 592 ) ? 0 : (Row_index-112)*256+(Column_index-192-96-48);
+assign oReadAddress = ( Row_index < 143 || Row_index > 399 || Column_index < 336 || Column_index > 592 ) ? 16'b0 : (Row_index-112)*256+(Column_index-192-96-48);
 // Assign color ouputs
-assign {oVGA_Red,oVGA_Green,oVGA_Blue} = ( Row_index < 112 || Row_index > 368 || Column_index < 336 || Column_index  > 592 ) ? {1,0,0} : wColorFromVideoMemory;
+assign {oVGA_Red,oVGA_Green,oVGA_Blue} = ( Row_index < 112 || Row_index > 368 || Column_index < 336 || Column_index  > 592 ) ? 3'd7 : wColorFromVideoMemory;
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
@@ -96,8 +96,6 @@ always @ ( posedge Clock_25 )
 					end
 				else 
 					begin
-						oHSync = 1;
-						oVSync = 1;
 						Column_reset = 1;
 					end
 			end
@@ -113,8 +111,6 @@ always @ ( posedge Clock_25 )
 					end
 				else 
 					begin
-						oHSync = 1;
-						oVSync = 1;
 						Column_reset = 1;
 					end
 			end
@@ -157,8 +153,6 @@ always @ ( posedge Clock_25 )
 					end
 				else 
 					begin
-						oHSync = 1;
-						oVSync = 1;
 						Column_reset = 1;
 						Row_reset = 1;
 					end
