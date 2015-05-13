@@ -155,7 +155,7 @@ Module_LCD_Control LCD
 wire [15:0] wDestinationVGA;
 wire [15:0] wReadAddressVGA;
 wire [2:0] wColorFromVideoMemory;
-assign wDestinationVGA = (wSourceData0)*256+wSourceData1;
+assign wDestinationVGA = (wSourceData1)*256+wSourceData0;
 RAM_SINGLE_READ_PORT VideoMemory
 (
 	.Clock( Clock ),

@@ -88,9 +88,9 @@ always @ ( posedge Clock_25 )
 		if (Row_index < 2)
 			begin
 				Row_reset = 0;
-				oVSync = 0;
+				oVSync = 0; // Active VSync
 				oHSync = 1;
-				if(Column_index < 96+48+640+16) 
+				if(Column_index < 800) 
 					begin	
 						Column_reset = 0;
 					end
@@ -105,7 +105,7 @@ always @ ( posedge Clock_25 )
 				Row_reset = 0;
 				oVSync = 1;
 				oHSync = 1;
-				if(Column_index < 96+48+640+16) 
+				if(Column_index < 800) 
 					begin	
 						Column_reset = 0;
 					end
@@ -114,6 +114,7 @@ always @ ( posedge Clock_25 )
 						Column_reset = 1;
 					end
 			end
+		// -------------------------------------------
 		// SEND COLUMNS
 		else if (Row_index < 480+2+29) 
 			begin
@@ -121,12 +122,12 @@ always @ ( posedge Clock_25 )
 				// TPW HSYNC
 				if(Column_index < 96) 
 					begin	
-						oHSync = 0;
+						oHSync = (Row_index == 31) ? 1:0; // Active oHSync
 						oVSync = 1;
 						Column_reset = 0;
 					end
 				// BACH PORCH HSYNC
-				else if ( Column_index < 96+48+640+16) 
+				else if ( Column_index < 800) 
 					begin	
 						oHSync = 1;
 						oVSync = 1;
@@ -140,6 +141,8 @@ always @ ( posedge Clock_25 )
 						Column_reset = 1;
 					end
 			end
+		// -------------------------------------------
+
 		/// FRONT PORCH VSYNC
 		else if (Row_index < 480+10+2+29)
 			begin
