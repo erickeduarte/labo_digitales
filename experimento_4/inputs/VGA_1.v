@@ -71,97 +71,95 @@ UPCOUNTER_POSEDGE #(9) ROW_COUNTER
 );
 ////////////////////////////////////////////////////////////////////////
 
-///////////////////////////// RESET
-always @ ( posedge Reset ) 
-	begin
-		oVSync = 1;
-		oHSync = 1;
-		Column_reset = 1;
-		Row_reset = 1;
-	end
-/////////////////////////////	
-
 ///////////////////////////// ALL
-always @ ( posedge Clock_25 )
-	begin
-		/// TPW VSYNC
-		if (Row_index < 2)
-			begin
-				Row_reset = 0;
-				oVSync = 0; // Active VSync
-				oHSync = 1;
-				if(Column_index < 800) 
-					begin	
-						Column_reset = 0;
-					end
-				else 
-					begin
-						Column_reset = 1;
-					end
-			end
-		/// BACK PORCH
-		else if (Row_index < 2+29)
-			begin
-				Row_reset = 0;
-				oVSync = 1;
-				oHSync = 1;
-				if(Column_index < 800) 
-					begin	
-						Column_reset = 0;
-					end
-				else 
-					begin
-						Column_reset = 1;
-					end
-			end
-		// -------------------------------------------
-		// SEND COLUMNS
-		else if (Row_index < 480+2+29) 
-			begin
-			Row_reset = 0;
-				// TPW HSYNC
-				if(Column_index < 96) 
-					begin	
-						oHSync = (Row_index == 31) ? 1:0; // Active oHSync
-						oVSync = 1;
-						Column_reset = 0;
-					end
-				// BACH PORCH HSYNC
-				else if ( Column_index < 800) 
-					begin	
-						oHSync = 1;
-						oVSync = 1;
-						Column_reset = 0;
-					end
-				// SEND COLUMNS
-				else 
-					begin
-						oHSync = 1;
-						oVSync = 1;
-						Column_reset = 1;
-					end
-			end
-		// -------------------------------------------
-
-		/// FRONT PORCH VSYNC
-		else if (Row_index < 480+10+2+29)
-			begin
-				oHSync = 1;
-				oVSync = 1;
-				
-				if(Column_index < 96+48+640+16) 
-					begin	
-						Column_reset = 0;
-						Row_reset = 0;
-					end
-				else 
-					begin
-						Column_reset = 1;
-						Row_reset = 1;
-					end
-			end
-				
-	end
+always @ ( posedge Clock_25 or posedge Reset)	
+	/// RESET
+	if(Reset)
+		begin 
+			oVSync = 1;
+			oHSync = 1;
+			Column_reset = 1;
+			Row_reset = 1;
+		end
+	else 
+		begin
+			/// TPW VSYNC
+			if (Row_index < 2)
+				begin
+					Row_reset = 0;
+					oVSync = 0; // Active VSync
+					oHSync = 1;
+					if(Column_index < 800) 
+						begin	
+							Column_reset = 0;
+						end
+					else 
+						begin
+							Column_reset = 1;
+						end
+				end
+			/// BACK PORCH
+			else if (Row_index < 2+29)
+				begin
+					Row_reset = 0;
+					oVSync = 1;
+					oHSync = 1;
+					if(Column_index < 800) 
+						begin	
+							Column_reset = 0;
+						end
+					else 
+						begin
+							Column_reset = 1;
+						end
+				end
+			// -------------------------------------------
+			// SEND COLUMNS
+			else if (Row_index < 480+2+29) 
+				begin
+					Row_reset = 0;
+					// TPW HSYNC
+					if(Column_index < 96) 
+						begin	
+							oHSync = (Row_index == 31) ? 1:0; // Active oHSync
+							oVSync = 1;
+							Column_reset = 0;
+						end
+					// BACH PORCH HSYNC
+					else if ( Column_index < 800) 
+						begin	
+							oHSync = 1;
+							oVSync = 1;
+							Column_reset = 0;
+						end
+					// SEND COLUMNS
+					else 
+						begin
+							oHSync = 1;
+							oVSync = 1;
+							Column_reset = 1;
+						end
+				end
+			// -------------------------------------------
+			/// FRONT PORCH VSYNC
+			else if (Row_index < 480+10+2+29)
+				begin
+					oHSync = 1;
+					oVSync = 1;
+					
+					if(Column_index < 96+48+640+16) 
+						begin	
+							Column_reset = 0;
+							Row_reset = 0;
+						end
+					else 
+						begin
+							Column_reset = 1;
+							Row_reset = 1;
+						end
+				end
+					
+		end
 //----------------------------------------------------------------------//
 
 endmodule
