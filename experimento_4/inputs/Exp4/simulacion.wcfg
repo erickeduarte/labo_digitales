@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/home/fabian/Development/labo_digitales/experimento_4/inputs/Exp4/TestBench_isim_beh1.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="TestBench" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="14" />
+   <wvobject fp_name="/TestBench/uut/VGA/Clock_25" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Clock_25</obj_property>
+      <obj_property name="ObjectShortName">Clock_25</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/Clock" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Clock</obj_property>
+      <obj_property name="ObjectShortName">Clock</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider15" type="divider">
+      <obj_property name="label">oVGA</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="vbus21" type="vbus" db_ref_id="1">
+      <obj_property name="label">oVGA_Color</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/TestBench/uut/oVGA_Red" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">oVGA_Red</obj_property>
+         <obj_property name="ObjectShortName">oVGA_Red</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/uut/oVGA_Green" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">oVGA_Green</obj_property>
+         <obj_property name="ObjectShortName">oVGA_Green</obj_property>
+      </wvobject>
+      <wvobject fp_name="/TestBench/uut/oVGA_Blue" type="logic" db_ref_id="1">
+         <obj_property name="ElementShortName">oVGA_Blue</obj_property>
+         <obj_property name="ObjectShortName">oVGA_Blue</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="divider16" type="divider">
+      <obj_property name="label">Syncs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/oVGA_HSync" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">oVGA_HSync</obj_property>
+      <obj_property name="ObjectShortName">oVGA_HSync</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/oVGA_VSync" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">oVGA_VSync</obj_property>
+      <obj_property name="ObjectShortName">oVGA_VSync</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider17" type="divider">
+      <obj_property name="label">Index</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">128 128 255</obj_property>
+      <obj_property name="TextColor">230 230 230</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/VGA/Row_index" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">Row_index[8:0]</obj_property>
+      <obj_property name="ObjectShortName">Row_index[8:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/VGA/Column_index" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">Column_index[9:0]</obj_property>
+      <obj_property name="ObjectShortName">Column_index[9:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/VGA/Column_reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Column_reset</obj_property>
+      <obj_property name="ObjectShortName">Column_reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/VGA/Row_reset" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">Row_reset</obj_property>
+      <obj_property name="ObjectShortName">Row_reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/VGA/oReadAddress" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">oReadAddress[15:0]</obj_property>
+      <obj_property name="ObjectShortName">oReadAddress[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/TestBench/uut/VGA/wColorFromVideoMemory" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">wColorFromVideoMemory[2:0]</obj_property>
+      <obj_property name="ObjectShortName">wColorFromVideoMemory[2:0]</obj_property>
+   </wvobject>
+</wave_config>

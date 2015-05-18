@@ -5,7 +5,7 @@ module VGA_Controller
 (
 input  	wire		  		Clock,
 input  	wire		  		Reset,
-output 	reg 	[15:0] 	oReadAddress,
+output 	wire 	[15:0] 	oReadAddress,
 output	wire 				oVGA_Red,
 output	wire 				oVGA_Green,
 output	wire 				oVGA_Blue,
@@ -20,18 +20,22 @@ output	reg				oVSync
 	Will be using 256*256 RAM. So ROW starts in 112 ends in (112+256=368). Else is black
 	COLUMN starts in 192 ends in (192+256=448). Else is black
 */
-// Read next signal
-//assign oReadAddress = ( wCurrentRow < 143 || wCurrentRow > 399 || CurrentCol < 336 || CurrentCol > 592 ) : 0 : (Row_index-112)*256+(Column_index-192-96-48);
-// Assign color ouputs
-//assign {oRed,oGreen,oBlue} = ( wCurrentRow < 112 || wCurrentRow > 368 || CurrentCol < 336 || CurrentCol > 592 ) : {0,0,0} : wColorFromVideoMemory;
-////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////
 wire 	Clock_25;
 wire 	[8:0] Row_index;
 wire 	[9:0] Column_index;
 reg		Column_reset;
 reg		Row_reset;
+
+// Read next signal
+assign oReadAddress = ( Row_index < 143 || Row_index > 399 || Column_index < 336 || Column_index > 592 ) ? 16'b0 : (Row_index-112)*256+(Column_index-192-96-48);
+// Assign color ouputs
+assign {oVGA_Red,oVGA_Green,oVGA_Blue} = ( Row_index < 112 || Row_index > 368 || Column_index < 336 || Column_index  > 592 ) ? 3'd7 : wColorFromVideoMemory;
+////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////
+
+
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
@@ -49,8 +53,8 @@ UPCOUNTER_POSEDGE #(1) Clock_25MHz
 UPCOUNTER_POSEDGE #(10) COLUMN_COUNTER
 (
 	.Clock(Clock_25),
-	.Reset(Column_reset | Reset),
-	.Initial(8'b0),
+	.Reset(Column_reset),
+	.Initial(10'b0),
 	.Enable(1),
 	.Q(Column_index)
 );
@@ -60,95 +64,102 @@ UPCOUNTER_POSEDGE #(10) COLUMN_COUNTER
 UPCOUNTER_POSEDGE #(9) ROW_COUNTER
 (
 	.Clock(Column_reset),
-	.Reset(Row_reset | Reset),
+	.Reset(Row_reset),
 	.Initial(9'b0),
 	.Enable(1),
 	.Q(Row_index)
 );
 ////////////////////////////////////////////////////////////////////////
-always @ ( posedge Clock_25 )
-	begin
-		/// TPW VSYNC
-		if (Row_index < 2)
-			begin
-				Row_reset = 0;
-				oVSync = 0;
-				oHSync = 1;
-				if(Column_index < 96+48+640+16) 
-					begin	
-						Column_reset = 0;
-					end
-				else 
-					begin
-						oHSync = 1;
-						oVSync = 1;
-						Column_reset = 1;
-					end
-			end
-		/// BACK PORCH
-		else if (Row_index < 2+29)
-			begin
-				Row_reset = 0;
-				oVSync = 1;
-				oHSync = 1;
-				if(Column_index < 96+48+640+16) 
-					begin	
-						Column_reset = 0;
-					end
-				else 
-					begin
-						oHSync = 1;
-						oVSync = 1;
-						Column_reset = 1;
-					end
-			end
-		// SEND COLUMNS
-		else if (Row_index < 480+2+29) 
-			begin
-			Row_reset = 0;
-				// TPW HSYNC
-				if(Column_index < 96) 
-					begin	
-						oHSync = 0;
-						oVSync = 1;
-						Column_reset = 0;
-					end
-				// BACH PORCH HSYNC
-				else if ( Column_index < 96+48+640+16) 
-					begin	
-						oHSync = 1;
-						oVSync = 1;
-						Column_reset = 0;
-					end
-				// SEND COLUMNS
-				else 
-					begin
-						oHSync = 1;
-						oVSync = 1;
-						Column_reset = 1;
-					end
-			end
-		/// FRONT PORCH VSYNC
-		else if (Row_index < 480+10+2+29)
-			begin
-				oHSync = 1;
-				oVSync = 1;
-				
-				if(Column_index < 96+48+640+16) 
-					begin	
-						Column_reset = 0;
-						Row_reset = 0;
-					end
-				else 
-					begin
-						oHSync = 1;
-						oVSync = 1;
-						Column_reset = 1;
-						Row_reset = 1;
-					end
-			end
-				
-	end
+
+///////////////////////////// ALL
+always @ ( posedge Clock_25 or posedge Reset)	
+	/// RESET
+	if(Reset)
+		begin 
+			oVSync = 1;
+			oHSync = 1;
+			Column_reset = 1;
+			Row_reset = 1;
+		end
+	else 
+		begin
+			/// TPW VSYNC
+			if (Row_index < 2)
+				begin
+					Row_reset = 0;
+					oVSync = 0; // Active VSync
+					oHSync = 1;
+					if(Column_index < 800) 
+						begin	
+							Column_reset = 0;
+						end
+					else 
+						begin
+							Column_reset = 1;
+						end
+				end
+			/// BACK PORCH
+			else if (Row_index < 2+29)
+				begin
+					Row_reset = 0;
+					oVSync = 1;
+					oHSync = 1;
+					if(Column_index < 800) 
+						begin	
+							Column_reset = 0;
+						end
+					else 
+						begin
+							Column_reset = 1;
+						end
+				end
+			// -------------------------------------------
+			// SEND COLUMNS
+			else if (Row_index < 480+2+29) 
+				begin
+					Row_reset = 0;
+					// TPW HSYNC
+					if(Column_index < 96) 
+						begin	
+							oHSync = (Row_index == 31) ? 1:0; // Active oHSync
+							oVSync = 1;
+							Column_reset = 0;
+						end
+					// BACH PORCH HSYNC
+					else if ( Column_index < 800) 
+						begin	
+							oHSync = 1;
+							oVSync = 1;
+							Column_reset = 0;
+						end
+					// SEND COLUMNS
+					else 
+						begin
+							oHSync = 1;
+							oVSync = 1;
+							Column_reset = 1;
+						end
+				end
+			// -------------------------------------------
+			/// FRONT PORCH VSYNC
+			else if (Row_index < 480+10+2+29)
+				begin
+					oHSync = 1;
+					oVSync = 1;
+					
+					if(Column_index < 96+48+640+16) 
+						begin	
+							Column_reset = 0;
+							Row_reset = 0;
+						end
+					else 
+						begin
+							Column_reset = 1;
+							Row_reset = 1;
+						end
+				end
+					
+		end
 //----------------------------------------------------------------------//
 
 endmodule

@@ -616,7 +616,8 @@ begin
 				oLCD_Data = 4'h0;		// Write data HEX 1
 				oReadyForData = 1;			// We are ready to acept data
 				rWrite_Enabled = 1'b0;  	// Not writting yet
-				oLCD_RegisterSelect = 1'b0; // Doesnt matter, LCD is not enabled
+				oLCD_RegisterSelect = 1'b1; // Doesnt matter, LCD is not enabled
+				rTimeCountReset = 1'b1; 
 				if(iData_Ready) 
 					begin
 						rStored_Data = iData;					// Store data in FF
@@ -624,7 +625,6 @@ begin
 					end
 				else 
 					begin
-						rTimeCountReset = 1'b1; 			// Start counting for next state
 						rNextState = `WAIT_FOR_DATA_STATE;	// We keep waiting for data
 					end
 			end
@@ -661,7 +661,7 @@ begin
 					begin
 						rTimeCountReset = 1'b1; 	// Reset timer
 						rWrite_Enabled = 1'b0;  	// Not enabled 
-						oLCD_RegisterSelect = 1'b0; // These are commands 
+						oLCD_RegisterSelect = 1'b1; // These are commands 
 						rNextState = `OUTPUT_DATA_LOWER_BITS; // Next state WAIT FOR DATA
 					end
 			end
@@ -699,7 +699,7 @@ begin
 					begin
 						rTimeCountReset = 1'b1; 	// Reset timer
 						rWrite_Enabled = 1'b0;  	// Not enabled 
-						oLCD_RegisterSelect = 1'b0; // These are commands 
+						oLCD_RegisterSelect = 1'b1; // These are commands 
 						rNextState = `WAIT_FOR_DATA_STATE; // Next state WAIT FOR DATA
 					end
 			end
