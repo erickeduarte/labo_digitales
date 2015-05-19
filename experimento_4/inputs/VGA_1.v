@@ -3,15 +3,15 @@
 ////////////////////////////////////////////////////////////////////////
 module VGA_Controller
 (
-input  	wire		  		Clock,
-input  	wire		  		Reset,
-output 	wire 	[15:0] 	oReadAddress,
-output	wire 				oVGA_Red,
-output	wire 				oVGA_Green,
-output	wire 				oVGA_Blue,
-input 	wire 	[2:0]		wColorFromVideoMemory,
-output 	reg				oHSync,
-output	reg				oVSync
+	input  	wire		  		Clock,
+	input  	wire		  		Reset,					
+	output wire 	[15:0] 		oReadAddress,			// Input adress to VGA RAM
+	output	wire 				oVGA_Red,				// Color RED
+	output	wire 				oVGA_Green,				// Color GREEN
+	output	wire 				oVGA_Blue,				// Color BLUE
+	input 	wire 	[2:0]		wColorFromVideoMemory,	// Color received from VGA RAM
+	output reg					oHSync,					// Horizontal Sync
+	output	reg					oVSync					// Vertical Sync
 );	
 
 

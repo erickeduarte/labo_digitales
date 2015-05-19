@@ -8,9 +8,9 @@ module MiniAlu
 	input wire Clock,
 	input wire Reset,
 	output wire [7:0] oLed,
-	output wire 		oLCD_Enabled,						// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
+	output wire 		oLCD_Enabled,					// 	Read/Write Enable Pulse -||- 0: Disabled -||- 1: Read/Write operation enabled
 	output wire 		oLCD_RegisterSelect, 			// 	Register Select 0=Command, 1=Data || 0: Instruction register during write operations. Busy Flash during read operations -- 1: Data for read or write operations
-	output wire 		oLCD_StrataFlashControl,	//	
+	output wire 		oLCD_StrataFlashControl,		//	
 	output wire 		oLCD_ReadWrite,					// 	Read/Write Control 0: WRITE, LCD accepts data 1: READ, LCD presents data || ALWAYS WRITE
 	output wire [3:0]	oLCD_Data,
 	output wire 		oVGA_Red,						//	VGA output of color RED
@@ -18,6 +18,8 @@ module MiniAlu
 	output wire 		oVGA_Blue,						//	VGA output of color BLUE
 	output wire 		oVGA_HSync,						//	VGA Horizontal Switch
 	output wire 		oVGA_VSync						//	VGA Vertical Switch
+	input wire iKeyboard_Data,							//
+	input wire	iKeyboard_Clock,
 );
 
 
@@ -180,6 +182,21 @@ VGA_Controller VGA
 	.oVSync(oVGA_VSync)
 );	
 
+////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////
+reg 	rKeyboard_Data_Received;
+wire 	wKeyboard_Data_Ready;
+wire [10:0] wKeyboard_Data;
+ 
+module Keyboard_Controller(
+	.Clock(iKeyboard_Clock),				// Clock received from keyboard
+	.Reset(Reset),							// Reset
+	.iKey_Data_In(iKeyboard_Data),			// Data from the keyboard
+	.oKey_Data_Out(wKeyboard_Data),			// Output data
+	.oData_Ready(wKeyboard_Data_Ready),		// Output to inform data is ready
+	.iData_Received(rKeyboard_Data_Ready)	// Input to inform data has been received
+);
 ////////////////////////////////////////////////////////////////////////
 
 always @ ( * )

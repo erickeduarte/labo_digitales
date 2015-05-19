@@ -82,15 +82,15 @@ NET "oVGA_VSync" DRIVE = 8;
 NET "oVGA_VSync" SLEW = FAST;
 
 # Keyboard
-#NET "oPS2_DATA" LOC = "G13";
-#NET "oPS2_DATA" IOSTANDARD = LVTTL;
-#NET "oPS2_DATA" DRIVE = 8;
-#NET "oPS2_DATA" SLEW = FAST;
+#NET "iKeyboard_Data" LOC = "G13";
+#NET "iKeyboard_Data" IOSTANDARD = LVTTL;
+#NET "iKeyboard_Data" DRIVE = 8;
+#NET "iKeyboard_Data" SLEW = FAST;
 
-#NET "oPS2_CLK" LOC = "G14";
-#NET "oPS2_CLK" IOSTANDARD = LVTTL;
-#NET "oPS2_CLK" DRIVE = 8;
-#NET "oPS2_CLK" SLEW = FAST;
+#NET "iKeyboard_Clock" LOC = "G14";
+#NET "iKeyboard_Clock" IOSTANDARD = LVTTL;
+#NET "iKeyboard_Clock" DRIVE = 8;
+#NET "iKeyboard_Clock" SLEW = FAST;
 
 
 
