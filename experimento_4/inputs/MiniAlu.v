@@ -195,7 +195,7 @@ module Keyboard_Controller(
 	.iKey_Data_In(iKeyboard_Data),			// Data from the keyboard
 	.oKey_Data_Out(wKeyboard_Data),			// Output data
 	.oData_Ready(wKeyboard_Data_Ready),		// Output to inform data is ready
-	.iData_Received(rKeyboard_Data_Ready)	// Input to inform data has been received
+	.iData_Received(rKeyboard_Data_Received)	// Input to inform data has been received
 );
 ////////////////////////////////////////////////////////////////////////
 
@@ -370,17 +370,79 @@ always @ ( * )
 		end
 	//-------------------------------------
 	`VGA:
-	begin
-		rLCD_Data_Ready <= 0;
-		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b0;
-		rWriteEnableVGA <= 1'b1;
-		rBranchTaken <= 1'b0;
-		rDoComplement <= 1'b0;
-		rResult      <= wImmediateValue;
-		rReturn		<=1'b0;
-		rSubR		   <=1'b0;
-	end
+		begin
+			rLCD_Data_Ready <= 0;
+			rFFLedEN     <= 1'b0;
+			rWriteEnable <= 1'b0;
+			rWriteEnableVGA <= 1'b1;
+			rBranchTaken   <= 1'b0;
+			rDoComplement  <= 1'b0;
+			rResult        <= wImmediateValue;
+			rReturn		   <=1'b0;
+			rSubR		   <=1'b0;
+		end
+	//-------------------------------------
+	`BKEY:
+		begin
+			// Fill all other flags
+			rLCD_Data_Ready <= 0;
+			rFFLedEN     	<= 1'b0;
+			rWriteEnable 	<= 1'b0;
+			rWriteEnableVGA <= 1'b1;
+			rDoComplement  	<= 1'b0;
+			rResult        	<= 0;
+			rReturn		   	<=1'b0;
+			rSubR		   	<=1'b0;
+			// Not received data yet
+			rKeyboard_Data_Received = 0;
+			// Check if we need to branch
+			if(wKeyboard_Data_Ready)
+				rBranchTaken = 0;
+			else
+				rBranchTaken = 1;
+		end
+	//-------------------------------------
+	`KEY:
+		begin
+			// In wSourceData0 we have the current X position of the RED SQUARE
+			// In wSourceData1 we have the current Y position of the RED SQUARE
+			// In rResult we write the new X position
+			// In rResult1 we write the new Y position
+			rWriteEnable 	<= 1'b1;
+			rWriteEnable1 	<= 1'b1;
+			if (wKeyboard_Data[8:1] == 8'h1C) // We received an A
+				begin
+					// We must move the square 32 pixels to the left
+					rResult  <= wSourceData0 - 16'd32;
+					rResult1 <= wSourceData1; // Same Y position
+				end
+			else if (wKeyboard_Data[8:1] == 8'h1B) // We received an S
+				begin
+					// We must move the square 32 pixels down
+					rResult  <= wSourceData0; // Same X position
+					rResult1 <= wSourceData1 - 16'd32; 
+				end
+			else if (wKeyboard_Data[8:1] == 8'h23) // We received an D
+				begin
+					// We must move the square 32 pixels to the right
+					rResult  <= wSourceData0 + 16'd32;
+					rResult1 <= wSourceData1; // Same Y position
+				end
+			else if (wKeyboard_Data[8:1] == 8'h1D) // We received an W
+				begin
+					// We must move the square 32 pixels up
+					rResult  <= wSourceData0; // Same X position
+					rResult1 <= wSourceData1 + 16'd32; 
+				end
+			// Fill all other flags
+			rLCD_Data_Ready <= 0;
+			rFFLedEN     	<= 1'b0;
+			rWriteEnableVGA <= 1'b1;
+			rDoComplement  	<= 1'b0;
+			rResult        	<= 0;
+			rReturn		   	<=1'b0;
+			rSubR		   	<=1'b0;
+		end
 	//-------------------------------------
 	default:
 		begin
