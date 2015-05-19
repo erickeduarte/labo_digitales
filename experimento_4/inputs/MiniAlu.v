@@ -444,6 +444,23 @@ always @ ( * )
 			rSubR		   	<=1'b0;
 		end
 	//-------------------------------------
+	`CPY:
+		begin
+			// Fill all other flags
+			rLCD_Data_Ready <= 0;
+			rFFLedEN     	<= 1'b0;
+			rWriteEnableVGA <= 1'b1;
+			rDoComplement  	<= 1'b0;
+			rResult        	<= 0;
+			rReturn		   	<=1'b0;
+			rSubR		   	<=1'b0;
+			// Important
+			rWriteEnable 	<= 1'b1;
+			rWriteEnable1 	<= 1'b0;
+			rResult0 		<= wSourceData0;
+			rResult1		<= 0;
+		end
+	//-------------------------------------
 	default:
 		begin
 			rFFLedEN      <= 1'b1;
