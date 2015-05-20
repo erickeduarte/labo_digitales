@@ -22,15 +22,16 @@ module VGA_Controller
 */
 
 wire 	Clock_25;
-wire 	[8:0] Row_index;
+wire 	[9:0] Row_index;
 wire 	[9:0] Column_index;
 reg		Column_reset;
 reg		Row_reset;
 
 // Read next signal
-assign oReadAddress = ( Row_index < 143 || Row_index > 399 || Column_index < 336 || Column_index > 592 ) ? 16'b0 : (Row_index-112)*256+(Column_index-192-96-48);
+assign oReadAddress = ( Row_index < 143 || Row_index > 399 || Column_index < 336 || Column_index > 592 ) ? 16'b0 : (Row_index-143)*256+(Column_index-396);
 // Assign color ouputs
-assign {oVGA_Red,oVGA_Green,oVGA_Blue} = ( Row_index < 112 || Row_index > 368 || Column_index < 336 || Column_index  > 592 ) ? 3'd7 : wColorFromVideoMemory;
+// assign {oVGA_Red,oVGA_Green,oVGA_Blue} = ( Row_index < 112 || Row_index > 368 || Column_index < 336 || Column_index  > 592 ) ? 3'b101 : wColorFromVideoMemory;
+assign {oVGA_Red,oVGA_Green,oVGA_Blue} = 3'b101;
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
@@ -61,17 +62,25 @@ UPCOUNTER_POSEDGE #(10) COLUMN_COUNTER
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////.
 //// ROW INDEX
-UPCOUNTER_POSEDGE #(9) ROW_COUNTER
+UPCOUNTER_POSEDGE #(10) ROW_COUNTER
 (
 	.Clock(Column_reset),
 	.Reset(Row_reset),
-	.Initial(9'b0),
+	.Initial(10'b0),
 	.Enable(1),
 	.Q(Row_index)
 );
 ////////////////////////////////////////////////////////////////////////
 
-///////////////////////////// ALL
+// Reset signals when they reach maximun
+assign Row_reset = (Row_index > 520) || Reset;
+assign Column_reset = (Column_index > 799) || Reset;
+// Syncs
+assign oVSync = (Row_index < 2); 
+assign oHSync = (Column_index < 96); 
+
+
+/*
 always @ ( posedge Clock_25 or posedge Reset)	
 	/// RESET
 	if(Reset)
@@ -161,7 +170,7 @@ always @ ( posedge Clock_25 or posedge Reset)
 					
 		end
 //----------------------------------------------------------------------//
-
+*/
 endmodule
 
 
