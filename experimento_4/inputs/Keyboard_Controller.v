@@ -22,7 +22,7 @@ always @(negedge Clock or Reset)
 			
 			// ------------------------------------------------------- //
 			begin
-				Key_Data_Out_temp = (Key_Data_Out_temp >> 1) + iKey_Data_In
+				Key_Data_Out_temp = (Key_Data_Out_temp >> 1) + iKey_Data_In;
 				Counter = Counter+1;
 
 				if(Counter == 10)

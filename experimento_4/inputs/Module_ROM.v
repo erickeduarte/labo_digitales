@@ -19,7 +19,7 @@ begin
 	case (iAddress)
 	
 	0: oInstruction = { `NOP ,	24'd4000	};
-	1: oInstruction = { `STO , `COLS, 16'b0};
+/*	1: oInstruction = { `STO , `COLS, 16'b0};
 	2: oInstruction = { `STO , `ROWS, 16'b0};
 	3: oInstruction = { `STO , `ONE, 16'b1};
 	4: oInstruction = { `NOP ,	24'd4000	};
@@ -48,7 +48,7 @@ begin
 	27: oInstruction = { `BLE , `BLUELOOP, `ROWS, 8'd255};
 	28: oInstruction = { `NOP ,	24'd4000	};
 	29: oInstruction = { `JMP , 8'd28, 16'b0 };
-
+*/
 
 	default:
 		oInstruction = { `LED ,  24'b10101010 };		//NOP
