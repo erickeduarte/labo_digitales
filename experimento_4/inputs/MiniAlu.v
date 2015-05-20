@@ -17,9 +17,9 @@ module MiniAlu
 	output wire 		oVGA_Green,						//	VGA output of color GREEN
 	output wire 		oVGA_Blue,						//	VGA output of color BLUE
 	output wire 		oVGA_HSync,						//	VGA Horizontal Switch
-	output wire 		oVGA_VSync						//	VGA Vertical Switch
-	input wire iKeyboard_Data,							//
-	input wire	iKeyboard_Clock,
+	output wire 		oVGA_VSync,						//	VGA Vertical Switch
+	input wire 			iKeyboard_Data,							//
+	input wire			iKeyboard_Clock
 );
 
 
