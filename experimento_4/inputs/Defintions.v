@@ -13,9 +13,14 @@
 `define MUL		4'd8
 `define BNLCD	4'd9
 `define LCD		4'd10
-`define CALL		4'd11
-`define RET		4'd12
+//`define CALL	4'd11
+`define CPY		4'd11
+//`define RET	4'd12
+
 `define VGA		4'd13
+`define BKEY	4'd14
+`define KEY	4'd15
+
 
 
 `define R0 8'd0
