@@ -5,13 +5,13 @@ module VGA_Controller
 (
 	input  	wire		  		Clock,
 	input  	wire		  		Reset,					
-	output wire 	[15:0] 		oReadAddress,			// Input adress to VGA RAM
+	output 	wire 	[15:0] 	oReadAddress,			// Input adress to VGA RAM
 	output	wire 				oVGA_Red,				// Color RED
 	output	wire 				oVGA_Green,				// Color GREEN
 	output	wire 				oVGA_Blue,				// Color BLUE
 	input 	wire 	[2:0]		wColorFromVideoMemory,	// Color received from VGA RAM
-	output reg					oHSync,					// Horizontal Sync
-	output	reg					oVSync					// Vertical Sync
+	output 	wire				oHSync,					// Horizontal Sync
+	output	wire				oVSync					// Vertical Sync
 );	
 
 
@@ -19,21 +19,23 @@ module VGA_Controller
 /*
 	Will be using 256*256 RAM. So ROW starts in 112 ends in (112+256=368). Else is black
 	COLUMN starts in 192 ends in (192+256=448). Else is black
-*/
+*/ 
 
 wire 	Clock_25;
 wire 	[9:0] Row_index;
 wire 	[9:0] Column_index;
-reg		Column_reset;
-reg		Row_reset;
+wire			Column_reset;
+wire			Row_reset;
 
 // Read next signal
-assign oReadAddress = ( Row_index < 143 || Row_index > 399 || Column_index < 336 || Column_index > 592 ) ? 16'b0 : (Row_index-143)*256+(Column_index-396);
+//assign oReadAddress = ( Row_index < 143 || Row_index > 399 || Column_index < 336 || Column_index > 592 ) ? 16'b0 : (Row_index-143)*256+(Column_index-396);
+assign oReadAddress = ( Row_index < 141 || Row_index > 396 || Column_index < 240 || Column_index > 496 ) ? 16'b0 : (Row_index-143)*256+(Column_index-396);
 // Assign color ouputs
 // assign {oVGA_Red,oVGA_Green,oVGA_Blue} = ( Row_index < 112 || Row_index > 368 || Column_index < 336 || Column_index  > 592 ) ? 3'b101 : wColorFromVideoMemory;
-assign {oVGA_Red,oVGA_Green,oVGA_Blue} = 3'b101;
-////////////////////////////////////////////////////////////////////////
+assign {oVGA_Red,oVGA_Green,oVGA_Blue} = 3'b100;
 
+////////////////////////////////////////////////////////////////////////
+wire enable;
 ////////////////////////////////////////////////////////////////////////
 
 
@@ -64,20 +66,21 @@ UPCOUNTER_POSEDGE #(10) COLUMN_COUNTER
 //// ROW INDEX
 UPCOUNTER_POSEDGE #(10) ROW_COUNTER
 (
-	.Clock(Column_reset),
+	.Clock(Clock_25),
 	.Reset(Row_reset),
 	.Initial(10'b0),
-	.Enable(1),
+	.Enable(enable),
 	.Q(Row_index)
 );
 ////////////////////////////////////////////////////////////////////////
 
+assign enable = (Column_index == 799);
 // Reset signals when they reach maximun
-assign Row_reset = (Row_index > 520) || Reset;
+assign Row_reset = (Row_index > 519) || Reset;
 assign Column_reset = (Column_index > 799) || Reset;
 // Syncs
-assign oVSync = (Row_index < 2); 
-assign oHSync = (Column_index < 96); 
+assign oVSync = (Row_index < 520)?1:0; 
+assign oHSync = (Column_index < 705)?1:0; 
 
 
 /*

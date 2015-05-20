@@ -2,7 +2,6 @@
 `include "Defintions.v"
 `include "VGA_1.v"
 
-
 module MiniAlu
 (
 	input wire Clock,
@@ -185,7 +184,7 @@ VGA_Controller VGA
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////
-reg 	rKeyboard_Data_Received;
+/*reg 	rKeyboard_Data_Received;
 wire 	wKeyboard_Data_Ready;
 wire [10:0] wKeyboard_Data;
  
@@ -196,7 +195,7 @@ module Keyboard_Controller(
 	.oKey_Data_Out(wKeyboard_Data),			// Output data
 	.oData_Ready(wKeyboard_Data_Ready),		// Output to inform data is ready
 	.iData_Received(rKeyboard_Data_Received)	// Input to inform data has been received
-);
+);*/
 ////////////////////////////////////////////////////////////////////////
 
 always @ ( * )
@@ -286,7 +285,7 @@ always @ ( * )
 		rSubR		<=1'b0;
 	end
 	//-------------------------------------	
-	`CALL:
+	/*`CALL:
 	begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
@@ -308,7 +307,7 @@ always @ ( * )
 		rBranchTaken <= 1'b1;
 		rReturn		<=1'b1;
 		rSubR		<=1'b0;
-	end
+	end*/
 	//-------------------------------------	
 	`LED:
 	begin
@@ -382,7 +381,7 @@ always @ ( * )
 			rSubR		   <=1'b0;
 		end
 	//-------------------------------------
-	`BKEY:
+/*	`BKEY:
 		begin
 			// Fill all other flags
 			rLCD_Data_Ready <= 0;
@@ -459,7 +458,7 @@ always @ ( * )
 			rWriteEnable1 	<= 1'b0;
 			rResult0 		<= wSourceData0;
 			rResult1		<= 0;
-		end
+		end*/
 	//-------------------------------------
 	default:
 		begin
