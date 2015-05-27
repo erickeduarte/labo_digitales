@@ -53,35 +53,35 @@ UPCOUNTER_POSEDGE #(1) Clock_25MHz
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////.
 //// COLUMN INDEX
-UPCOUNTER_POSEDGE #(10) COLUMN_COUNTER
+UPCOUNTER_POSEDGE # (10) HORIZONTAL_COUNTER
 (
-	.Clock(Clock_25),
-	.Reset(Column_reset),
-	.Initial(10'b0),
-	.Enable(1),
-	.Q(Column_index)
+.Clock	(   Clock_25   ), 
+.Reset	( (Column_index > 799) || Reset ),
+.Initial	( 10'b0  ),
+.Enable	(  1'b1	),
+.Q			(	Column_index  )
 );
-////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////.
-//// ROW INDEX
-UPCOUNTER_POSEDGE #(10) ROW_COUNTER
-(
-	.Clock(Clock_25),
-	.Reset(Row_reset),
-	.Initial(10'b0),
-	.Enable(enable),
-	.Q(Row_index)
-);
-////////////////////////////////////////////////////////////////////////
 
+UPCOUNTER_POSEDGE # (10) VERTICAL_COUNTER
+(
+.Clock	( Clock_25   ), 
+.Reset	( (Row_index > 520) || Reset ),
+.Initial	( 10'b0		),	
+.Enable	( (Column_index == 799) ? 1'b1:1'b0	),
+.Q			( Row_index   )
+);
+////////////////////////////////////////////////////////////////////////
+assign oHSync = (Column_index < 704) ? 1'b1 : 1'b0;
+assign oVSync = (Row_index < 519) ? 1'b1 : 1'b0;
+/*
 assign enable = (Column_index == 799);
 // Reset signals when they reach maximun
-assign Row_reset = (Row_index > 519) || Reset;
+assign Row_reset = (Row_index > 520) || Reset;
 assign Column_reset = (Column_index > 799) || Reset;
 // Syncs
-assign oVSync = (Row_index < 520)?1:0; 
-assign oHSync = (Column_index < 705)?1:0; 
-
+assign oVSync = (Row_index < 519)?1'b1:1'b0; 
+assign oHSync = (Column_index < 704)?1'b1:1'b0; 
+*/
 
 /*
 always @ ( posedge Clock_25 or posedge Reset)	
