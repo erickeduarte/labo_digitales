@@ -7,7 +7,7 @@ module VGA_Controller (Clock, Reset, H_Sync, V_Sync, oRGB, Cont_X, Cont_Y);
 localparam RGB_MARCO = 3'b0;
 localparam MARCO_X = 48;
 localparam MARCO_Y = 32;
-localparam MARCO = 3'b010;
+localparam MARCO = 3'b0d 10;
 
 localparam RESOL_X = 640;
 localparam RESOL_Y = 480;
@@ -54,6 +54,33 @@ UPCOUNTER_POSEDGE # (10) VERTICAL_COUNTER
 .Initial	( 10'b0		),	
 .Enable		( (Cont_X == 799) ? 1'b1:1'b0 ),
 .Q			( Cont_Y    )
+);
+
+reg rPreReset; 
+reg  rFlag;
+wire [2:0]Clock25;
+
+always @ (posedge Clock )
+begin
+    if (rFlag)
+        begin 
+            rPreReset = 1'b0;
+        end
+    else
+        begin
+            rPreReset = 1'b1;
+            rFlag = 1'b1;
+        end
+end
+
+
+UPCOUNTER_POSEDGE #(2) CLOCK25 
+( 
+.Clock(   Clock                ),  
+.Reset(   rPreReset             ), 
+.Initial( 0                    ), 
+.Enable(  1'b1                 ), 
+.Q(       Clock25          ) 
 );
    
 endmodule
