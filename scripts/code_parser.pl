@@ -72,8 +72,8 @@ while ($inline = <IN_DH>) {
 		# Add correct format to definition (increases flexibility in coding)
 		$inline =~ s/^(.*define)/`define/;
 		# In case we try to loop
-		if($inline =~ s/ NEXTLINE$//;) {
-			$inline .= "8'd".($inst_counter+1);
+		if($inline =~ s/\sNEXTLINE$//) {
+			$inline .= "\t8'd".($inst_counter);
 		}
 		# Add definition to definitions string
 		$definitions .= "$inline \n";

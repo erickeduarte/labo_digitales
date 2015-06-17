@@ -1,0 +1,23 @@
+define COLS		8'b0
+define ROWS 	8'b1
+define ONE 		8'd2
+define MAX_ROWS 	8'd3
+define MAX_COLS		8'd4
+define STRIPE_SIZE  8'd5
+
+NOP
+STO 	`COLS 		16'b0
+STO 	`ROWS 		16'b0
+STO 	`ONE  		16'b1
+STO		`MAX_ROWS 	16'd99;
+STO		`MAX_COLS 	16'd99;
+
+define 	WHITELOOP	NEXTLINE
+NOP
+VGA 	`WHITE 		`COLS 	`ROWS
+ADD 	`COLS 		`COLS 	`ONE
+BLE 	`WHITELOOP 	`COLS 	`MAX_COLS
+
+STO 	`COLS 16'b0
+ADD 	`ROWS 		`ROWS 	`ONE
+BLE		`WHITELOOP  `ROWS	`ROWS_SIZE
