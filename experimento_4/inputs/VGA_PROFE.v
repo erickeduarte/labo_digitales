@@ -2,13 +2,13 @@
 // Módulo VGA controller
 module VGA_controller
 (
-	input wire				Clock,
+	input wire					Clock,
 	input wire 				Reset,
 	output wire	[2:0]		oVGA_RGB,
 	output wire				oHsync,
 	output wire				oVsync,
-	output wire [9:0]		oVcounter,
-	output wire [9:0]		oHcounter
+	output wire 	[9:0]		oVcounter,
+	output wire 	[9:0]		oHcounter
 );
 wire iVGA_R, iVGA_G, iVGA_B;
 wire oVGA_R, oVGA_G, oVGA_B;

@@ -1,13 +1,16 @@
 
 `timescale 1ns / 1ps
 `include "Defintions.v"
-`define COLS 8'b0 
-`define ROWS 8'b1 
-`define ONE 8'd2 
-`define GREENLOOP 8'd4 
-`define REDLOOP 8'd10 
-`define WHITELOOP 8'd16 
-`define BLUELOOP 8'd22 
+`define COLS		8'b0 
+`define ROWS 		8'b1 
+`define ONE 		8'd2 
+`define COLS_SIZE 	8'd3 
+`define ROWS_SIZE	8'd4 
+`define STRIPE_SIZE 8'd5 
+`define GREENLOOP 	8'd7 
+`define REDLOOP 	8'd15 
+`define WHITELOOP	8'd23 
+`define BLUELOOP 	8'd31 
 
 module ROM
 (
@@ -19,36 +22,46 @@ begin
 	case (iAddress)
 	
 	0: oInstruction = { `NOP ,	24'd4000	};
-/*	1: oInstruction = { `STO , `COLS, 16'b0};
+	1: oInstruction = { `STO , `COLS, 16'b0};
 	2: oInstruction = { `STO , `ROWS, 16'b0};
 	3: oInstruction = { `STO , `ONE, 16'b1};
-	4: oInstruction = { `NOP ,	24'd4000	};
-	5: oInstruction = { `VGA , `COLOR_GREEN,5'b0 , `COLS, `ROWS  };
-	6: oInstruction = { `ADD , `COLS, `COLS, `ONE};
-	7: oInstruction = { `BLE , `GREENLOOP, `COLS, 8'd255};
-	8: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
-	9: oInstruction = { `BLE , `GREENLOOP, `ROWS, 8'd63};
-	10: oInstruction = { `NOP ,	24'd4000	};
-	11: oInstruction = { `VGA , `COLOR_RED,5'b0 , `COLS, `ROWS  };
-	12: oInstruction = { `ADD , `COLS, `COLS, `ONE};
-	13: oInstruction = { `BLE , `REDLOOP, `COLS, 8'd255};
-	14: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
-	15: oInstruction = { `BLE , `REDLOOP, `ROWS, 8'd127};
-	16: oInstruction = { `NOP ,	24'd4000	};
-	17: oInstruction = { `VGA , `COLOR_RED,5'b0 , `COLS, `ROWS  };
-	18: oInstruction = { `ADD , `COLS, `COLS, `ONE};
-	19: oInstruction = { `BLE , `WHITELOOP, `COLS, 8'd255};
+	4: oInstruction = { `STO , `COLS_SIZE, 16'd255};
+	5: oInstruction = { `STO , `ROWS_SIZE, 16'd64};
+	6: oInstruction = { `STO , `STRIPE_SIZE, 16'd64};
+	7: oInstruction = { `NOP ,	24'd4000	};
+	8: oInstruction = { `VGA , `COLOR_GREEN,5'b0 , `COLS, `ROWS  };
+	9: oInstruction = { `ADD , `COLS, `COLS, `ONE};
+	10: oInstruction = { `BLE , `GREENLOOP, `COLS, `COLS_SIZE};
+	11: oInstruction = { `STO , `COLS, 16'b0};
+	12: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
+	13: oInstruction = { `BLE , `GREENLOOP, `ROWS, `ROWS_SIZE};
+	14: oInstruction = { `ADD , `ROWS_SIZE, `ROWS_SIZE, `STRIPE_SIZE};
+	15: oInstruction = { `NOP ,	24'd4000	};
+	16: oInstruction = { `VGA , `COLOR_RED,5'b0 , `COLS, `ROWS  };
+	17: oInstruction = { `ADD , `COLS, `COLS, `ONE};
+	18: oInstruction = { `BLE , `REDLOOP, `COLS, `COLS_SIZE};
+	19: oInstruction = { `STO , `COLS, 16'b0};
 	20: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
-	21: oInstruction = { `BLE , `WHITELOOP, `ROWS, 8'd191};
-	22: oInstruction = { `NOP ,	24'd4000	};
-	23: oInstruction = { `VGA , `COLOR_RED,5'b0 , `COLS, `ROWS  };
-	24: oInstruction = { `ADD , `COLS, `COLS, `ONE};
-	25: oInstruction = { `BLE , `BLUELOOP, `COLS, 8'd255};
-	26: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
-	27: oInstruction = { `BLE , `BLUELOOP, `ROWS, 8'd255};
-	28: oInstruction = { `NOP ,	24'd4000	};
-	29: oInstruction = { `JMP , 8'd28, 16'b0 };
-*/
+	21: oInstruction = { `BLE , `REDLOOP, `ROWS, `ROWS_SIZE};
+	22: oInstruction = { `ADD , `ROWS_SIZE, `ROWS_SIZE, `STRIPE_SIZE};
+	23: oInstruction = { `NOP ,	24'd4000	};
+	24: oInstruction = { `VGA , `COLOR_RED,5'b0 , `COLS, `ROWS  };
+	25: oInstruction = { `ADD , `COLS, `COLS, `ONE};
+	26: oInstruction = { `BLE , `WHITELOOP, `COLS, `COLS_SIZE};
+	27: oInstruction = { `STO , `COLS, 16'b0};
+	28: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
+	29: oInstruction = { `BLE , `WHITELOOP, `ROWS, `ROWS_SIZE};
+	30: oInstruction = { `ADD , `ROWS_SIZE, `ROWS_SIZE, `STRIPE_SIZE};
+	31: oInstruction = { `NOP ,	24'd4000	};
+	32: oInstruction = { `VGA , `COLOR_RED,5'b0 , `COLS, `ROWS  };
+	33: oInstruction = { `ADD , `COLS, `COLS, `ONE};
+	34: oInstruction = { `BLE , `BLUELOOP, `COLS, `COLS_SIZE};
+	35: oInstruction = { `STO , `COLS, 16'b0};
+	36: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
+	37: oInstruction = { `BLE , `BLUELOOP, `ROWS, 8'd255};
+	38: oInstruction = { `NOP ,	24'd4000	};
+	39: oInstruction = { `JMP , 8'd38, 16'b0 };
+
 
 	default:
 		oInstruction = { `LED ,  24'b10101010 };		//NOP
