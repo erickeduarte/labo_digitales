@@ -70,14 +70,14 @@
 `define STATE_DISPLAY_WRITE_6 33
 `define STATE_DISPLAY_WRITE_7 34
 
-`define COLOR_BLACK 3'b000
-`define COLOR_BLUE 3'b001
-`define COLOR_GREEN 3'b010
-`define COLOR_CYAN 3'b011
-`define COLOR_RED 3'b100
-`define COLOR_MAGENTA 3'b101
-`define COLOR_YELLOW 3'b110
-`define COLOR_WHITE 3'b111
+`define BLACK 3'b000
+`define BLUE 3'b001
+`define GREEN 3'b010
+`define CYAN 3'b011
+`define RED 3'b100
+`define MAGENTA 3'b101
+`define YELLOW 3'b110
+`define WHITE 3'b111
 
 `define STATE_RESET 0
 `define STATE_POWERON_INIT_0 1
