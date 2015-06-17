@@ -8,6 +8,7 @@
 `define MAX_COLS		8'd4 
 `define STRIPE_SIZE  8'd5 
 `define 	WHITELOOP	8'd6 
+`define	END			8'd13 
 
 module ROM
 (
@@ -30,7 +31,9 @@ begin
 	9: oInstruction = { `BLE , `WHITELOOP, `COLS, `MAX_COLS};
 	10: oInstruction = { `STO , `COLS, 16'b0};
 	11: oInstruction = { `ADD , `ROWS, `ROWS, `ONE};
-	12: oInstruction = { `BLE , `WHITELOOP, `ROWS, `ROWS_SIZE};
+	12: oInstruction = { `BLE , `WHITELOOP, `ROWS, `MAX_ROWS};
+	13: oInstruction = { `NOP ,	24'd4000	};
+	14: oInstruction = { `JMP , `END, 16'b0 };
 
 
 	default:
