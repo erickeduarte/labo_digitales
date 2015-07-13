@@ -60,6 +60,31 @@ output reg [SIZE-1:0] Q
   end
 
 endmodule
+
+//------------------------------------------------
+module UPCOUNTER_ASYNC # (parameter SIZE=16)
+(
+input wire Clock, Reset,
+input wire [SIZE-1:0] Initial,
+input wire Enable,
+output reg [SIZE-1:0] Q
+);
+
+
+  always @(posedge Clock or posedge Reset )
+  begin
+      if (Reset)
+        Q = Initial;
+      else
+		begin
+		if (Enable)
+			Q = Q + 1;
+			
+		end			
+  end
+
+endmodule
+
 //----------------------------------------------------
 module mux (in0,in1,in2,in3, sel, out);
 	input wire [7:0] in0,in1,in2,in3;

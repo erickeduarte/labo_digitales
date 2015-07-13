@@ -6,10 +6,15 @@ module MiniAlu
 (
  input wire Clock,
  input wire Reset,
+ input wire Move,
  output wire [7:0] oLed,
  output wire oVGA_HSYNC,
  output wire oVGA_VSYNC,
- output wire [2:0] oVgaRgb
+ output wire [2:0] oVgaRgb,
+ input wire BTN_EAST,
+ input wire BTN_WEST,
+ input wire BTN_NORTH,
+ input wire BTN_SOUTH
 );
 
 localparam RESOL_X = 100;
@@ -226,7 +231,13 @@ VGA_Controller_Josue  # (.RESOL_X(RESOL_X), .RESOL_Y(RESOL_Y) ) c1
    .Cont_X(wCurrentCol),
 	.Cont_Y(wCurrentRow)
   );
+///////////////////////////////////////////////
+ reg BTN_ACK;
+wire TMP_EAST, TMP_WEST, TMP_NORTH, TMP_SOUTH;
+wire XOR_EAST, XOR_WEST, XOR_NORTH, XOR_SOUTH;
+wire B_EAST;
 
+///////////////////////////////////////////////
 always @ ( * )
 begin
 	case (wOperation)
@@ -239,6 +250,7 @@ begin
 		rFlagCALL    <= 1'b0;
 		rResult      <= 0;
 		rVgaWriteEnable <= 1'b0;
+		BTN_ACK 	<= 0;
 	end
 	//-------------------------------------
 	//-------------------------------------
@@ -252,7 +264,7 @@ begin
 		rLCDData=wSourceData1;
 		rDoWrite=1'b1;
 		rVgaWriteEnable <= 1'b0;
-		
+		BTN_ACK 	<= 0;
 	end
 	//-------------------------------------
 	`ADD:
@@ -263,17 +275,19 @@ begin
 		rFlagCALL    <= 1'b0;
 		rResult      <= wSourceData1 + wSourceData0;
 		rVgaWriteEnable <= 1'b0;
+		BTN_ACK 	<= 0;
 		//$display("%dns ADD %h + %h = %h",$time,wSourceData0,wSourceData1,rResult);
 	end
 	//-------------------------------------
-	`CMP:
+	`SUB:
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rFlagCALL    <= 1'b0;
-		rResult      <= -wSourceData1; 
+		rResult      <= wSourceData1-wSourceData0; 
 		rVgaWriteEnable <= 1'b0;
+		BTN_ACK 	<= 0;
 		// $display("%dns CMP %h = %h",$time,wSourceData1,rResult);
 	end
 	//-------------------------------------
@@ -285,6 +299,7 @@ begin
 		rFlagCALL    <= 1'b0;
 		rVgaWriteEnable <= 1'b0;
 		rResult      <= wImmediateValue;
+		BTN_ACK 	<= 0;
 	end
 	//-------------------------------------
 	`BLE:
@@ -294,45 +309,18 @@ begin
 		rFlagCALL    <= 1'b0;
 		rResult      <= 0;
 		rVgaWriteEnable <= 1'b0;
+		BTN_ACK 	<= 0;
 		if (wSourceData1 <= wSourceData0 )
 			rBranchTaken <= 1'b1;
 		else
 			rBranchTaken <= 1'b0;
 		
 	end
-	//-------------------------------------
-	`BLCD1:
-	begin
-		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b0;
-		rFlagCALL    <= 1'b0;
-		rResult      <= 0;
-		rVgaWriteEnable <= 1'b0;
-		if (!oSetupReady )
-			rBranchTaken <= 1'b1;
-		else
-			rBranchTaken <= 1'b0;
-		
-	end
-	//----------------------	
-	/*`BLCD2:
-	begin
-		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b0;
-		rFlagCALL    <= 1'b0;
-		rResult      <= 0;
-		if (wpWriteDone )
-			begin
-				rDoWrite <=1'b0;
-				rBranchTaken <= 1'b0;
-			end
-		else
-			rBranchTaken <= 1'b1;
-		
-	end*/
+	
 	//------------------------
 	`JMP:
 	begin
+		BTN_ACK 	<= 0;
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
 		rFlagCALL    <= 1'b0;
@@ -343,6 +331,7 @@ begin
 	//-------------------------------------	
 	`LED:
 	begin
+		BTN_ACK 	<= 0;
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
 		rFlagCALL    <= 1'b0;
@@ -351,65 +340,9 @@ begin
 		rVgaWriteEnable <= 1'b0;
 	end
 	//-------------------------------------
-	`SMUL:
-	begin
-		rVgaWriteEnable <= 1'b0;
-		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b1;
-		rFlagCALL    <= 1'b0;
-		rResult      <= wSourceData0*wSourceData1;
-		rBranchTaken <= 1'b0;
-	end
-	//-------------------------------------
-	`IMUL:
-	begin
-		rVgaWriteEnable <= 1'b0;
-		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b1;
-		rFlagCALL    <= 1'b0;
-		rResult <= rRmul1;
-//		arrayMUL mul1(wSourceData0,wSourceData1,rResult);
-		rBranchTaken <= 1'b0;
-	end
-	//-------------------------------------
-	`gIMUL:
-	begin
-		rVgaWriteEnable <= 1'b0;
-		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b1;
-		rFlagCALL    <= 1'b0;
-		rResult      <= rRgmul1;
-//		arrayMUL_GEN mg1(wSourceData0,wSourceData1,rResult);
-		rBranchTaken <= 1'b0;
-		$display("%dns gIMUL %h * %h = %h",$time,wSourceData0,wSourceData1,rResult);
-	end
-	//-------------------------------------
-	`IMUL2:
-	begin
-		rVgaWriteEnable <= 1'b0;
-		rFFLedEN     <= 1'b0;
-		rBranchTaken <= 1'b0;
-		rWriteEnable <= 1'b1;
-		rFlagCALL    <= 1'b0;
-		rResult 		 <= rRmux1;
-//		muxMUL mx1(wSourceData0,wSourceData1,rRmux1);
-	end
-
-	//-------------------------------------
-	`IMUX4:
-	begin
-		rFFLedEN     <= 1'b0;
-		rBranchTaken <= 1'b0;
-		rWriteEnable <= 1'b1;
-		rFlagCALL    <= 1'b0;
-		rResult 		 <= rRmux4;
-		rVgaWriteEnable <= 1'b0;
-//		multiplicador4bits mx4  (wSourceData0,wSourceData1,rRmux4);
-	end
-
-	//-------------------------------------
 	`VGA:
 	begin
+		BTN_ACK 	<= 0;
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
@@ -426,6 +359,7 @@ begin
 	//-------------------------------------
 	`CALL:
 	begin
+		BTN_ACK 	<= 0;
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rResult      <= 0;
@@ -436,6 +370,7 @@ begin
 	//-------------------------------------
 	`RET:
 	begin
+		BTN_ACK 	<= 0;
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
@@ -444,8 +379,65 @@ begin
 		rVgaWriteEnable <= 1'b0;
 	end
 	//-------------------------------------
+	//-------------------------------------
+	`CPY:
+	begin
+		BTN_ACK 	<= 0;
+		rFFLedEN     <= 1'b0;
+		rWriteEnable <= 1'b1;
+		rResult      <= wSourceData0;
+		rFlagCALL    <= 1'b0;
+		rBranchTaken <= 1'b0;
+		rVgaWriteEnable <= 1'b0;
+	end
+	//-------------------------------------
+	`BEAST:
+		begin
+		BTN_ACK 	<= BTN_EAST;
+		rFFLedEN     <= 1'b0;
+		rWriteEnable <= 1'b0;
+		rResult      <= 0;
+		rFlagCALL    <= 1'b0;
+		rBranchTaken <=  BTN_EAST;//B_EAST;
+		rVgaWriteEnable <= 1'b0;
+	end
+	//-------------------------------------
+	`BWEST:
+	begin
+		BTN_ACK		<= BTN_WEST;
+		rFFLedEN     <= 1'b0;
+		rWriteEnable <= 1'b0;
+		rResult      <= 0;
+		rFlagCALL    <= 1'b0;
+		rBranchTaken <= BTN_WEST;
+		rVgaWriteEnable <= 1'b0;
+	end
+	//-------------------------------------
+	`BNORTH:
+	begin
+		BTN_ACK 	<= BTN_NORTH;
+		rFFLedEN     <= 1'b0;
+		rWriteEnable <= 1'b0;
+		rResult      <= 0;
+		rFlagCALL    <= 1'b0;
+		rBranchTaken <= BTN_NORTH;
+		rVgaWriteEnable <= 1'b0;
+	end
+	//-------------------------------------
+	`BSOUTH:
+	begin	
+		BTN_ACK		<= BTN_SOUTH;
+		rFFLedEN     <= 1'b0;
+		rWriteEnable <= 1'b0;
+		rResult      <= 0;
+		rFlagCALL    <= 1'b0;
+		rBranchTaken <= BTN_SOUTH;
+		rVgaWriteEnable <= 1'b0;
+	end
+	//-------------------------------------
 	default:
 	begin
+		BTN_ACK	<= 0;
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
 		rFlagCALL    <= 1'b0;
@@ -458,4 +450,40 @@ begin
 end
 
 
+FFD_POSEDGE_SYNCRONOUS_RESET # ( 4 ) TMPS 
+(
+	.Clock(Clock),
+	.Reset(Reset),
+	.Enable(1'b1),
+	.D({BTN_EAST, BTN_WEST, BTN_NORTH, BTN_SOUTH}),
+	.Q({TMP_EAST, TMP_WEST, TMP_NORTH, TMP_SOUTH})
+);
+
+
+assign XOR_EAST = BTN_EAST ^ TMP_EAST;
+assign XOR_WEST = BTN_WEST ^ TMP_WEST;
+assign XOR_NORTH = BTN_NORTH ^ TMP_NORTH;
+assign XOR_SOUTH = BTN_SOUTH ^ TMP_SOUTH;
+
+
+
+UPCOUNTER_POSEDGE # ( 1 ) EAST 
+(
+		.Clock(   Clock ), 
+		.Reset(   Reset ),
+		.Initial( 1'b0  ),
+		.Enable(  XOR_EAST  | BTN_ACK  ),
+		.Q(  B_EAST 	)
+);
+
+/*
+UPCOUNTER_POSEDGE # ( 3 ) EAST 
+(
+		.Clock(   Clock ), 
+		.Reset(   Reset),
+		.Initial( 1'b0  ),
+		.Enable(  BTN_EAST    ),
+		.Q(  BUS_EAST 	)
+);
+*/
 endmodule

@@ -9,19 +9,16 @@
 `define STO   4'd4
 `define ADD   4'd5
 `define JMP   4'd6
-`define CMP   4'd7   
-`define SMUL   4'd8    
-`define IMUL   4'd9
-`define gIMUL   4'd10
-`define IMUL2   4'd11
-`define IMUX4   4'd12
-`define VGA  	 4'd13
-`define LCD     4'd14
-`define BLCD1     4'd15
-`define BLCD2     4'd16
-`define CALL   4'd17
-`define RET   4'd18
-
+`define SUB   4'd7   
+`define VGA   4'd8
+`define LCD   4'd9
+`define CALL  4'd10
+`define RET   4'd11
+`define CPY   4'd12
+`define BEAST  4'd13
+`define BWEST  4'd14
+`define BNORTH  4'd15
+`define BSOUTH  4'd1
 
 
 
