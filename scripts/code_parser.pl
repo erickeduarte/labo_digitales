@@ -421,6 +421,64 @@ while ($inline = <IN_DH>) {
 		# Next line
 		next;
 	} 
+	# FOR BEAST BWEST BSOUTH BWEST
+	elsif ($inline =~ /^B(EAST|WEST|NORTH|SOUTH)\s/) {
+		# Set and clean $tmp_comment, $inline 
+		set_vars();
+		
+		# Check for correct format
+		if ($#tmp_arguments != 1) {
+			print "\t-E-\t Wrong number of arguments for BEAST|BWEST|BSOUTH|BNORTH instruction. Given $#tmp_arguments, spected: 1 \t Line: <$line_counter> \n";
+			exit;
+		}
+		
+		# Include VGA code in instructions
+		$instructions .= "\t$inst_counter: oInstruction = { `$tmp_arguments[0] , $tmp_arguments[1], 16'b0 };"; # No need for destination
+		# Increase instruction counter
+		$inst_counter++;
+		# Add comments
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
+		# Next line
+		next;
+	}
+	elsif ($inline =~ /^CPY\s/) {
+		# Set and clean $tmp_comment, $inline 
+		set_vars();
+		
+		# Check for correct format
+		if ($#tmp_arguments != 2) {
+			print "\t-E-\t Wrong number of arguments for CPY instruction. Given $#tmp_arguments, spected: 2 \t Line: <$line_counter> \n";
+			exit;
+		}
+		
+		# Include VGA code in instructions
+		$instructions .= "\t$inst_counter: oInstruction = { `CPY , $tmp_arguments[2], $tmp_arguments[1], $tmp_arguments[1] };"; # No need for destination
+		# Increase instruction counter
+		$inst_counter++;
+		# Add comments
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
+		# Next line
+		next;
+	} 
+	elsif ($inline =~ /^BCLOSE\s/) {
+		# Set and clean $tmp_comment, $inline 
+		set_vars();
+		
+		# Check for correct format
+		if ($#tmp_arguments != 3) {
+			print "\t-E-\t Wrong number of arguments for BCLOSE instruction. Given $#tmp_arguments, spected: 3 \t Line: <$line_counter> \n";
+			exit;
+		}
+		
+		# Include VGA code in instructions
+		$instructions .= "\t$inst_counter: oInstruction = { `BCLOSE , $tmp_arguments[1], $tmp_arguments[2], $tmp_arguments[3] };"; # No need for destination
+		# Increase instruction counter
+		$inst_counter++;
+		# Add comments
+		$instructions .= ($tmp_comment) ? " \/\/ $tmp_comment \n": "\n" ;
+		# Next line
+		next;
+	}
 }
 # Done with input file.
 close(IN_DH);

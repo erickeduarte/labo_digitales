@@ -91,7 +91,7 @@ assign wColorWriteAddress = wSourceData0*RESOL_X + wSourceData1;
 assign wIPInitialValue = (Reset) ? 8'b0 :((wOperation_Pre==`RET) ? wSourceData0 :wDestination);
 assign wIP = (rBranchTaken | (wOperation_Pre==`RET)) ? wIPInitialValue : wIP_temp;
 
-assign wResult_Pre = (wOperation==`CALL) ? wIP_temp : rResult ;
+assign wResult_Pre = (wOperation==`RET) ? wIP_temp : rResult ;
 assign wSourceAddr0Pre = (wOperation==`RET) ? 8'd7 : wInstruction[7:0];
 assign  wDestination_Pre = (rFlagCALL) ? 8'd7 : wDestination ; //wDestination_Pre => iWriteAddress
 
@@ -357,14 +357,14 @@ begin
 
 	end
 	//-------------------------------------
-	`CALL:
+	`BCLOSE:
 	begin
 		BTN_ACK 	<= 0;
 		rFFLedEN     <= 1'b0;
-		rWriteEnable <= 1'b1;
+		rWriteEnable <= 1'b0;
 		rResult      <= 0;
-		rFlagCALL    <= 1'b1;
-		rBranchTaken <= 1'b1;
+		rFlagCALL    <= 1'b0;
+		rBranchTaken <= (((wSourceData1 > wSourceData0)?(wSourceData1-wSourceData0):(wSourceData0-wSourceData1))<5);
 		rVgaWriteEnable <= 1'b0;
 	end
 	//-------------------------------------

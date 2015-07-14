@@ -12,7 +12,7 @@
 `define SUB   4'd7   
 `define VGA   4'd8
 `define LCD   4'd9
-`define CALL  4'd10
+`define BCLOSE  4'd10
 `define RET   4'd11
 `define CPY   4'd12
 `define BEAST  4'd13
